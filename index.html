@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gramática Holandesa / Dutch Grammar</title>
+  <title>Gramática Holandesa Completa / Dutch Grammar</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -29,7 +29,7 @@
         <i class="fa-solid fa-language text-blue-600 mr-2"></i>Herramienta de Gramática Holandesa
       </h1>
       <p class="text-slate-600 text-sm md:text-base" id="uiHeaderSubtitle">
-        Consulta de artículos (de/het), demostrativos, traducción al español/inglés, formación de plurales y conjugación verbal.
+        Diccionario masivo con traducciones automáticas, artículos (DE/HET), demostrativos, plurales y conjugador de verbos.
       </p>
     </header>
 
@@ -46,21 +46,21 @@
     <!-- TAB 1: NOUNS & DEMONSTRATIVES -->
     <div id="content-nouns" class="space-y-6">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <label class="block text-sm font-semibold text-slate-700 mb-2" id="uiLabelNounInput">Busca o escribe un sustantivo en holandés:</label>
+        <label class="block text-sm font-semibold text-slate-700 mb-2" id="uiLabelNounInput">Escribe CUALQUIER sustantivo en holandés:</label>
         <div class="relative">
-          <input type="text" id="nounInput" placeholder="Ej. man, huis, auto, boek, kind, tafel..." 
+          <input type="text" id="nounInput" value="restaurant" placeholder="Ej. restaurant, auto, huis, boek, kind, tafels..." 
             class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-            oninput="analyzeNoun()">
+            oninput="handleNounInput()">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-4 text-slate-400"></i>
         </div>
         <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
-          <span id="uiLabelSuggestions">Sugerencias:</span>
-          <button onclick="setNoun('man')" class="underline hover:text-blue-600">man</button>,
-          <button onclick="setNoun('huis')" class="underline hover:text-blue-600">huis</button>,
+          <span id="uiLabelSuggestions">Prueba estos:</span>
+          <button onclick="setNoun('restaurant')" class="underline hover:text-blue-600 font-bold">restaurant</button>,
           <button onclick="setNoun('auto')" class="underline hover:text-blue-600">auto</button>,
-          <button onclick="setNoun('kind')" class="underline hover:text-blue-600">kind</button>,
-          <button onclick="setNoun('tafel')" class="underline hover:text-blue-600">tafel</button>,
-          <button onclick="setNoun('hond')" class="underline hover:text-blue-600">hond</button>
+          <button onclick="setNoun('huis')" class="underline hover:text-blue-600">huis</button>,
+          <button onclick="setNoun('supermarkt')" class="underline hover:text-blue-600">supermarkt</button>,
+          <button onclick="setNoun('fiets')" class="underline hover:text-blue-600">fiets</button>,
+          <button onclick="setNoun('tafels')" class="underline hover:text-blue-600">tafels (plural)</button>
         </div>
       </div>
 
@@ -69,18 +69,18 @@
         <div class="flex flex-wrap items-center justify-between border-b pb-4 gap-4">
           <div>
             <div class="flex items-center">
-              <span id="articleBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 mr-2">DE</span>
-              <span id="nounDisplay" class="text-2xl font-bold text-slate-900">man</span>
+              <span id="articleBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 mr-2">HET</span>
+              <span id="nounDisplay" class="text-2xl font-bold text-slate-900">restaurant</span>
             </div>
             <!-- Translation Badge -->
             <p class="text-sm font-medium text-slate-500 mt-1 flex items-center">
               <i class="fa-solid fa-language text-slate-400 mr-1.5"></i>
-              <span id="uiLabelTrans">Traducción:</span>&nbsp;<strong id="nounTranslation" class="text-slate-800">hombre</strong>
+              <span id="uiLabelTrans">Traducción:</span>&nbsp;<strong id="nounTranslation" class="text-slate-800">restaurante</strong>
             </p>
           </div>
           <div class="text-right">
             <span class="text-xs text-slate-500 block" id="uiLabelPluralHeader">Plural (siempre usa DE):</span>
-            <strong id="pluralDisplay" class="text-lg text-blue-600 font-bold">de mannen</strong>
+            <strong id="pluralDisplay" class="text-lg text-blue-600 font-bold">de restaurants</strong>
           </div>
         </div>
 
@@ -90,7 +90,7 @@
             <i class="fa-solid fa-layer-group text-blue-600 mr-2"></i><span id="uiPluralRuleTitle">¿Cómo se construye el plural?</span>
           </h4>
           <p id="pluralExplanation" class="text-xs text-blue-900 leading-relaxed">
-            Se añade <strong>-en</strong> y se duplica la consonante final para mantener la vocal corta: <em>man &rarr; mannen</em>.
+            Palabras prestadas de otro idioma terminadas en consonante suelen hacer el plural en <strong>-s</strong>.
           </p>
           <p class="text-xs font-semibold text-blue-700 mt-1" id="uiPluralNote">
             📌 Recuerda: Todos los plurales en holandés son palabras DE y usan <strong>deze</strong> (cerca) y <strong>die</strong> (lejos).
@@ -104,8 +104,8 @@
               <i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>Demostrativos
             </h4>
             <ul class="space-y-2 text-sm">
-              <li class="flex justify-between"><span class="text-slate-500" id="uiDemNear">Cerca:</span> <strong id="demNear" class="text-blue-600 font-semibold">deze man</strong></li>
-              <li class="flex justify-between"><span class="text-slate-500" id="uiDemFar">Lejos:</span> <strong id="demFar" class="text-blue-600 font-semibold">die man</strong></li>
+              <li class="flex justify-between"><span class="text-slate-500" id="uiDemNear">Cerca:</span> <strong id="demNear" class="text-blue-600 font-semibold">dit restaurant</strong></li>
+              <li class="flex justify-between"><span class="text-slate-500" id="uiDemFar">Lejos:</span> <strong id="demFar" class="text-blue-600 font-semibold">dat restaurant</strong></li>
             </ul>
           </div>
 
@@ -115,8 +115,8 @@
               <i class="fa-solid fa-clone text-indigo-500 mr-2"></i>Identificadores
             </h4>
             <ul class="space-y-2 text-sm">
-              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameType">Mismo tipo (réplica):</span> <strong id="idSameType" class="text-indigo-600 font-semibold">dezelfde man</strong></li>
-              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameExact">Misma unidad exacta:</span> <strong id="idSameExact" class="text-indigo-600 font-semibold">diezelfde man</strong></li>
+              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameType">Mismo tipo (réplica):</span> <strong id="idSameType" class="text-indigo-600 font-semibold">hetzelfde restaurant</strong></li>
+              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameExact">Misma unidad exacta:</span> <strong id="idSameExact" class="text-indigo-600 font-semibold">datzelfde restaurant</strong></li>
             </ul>
           </div>
         </div>
@@ -124,7 +124,7 @@
         <!-- Explanation box -->
         <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
           <p class="font-bold"><i class="fa-regular fa-lightbulb text-amber-600 mr-1"></i><span id="uiRuleTitle">Regla de uso:</span></p>
-          <p id="ruleText">Como <strong>man</strong> usa el artículo <strong>DE</strong>, sus demostrativos usan terminación <strong>-e</strong> (deze / die / dezelfde / diezelfde).</p>
+          <p id="ruleText">Como <strong>restaurant</strong> es una palabra <strong>HET</strong>, sus demostrativos de cerca usan <strong>dit</strong>, de lejos <strong>dat</strong>, de modelo <strong>hetzelfde</strong> y de unidad exacta <strong>datzelfde</strong>.</p>
         </div>
       </div>
     </div>
@@ -134,7 +134,7 @@
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
         <label class="block text-sm font-semibold text-slate-700 mb-2" id="uiLabelVerbInput">Escribe un verbo en infinitivo:</label>
         <div class="relative">
-          <input type="text" id="verbInput" placeholder="Ej. werken, hebben, zijn, lopen, maken, gaan..." 
+          <input type="text" id="verbInput" value="werken" placeholder="Ej. werken, hebben, zijn, lopen, maken, gaan..." 
             class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
             oninput="conjugateVerb()">
           <i class="fa-solid fa-bolt absolute left-3.5 top-4 text-slate-400"></i>
@@ -145,7 +145,8 @@
           <button onclick="setVerb('hebben')" class="underline hover:text-blue-600">hebben</button>,
           <button onclick="setVerb('zijn')" class="underline hover:text-blue-600">zijn</button>,
           <button onclick="setVerb('lopen')" class="underline hover:text-blue-600">lopen</button>,
-          <button onclick="setVerb('maken')" class="underline hover:text-blue-600">maken</button>
+          <button onclick="setVerb('maken')" class="underline hover:text-blue-600">maken</button>,
+          <button onclick="setVerb('eten')" class="underline hover:text-blue-600">eten</button>
         </div>
       </div>
 
@@ -194,15 +195,16 @@
 
   <script>
     let currentLang = 'es';
+    let debounceTimer = null;
 
     const translations = {
       es: {
         headerTitle: '<i class="fa-solid fa-language text-blue-600 mr-2"></i>Herramienta de Gramática Holandesa',
-        headerSubtitle: 'Consulta de artículos (de/het), demostrativos, traducción al español/inglés, formación de plurales y conjugación verbal.',
+        headerSubtitle: 'Diccionario masivo con traducciones automáticas, artículos (DE/HET), demostrativos, plurales y conjugador de verbos.',
         tabNouns: 'Sustantivos y Demostrativos',
         tabVerbs: 'Conjugador de Verbos',
-        labelNounInput: 'Busca o escribe un sustantivo en holandés:',
-        labelSuggestions: 'Sugerencias:',
+        labelNounInput: 'Escribe CUALQUIER sustantivo en holandés:',
+        labelSuggestions: 'Prueba estos:',
         labelTrans: 'Traducción:',
         pluralHeader: 'Plural (siempre usa DE):',
         pluralRuleTitle: '¿Cómo se construye el plural?',
@@ -225,11 +227,11 @@
       },
       en: {
         headerTitle: '<i class="fa-solid fa-language text-blue-600 mr-2"></i>Dutch Grammar Tool',
-        headerSubtitle: 'Lookup articles (de/het), demonstratives, translations, plural rules, and verb conjugations.',
+        headerSubtitle: 'Massive dictionary with auto-translation, DE/HET articles, demonstratives, plurals, and verb conjugations.',
         tabNouns: 'Nouns & Demonstratives',
         tabVerbs: 'Verb Conjugator',
-        labelNounInput: 'Search or type a Dutch noun:',
-        labelSuggestions: 'Suggestions:',
+        labelNounInput: 'Type ANY Dutch noun:',
+        labelSuggestions: 'Try these:',
         labelTrans: 'Translation:',
         pluralHeader: 'Plural (always uses DE):',
         pluralRuleTitle: 'How is the plural formed?',
@@ -252,36 +254,41 @@
       }
     };
 
+    // Dictionary database
     const nounDb = {
-      "man": { art: "de", plural: "mannen", es: "hombre", en: "man", pluralRuleEs: "Se añade <strong>-en</strong> y se duplica la consonante final (n) para mantener la vocal corta.", pluralRuleEn: "Add <strong>-en</strong> and double the final consonant (n) to keep the short vowel." },
-      "vrouw": { art: "de", plural: "vrouwen", es: "mujer", en: "woman", pluralRuleEs: "Se añade simplemente <strong>-en</strong> al final de la palabra.", pluralRuleEn: "Simply add <strong>-en</strong> to the end of the word." },
-      "auto": { art: "de", plural: "auto's", es: "coche / auto", en: "car", pluralRuleEs: "Las palabras que terminan en vocal larga (a, o, u, i) añaden <strong>'s</strong>.", pluralRuleEn: "Words ending in a long vowel (a, o, u, i) add <strong>'s</strong>." },
-      "tafel": { art: "de", plural: "tafels", es: "mesa", en: "table", pluralRuleEs: "Las palabras que terminan en <strong>-el, -em, -en, -er</strong> añaden solo una <strong>-s</strong>.", pluralRuleEn: "Words ending in <strong>-el, -em, -en, -er</strong> take an <strong>-s</strong>." },
-      "hond": { art: "de", plural: "honden", es: "perro", en: "dog", pluralRuleEs: "Se añade <strong>-en</strong> directamente.", pluralRuleEn: "Add <strong>-en</strong> directly." },
-      "kat": { art: "de", plural: "katten", es: "gato", en: "cat", pluralRuleEs: "Se añade <strong>-en</strong> y se duplica la consonante final (t) para mantener la vocal corta.", pluralRuleEn: "Add <strong>-en</strong> and double the final consonant (t) to keep the short vowel sound." },
-      "stoel": { art: "de", plural: "stoelen", es: "silla", en: "chair", pluralRuleEs: "Se añade <strong>-en</strong> al final.", pluralRuleEn: "Add <strong>-en</strong> at the end." },
-      "sleutel": { art: "de", plural: "sleutels", es: "llave", en: "key", pluralRuleEs: "Termina en <strong>-el</strong>, por lo que añade solo una <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-el</strong>, so it takes an <strong>-s</strong>." },
-      "huis": { art: "het", plural: "huizen", es: "casa", en: "house", pluralRuleEs: "Añade <strong>-en</strong> y la <strong>s</strong> final cambia a <strong>z</strong> sonora (huis &rarr; huizen).", pluralRuleEn: "Adds <strong>-en</strong> and final <strong>s</strong> changes to <strong>z</strong> (huis &rarr; huizen)." },
-      "boek": { art: "het", plural: "boeken", es: "libro", en: "book", pluralRuleEs: "Se añade <strong>-en</strong> directamente.", pluralRuleEn: "Add <strong>-en</strong> directly." },
-      "kind": { art: "het", plural: "kinderen", es: "niño / niña", en: "child", pluralRuleEs: "Es un plural irregular especial en <strong>-eren</strong> (kind &rarr; kinderen).", pluralRuleEn: "Special irregular plural ending in <strong>-eren</strong> (kind &rarr; kinderen)." },
+      "restaurant": { art: "het", plural: "restaurants", es: "restaurante", en: "restaurant", pluralRuleEs: "Añade <strong>-s</strong> al ser una palabra extranjera terminada en consonante.", pluralRuleEn: "Adds <strong>-s</strong> as a foreign loanword." },
+      "auto": { art: "de", plural: "auto's", es: "coche / automóvil", en: "car", pluralRuleEs: "Vocal larga final (o) requiere <strong>'s</strong> para mantener la pronunciación.", pluralRuleEn: "Long vowel (o) requires <strong>'s</strong>." },
+      "huis": { art: "het", plural: "huizen", es: "casa", en: "house", pluralRuleEs: "Añade <strong>-en</strong> y la <strong>s</strong> final cambia a <strong>z</strong> sonora.", pluralRuleEn: "Adds <strong>-en</strong> and final <strong>s</strong> changes to <strong>z</strong>." },
+      "supermarkt": { art: "de", plural: "supermarkten", es: "supermercado", en: "supermarket", pluralRuleEs: "Se añade <strong>-en</strong> al final.", pluralRuleEn: "Add <strong>-en</strong> directly." },
+      "fiets": { art: "de", plural: "fietsen", es: "bicicleta", en: "bicycle", pluralRuleEs: "Se añade <strong>-en</strong> al final.", pluralRuleEn: "Add <strong>-en</strong> directly." },
+      "man": { art: "de", plural: "mannen", es: "hombre", en: "man", pluralRuleEs: "Se añade <strong>-en</strong> y se duplica la consonante (n) para mantener la vocal corta.", pluralRuleEn: "Add <strong>-en</strong> and double final consonant (n)." },
+      "vrouw": { art: "de", plural: "vrouwen", es: "mujer", en: "woman", pluralRuleEs: "Se añade <strong>-en</strong> directamente.", pluralRuleEn: "Add <strong>-en</strong> directly." },
+      "boek": { art: "het", plural: "boeken", es: "libro", en: "book", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
+      "kind": { art: "het", plural: "kinderen", es: "niño / niña", en: "child", pluralRuleEs: "Plural irregular especial terminado en <strong>-eren</strong>.", pluralRuleEn: "Special irregular plural ending in <strong>-eren</strong>." },
+      "tafel": { art: "de", plural: "tafels", es: "mesa", en: "table", pluralRuleEs: "Terminación en <strong>-el</strong> requiere una <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-el</strong>, takes <strong>-s</strong>." },
+      "stoel": { art: "de", plural: "stoelen", es: "silla", en: "chair", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
+      "hond": { art: "de", plural: "honden", es: "perro", en: "dog", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
+      "kat": { art: "de", plural: "katten", es: "gato", en: "cat", pluralRuleEs: "Se añade <strong>-en</strong> y duplica la t final.", pluralRuleEn: "Add <strong>-en</strong> and double final t." },
+      "sleutel": { art: "de", plural: "sleutels", es: "llave", en: "key", pluralRuleEs: "Termina en <strong>-el</strong>, añade <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-el</strong>, adds <strong>-s</strong>." },
       "bier": { art: "het", plural: "bieren", es: "cerveza", en: "beer", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "idee": { art: "het", plural: "ideeën", es: "idea", en: "idea", pluralRuleEs: "Añade <strong>-ën</strong> con diéresis para indicar una nueva sílaba.", pluralRuleEn: "Adds <strong>-ën</strong> with diaeresis to show a new syllable." },
-      "meisje": { art: "het", plural: "meisjes", es: "chica / niña", en: "girl", pluralRuleEs: "Todos los diminutivos (terminados en <strong>-je</strong>) añaden una <strong>-s</strong>.", pluralRuleEn: "All diminutives (ending in <strong>-je</strong>) form plurals by adding an <strong>-s</strong>." },
-      "paard": { art: "het", plural: "paarden", es: "caballo", en: "horse", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "raam": { art: "het", plural: "ramen", es: "ventana", en: "window", pluralRuleEs: "Pierde una vocal (aa &rarr; a) al abrirse la sílaba y añade <strong>-en</strong>.", pluralRuleEn: "Drops one vowel (aa &rarr; a) when syllable opens and adds <strong>-en</strong>." },
-      "computer": { art: "de", plural: "computers", es: "ordenador", en: "computer", pluralRuleEs: "Termina en <strong>-er</strong>, por lo que añade solo una <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-er</strong>, so it takes an <strong>-s</strong>." },
-      "telefoon": { art: "de", plural: "telefoons", es: "teléfono", en: "phone", pluralRuleEs: "Palabra de origen extranjero terminada en consonante que adopta <strong>-s</strong>.", pluralRuleEn: "Foreign loanword taking <strong>-s</strong>." }
+      "wijn": { art: "de", plural: "wijnen", es: "vino", en: "wine", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
+      "brood": { art: "het", plural: "broden", es: "pan", en: "bread", pluralRuleEs: "Pierde una o (oo &rarr; o) y cambia a <strong>-den</strong>.", pluralRuleEn: "Drops one o (oo &rarr; o) and adds <strong>-den</strong>." },
+      "water": { art: "het", plural: "waters", es: "agua", en: "water", pluralRuleEs: "Termina en <strong>-er</strong>, toma <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-er</strong>, takes <strong>-s</strong>." },
+      "stad": { art: "de", plural: "steden", es: "ciudad", en: "city", pluralRuleEs: "Plural irregular con cambio vocálico (a &rarr; e): steden.", pluralRuleEn: "Irregular vowel shift (a &rarr; e): steden." },
+      "land": { art: "het", plural: "landen", es: "país", en: "country", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
+      "meisje": { art: "het", plural: "meisjes", es: "chica / niña", en: "girl", pluralRuleEs: "Todos los diminutivos (<strong>-je</strong>) llevan <strong>-s</strong>.", pluralRuleEn: "All diminutives (<strong>-je</strong>) take <strong>-s</strong>." }
     };
 
     const verbDb = {
       "werken": { es: "trabajar", en: "to work", type: "Regular", ik: "werk", jij: "werkt", jijInv: "werk je?", hij: "werkt", plural: "werken", ovtS: "werkte", ovtP: "werkten", aux: "heeft", part: "gewerkt" },
-      "maken": { es: "hacer / crear", en: "to make / do", type: "Regular", ik: "maak", jij: "maakt", jijInv: "maak je?", hij: "maakt", plural: "maken", ovtS: "maakte", ovtP: "maakten", aux: "heeft", part: "gemaakt" },
+      "maken": { es: "hacer / crear", en: "to make", type: "Regular", ik: "maak", jij: "maakt", jijInv: "maak je?", hij: "maakt", plural: "maken", ovtS: "maakte", ovtP: "maakten", aux: "heeft", part: "gemaakt" },
       "zijn": { es: "ser / estar", en: "to be", type: "Irregular", ik: "ben", jij: "bent", jijInv: "ben je?", hij: "is", plural: "zijn", ovtS: "was", ovtP: "waren", aux: "is", part: "geweest" },
       "hebben": { es: "tener / haber", en: "to have", type: "Irregular", ik: "heb", jij: "hebt", jijInv: "heb je?", hij: "heeft", plural: "hebben", ovtS: "had", ovtP: "haten", aux: "heeft", part: "gehad" },
       "gaan": { es: "ir", en: "to go", type: "Irregular", ik: "ga", jij: "gaat", jijInv: "ga je?", hij: "gaat", plural: "gaan", ovtS: "ging", ovtP: "gingen", aux: "is", part: "gegaan" },
       "lopen": { es: "caminar / andar", en: "to walk", type: "Irregular", ik: "loop", jij: "loopt", jijInv: "loop je?", hij: "loopt", plural: "lopen", ovtS: "liep", ovtP: "liepen", aux: "heeft/is", part: "gelopen" },
       "komen": { es: "venir", en: "to come", type: "Irregular", ik: "kom", jij: "komt", jijInv: "kom je?", hij: "komt", plural: "komen", ovtS: "kwam", ovtP: "kwamen", aux: "is", part: "gekomen" },
-      "zien": { es: "ver", en: "to see", type: "Irregular", ik: "zie", jij: "ziet", jijInv: "zie je?", hij: "ziet", plural: "zien", ovtS: "zag", ovtP: "zagen", aux: "heeft", part: "gezien" }
+      "zien": { es: "ver", en: "to see", type: "Irregular", ik: "zie", jij: "ziet", jijInv: "zie je?", hij: "ziet", plural: "zien", ovtS: "zag", ovtP: "zagen", aux: "heeft", part: "gezien" },
+      "eten": { es: "comer", en: "to eat", type: "Irregular", ik: "eet", jij: "eet", jijInv: "eet je?", hij: "eet", plural: "eten", ovtS: "at", ovtP: "aten", aux: "heeft", part: "gegeten" }
     };
 
     function setLanguage(lang) {
@@ -332,31 +339,68 @@
       analyzeNoun();
     }
 
-    function analyzeNoun() {
+    function handleNounInput() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        analyzeNoun();
+      }, 300);
+    }
+
+    async function analyzeNoun() {
       const input = document.getElementById('nounInput').value.trim().toLowerCase();
       if (!input) return;
 
       let art = "de";
       let plural = input + "en";
-      let translationText = currentLang === 'es' ? "Traducción general" : "General translation";
+      let translationText = "...";
       let ruleEs = "Regla general: Añade <strong>-en</strong> para formar el plural.";
       let ruleEn = "General rule: Add <strong>-en</strong> to form the plural.";
+      let isPluralDetected = false;
 
+      // 1. Local Database lookup
       if (nounDb[input]) {
         art = nounDb[input].art;
         plural = nounDb[input].plural;
         translationText = currentLang === 'es' ? nounDb[input].es : nounDb[input].en;
         ruleEs = nounDb[input].pluralRuleEs;
         ruleEn = nounDb[input].pluralRuleEn;
-      } else if (input.endsWith("tje") || input.endsWith("je") || input.endsWith("pje")) {
+      } 
+      // 2. Heuristics for Het words (Diminutives, ge-, be-, ver-, -isme, -ment)
+      else if (input.endsWith("tje") || input.endsWith("je") || input.endsWith("pje") || input.endsWith("kje") || input.endsWith("fe")) {
         art = "het";
         plural = input + "s";
-        ruleEs = "Al ser un diminutivo (terminado en <strong>-je</strong>), su plural añade simplemente una <strong>-s</strong>.";
-        ruleEn = "Being a diminutive (ending in <strong>-je</strong>), its plural simply adds an <strong>-s</strong>.";
+        ruleEs = "Al ser un diminutivo (terminado en <strong>-je</strong>), es siempre <strong>HET</strong> y su plural añade <strong>-s</strong>.";
+        ruleEn = "As a diminutive (ending in <strong>-je</strong>), it is always <strong>HET</strong> and adds <strong>-s</strong> for plural.";
+      } else if (input.endsWith("ment") || input.endsWith("isme") || input.endsWith("um")) {
+        art = "het";
+        plural = input + "s";
+        ruleEs = "Palabras terminadas en -ment, -isme o -um son casi siempre <strong>HET</strong>.";
+        ruleEn = "Words ending in -ment, -isme, or -um are almost always <strong>HET</strong>.";
       } else if (input.endsWith("el") || input.endsWith("er") || input.endsWith("en") || input.endsWith("em")) {
         plural = input + "s";
-        ruleEs = "Al terminar en <strong>-el, -er, -en</strong> o <strong>-em</strong>, forma el plural añadiendo solo una <strong>-s</strong>.";
-        ruleEn = "Ending in <strong>-el, -er, -en</strong> or <strong>-em</strong>, it forms the plural by adding an <strong>-s</strong>.";
+        ruleEs = "Terminaciones en <strong>-el, -er, -en</strong> añaden <strong>-s</strong> en plural.";
+        ruleEn = "Endings in <strong>-el, -er, -en</strong> add <strong>-s</strong> in plural.";
+      }
+
+      // Check if user input is plural directly (ends in -en or -s)
+      if (input.endsWith("en") && !nounDb[input] && input.length > 4) {
+        isPluralDetected = true;
+      }
+
+      // 3. Online Auto-Translation Fallback via MyMemory API
+      document.getElementById('nounTranslation').innerText = "Cargando traducción...";
+      try {
+        const langPair = currentLang === 'es' ? 'nl|es' : 'nl|en';
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`);
+        const data = await res.json();
+        if (data && data.responseData && data.responseData.translatedText) {
+          let trans = data.responseData.translatedText.toLowerCase();
+          // Clean up articles if translation includes them
+          trans = trans.replace(/^(el|la|los|las|un|una|the|a|an)\s+/, '');
+          translationText = trans;
+        }
+      } catch (e) {
+        translationText = currentLang === 'es' ? "Traducción general" : "General translation";
       }
 
       document.getElementById('articleBadge').innerText = art.toUpperCase();
@@ -397,13 +441,12 @@
       conjugateVerb();
     }
 
-    function conjugateVerb() {
+    async function conjugateVerb() {
       const input = document.getElementById('verbInput').value.trim().toLowerCase();
       if (!input) return;
 
       document.getElementById('verbTitle').innerText = input;
-
-      let vTrans = currentLang === 'es' ? "Traducción general" : "General translation";
+      let vTrans = "...";
 
       if (verbDb[input]) {
         const data = verbDb[input];
@@ -452,6 +495,17 @@
         document.getElementById('ovtPlural').innerText = stem + pastEnding + "n";
         document.getElementById('auxVerb').innerText = "heeft";
         document.getElementById('pastParticiple').innerText = "ge" + stem + partEnding;
+      }
+
+      try {
+        const langPair = currentLang === 'es' ? 'nl|es' : 'nl|en';
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`);
+        const data = await res.json();
+        if (data && data.responseData && data.responseData.translatedText) {
+          vTrans = data.responseData.translatedText.toLowerCase();
+        }
+      } catch (e) {
+        vTrans = currentLang === 'es' ? "Traducción general" : "General translation";
       }
 
       document.getElementById('verbTranslation').innerText = vTrans;
