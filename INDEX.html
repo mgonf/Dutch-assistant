@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta de Gramática Holandesa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dutch: {
+                            orange: '#FF6F00',
+                            orangeLight: '#FFF3E0',
+                            blue: '#1E88E5',
+                            blueDark: '#0D47A1',
+                            blueLight: '#E3F2FD',
+                            red: '#D32F2F',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-header {
+            background: linear-gradient(135deg, #FF6F00 0%, #1E88E5 100%);
+        }
+        .active-tab {
+            border-bottom: 3px solid #FF6F00;
+            color: #FF6F00;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="gradient-header text-white shadow-lg">
+        <div class="max-w-5xl mx-auto px-4 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-white text-dutch-orange p-3 rounded-2xl shadow">
+                    <i class="fa-solid fa-language text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">Nederlands Grammatica</h1>
+                    <p class="text-xs text-orange-100">Demostrativos, artículos y conjugación verbal</p>
+                </div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium border border-white/20">
+                <i class="fa-solid fa-graduation-cap me-1"></i> Guía rápida para hispanohablantes
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full">
+
+        <!-- Tabs Navigation -->
+        <div class="flex border-b border-slate-200 mb-8 bg-white rounded-t-xl shadow-sm px-2 pt-2">
+            <button id="tab-nouns-btn" onclick="switchTab('nouns')" class="flex-1 py-3 px-4 text-center font-medium transition-all active-tab flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cube"></i> Sustantivos y Demostrativos
+            </button>
+            <button id="tab-verbs-btn" onclick="switchTab('verbs')" class="flex-1 py-3 px-4 text-center font-medium text-slate-500 hover:text-slate-800 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-bolt"></i> Conjugador de Verbos
+            </button>
+        </div>
+
+        <!-- ================= NOUNS SECTION ================= -->
+        <section id="section-nouns" class="space-y-6">
+            <!-- Search & Input Card -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <label for="noun-input" class="block text-sm font-semibold text-slate-700 mb-2">Escribe un sustantivo en holandés:</label>
+                <div class="relative">
+                    <input type="text" id="noun-input" placeholder="Ej: man, huis, auto, kind, meisje, tafel..." 
+                        class="w-full pl-11 pr-24 py-3.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-dutch-orange focus:border-dutch-orange outline-none text-lg transition-all"
+                        onkeyup="if(event.key === 'Enter') analyzeNoun()">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <button onclick="analyzeNoun()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-dutch-orange hover:bg-orange-600 text-white px-5 py-2 rounded-lg font-medium transition-all text-sm">
+                        Analizar
+                    </button>
+                </div>
+
+                <!-- Quick Examples Chips -->
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                    <span class="text-slate-400 font-medium">Ejemplos rápidos:</span>
+                    <button onclick="setNoun('huis')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">het huis</button>
+                    <button onclick="setNoun('man')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">de man</button>
+                    <button onclick="setNoun('vrouw')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">de vrouw</button>
+                    <button onclick="setNoun('kind')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">het kind</button>
+                    <button onclick="setNoun('auto')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">de auto</button>
+                    <button onclick="setNoun('meisje')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">het meisje</button>
+                    <button onclick="setNoun('boeken')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-dutch-orange px-3 py-1 rounded-full transition-all">de boeken (plural)</button>
+                </div>
+            </div>
+
+            <!-- Manual Gender Override / Rule Fallback (If unknown) -->
+            <div id="noun-override-box" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
+                <div class="flex items-center gap-2 text-amber-800">
+                    <i class="fa-solid fa-triangle-exclamation text-base"></i>
+                    <span>Esta palabra no está en la base de datos rápida. ¿Qué artículo lleva en singular?</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="forceNounArticle('de')" class="bg-dutch-blue text-white px-4 py-1.5 rounded-lg font-bold hover:opacity-90 transition">Es DE</button>
+                    <button onclick="forceNounArticle('het')" class="bg-dutch-orange text-white px-4 py-1.5 rounded-lg font-bold hover:opacity-90 transition">Es HET</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="noun-results" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Main Card: Singular -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-slate-800 text-white px-6 py-4 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Forma Singular</span>
+                            <h2 id="res-noun-title" class="text-2xl font-bold">---</h2>
+                        </div>
+                        <span id="res-gender-badge" class="px-4 py-1.5 text-sm font-extrabold rounded-full bg-slate-700 text-white">
+                            -
+                        </span>
+                    </div>
+
+                    <div class="p-6 space-y-4 flex-1">
+                        <!-- Translation / Meaning -->
+                        <div class="text-sm text-slate-500 italic pb-2 border-b border-slate-100">
+                            Significado aprox.: <span id="res-noun-trans" class="font-medium text-slate-800">...</span>
+                        </div>
+
+                        <!-- Demonstratives Breakdown -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                                <span class="text-xs font-semibold text-slate-400 block mb-1">Cerca (Este/Esta)</span>
+                                <p id="res-near" class="text-lg font-bold text-slate-800">-</p>
+                                <p id="res-near-ex" class="text-xs text-slate-500 italic mt-0.5">-</p>
+                            </div>
+                            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                                <span class="text-xs font-semibold text-slate-400 block mb-1">Lejos (Ese/Aquel)</span>
+                                <p id="res-far" class="text-lg font-bold text-slate-800">-</p>
+                                <p id="res-far-ex" class="text-xs text-slate-500 italic mt-0.5">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Identifiers -->
+                        <div class="space-y-2 pt-2">
+                            <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-100 text-xs">
+                                <span class="font-bold text-amber-900 block mb-0.5">Mismo objeto en concreto (El/la mismo/a):</span>
+                                <span id="res-diezelfde" class="text-sm font-bold text-amber-800">-</span>
+                            </div>
+                            <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-100 text-xs">
+                                <span class="font-bold text-blue-900 block mb-0.5">Misma clase o tipo (Lo mismo / Mismo tipo):</span>
+                                <span id="res-dezelfde" class="text-sm font-bold text-blue-800">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Card: Plural & Rules -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                            <div>
+                                <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Regla del Plural</span>
+                                <h3 class="text-lg font-bold text-slate-800">Forma Plural</h3>
+                            </div>
+                            <span class="bg-blue-100 text-dutch-blue text-xs font-bold px-3 py-1 rounded-full">¡Siempre DE!</span>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl mb-4 border border-slate-100">
+                            <p class="text-xs text-slate-500 font-medium mb-1">Sustantivo en Plural:</p>
+                            <p id="res-plural-form" class="text-xl font-bold text-dutch-blue">-</p>
+                            <p class="text-xs text-slate-400 mt-1">Todos los plurales en holandés usan <strong>DE</strong> sin importar si en singular eran het.</p>
+                        </div>
+
+                        <!-- Plural Demonstratives Grid -->
+                        <div class="grid grid-cols-2 gap-3 mb-4 text-xs">
+                            <div class="bg-white p-3 rounded-lg border border-slate-200">
+                                <span class="text-slate-400 block font-medium">Estos / Estas</span>
+                                <span id="res-plural-deze" class="text-base font-bold text-slate-700">-</span>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg border border-slate-200">
+                                <span class="text-slate-400 block font-medium">Esos / Aquellos</span>
+                                <span id="res-plural-die" class="text-base font-bold text-slate-700">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Rule Explanation Box -->
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-1">
+                            <p class="font-bold text-slate-700"><i class="fa-solid fa-lightbulb text-amber-500 me-1"></i> Regla mnemotécnica rápida:</p>
+                            <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                <li>Palabras <strong>DE</strong> ➔ <strong>deze</strong> (cerca), <strong>die</strong> (lejos), <strong>diezelfde</strong>.</li>
+                                <li>Palabras <strong>HET</strong> ➔ <strong>dit</strong> (cerca), <strong>dat</strong> (lejos), <strong>datzelfde</strong>.</li>
+                                <li>Los diminutivos (terminados en <em>-tje / -je</em>) son <strong>SIEMPRE HET</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Andere vs Anderen tip -->
+                    <div class="mt-4 pt-3 border-t border-slate-100 text-xs">
+                        <span class="font-bold text-slate-700 block mb-1">¿Andere o Anderen?</span>
+                        <p class="text-slate-600">
+                            Use <strong>andere</strong> con sustantivos (<em>de andere auto</em>). Use <strong>anderen</strong> solo para referirse a personas sin sustantivo (<em>help anderen</em> = ayuda a otros).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= VERBS SECTION ================= -->
+        <section id="section-verbs" class="space-y-6 hidden">
+            <!-- Search & Input Card -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <label for="verb-input" class="block text-sm font-semibold text-slate-700 mb-2">Escribe un verbo en infinitivo:</label>
+                <div class="relative">
+                    <input type="text" id="verb-input" placeholder="Ej: werken, zijn, hebben, gaan, lopen, maken, eten..." 
+                        class="w-full pl-11 pr-24 py-3.5 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-dutch-blue focus:border-dutch-blue outline-none text-lg transition-all"
+                        onkeyup="if(event.key === 'Enter') analyzeVerb()">
+                    <i class="fa-solid fa-bolt absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                    <button onclick="analyzeVerb()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-dutch-blue hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition-all text-sm">
+                        Conjugar
+                    </button>
+                </div>
+
+                <!-- Quick Examples Chips -->
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                    <span class="text-slate-400 font-medium">Verbos frecuentes:</span>
+                    <button onclick="setVerb('werken')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">werken (regular)</button>
+                    <button onclick="setVerb('zijn')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">zijn (irregular)</button>
+                    <button onclick="setVerb('hebben')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">hebben (irregular)</button>
+                    <button onclick="setVerb('gaan')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">gaan</button>
+                    <button onclick="setVerb('lopen')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">lopen</button>
+                    <button onclick="setVerb('maken')" class="bg-slate-100 hover:bg-blue-100 text-slate-700 hover:text-dutch-blue px-3 py-1 rounded-full transition-all">maken</button>
+                </div>
+            </div>
+
+            <!-- Verb Results Grid -->
+            <div id="verb-results" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Present Tense Column -->
+                <div class="md:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="bg-slate-800 text-white px-6 py-4 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Tijd: Oegenwoordige Tijd</span>
+                            <h2 id="res-verb-title" class="text-2xl font-bold">---</h2>
+                        </div>
+                        <span id="res-verb-type" class="px-3 py-1 text-xs font-bold rounded-full bg-blue-600 text-white">Regular</span>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="text-sm text-slate-500 italic mb-4">
+                            Significado / Traducción: <span id="res-verb-trans" class="font-medium text-slate-800">...</span>
+                        </div>
+
+                        <!-- Conjugation Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-xs text-slate-400 uppercase">
+                                        <th class="py-2 px-3">Pronombre</th>
+                                        <th class="py-2 px-3">Conjugación (Presente)</th>
+                                        <th class="py-2 px-3">Regla aplicada</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-slate-700">
+                                    <tr>
+                                        <td class="py-3 px-3 font-semibold text-slate-900">ik <span class="text-xs text-slate-400 font-normal">(yo)</span></td>
+                                        <td id="conj-ik" class="py-3 px-3 font-bold text-dutch-blue text-base">-</td>
+                                        <td class="py-3 px-3 text-xs text-slate-500">Stam (Raíz)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-3 font-semibold text-slate-900">jij / je <span class="text-xs text-slate-400 font-normal">(tú)</span></td>
+                                        <td id="conj-jij" class="py-3 px-3 font-bold text-slate-800 text-base">-</td>
+                                        <td class="py-3 px-3 text-xs text-slate-500">
+                                            Stam + t <br>
+                                            <span class="text-amber-600 font-medium">Nota: ¡Inversión! (Werk jij?) pierde la +t.</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-3 font-semibold text-slate-900">u <span class="text-xs text-slate-400 font-normal">(usted)</span></td>
+                                        <td id="conj-u" class="py-3 px-3 font-bold text-slate-800 text-base">-</td>
+                                        <td class="py-3 px-3 text-xs text-slate-500">Stam + t</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-3 font-semibold text-slate-900">hij / zij / het <span class="text-xs text-slate-400 font-normal">(él/ella)</span></td>
+                                        <td id="conj-hij" class="py-3 px-3 font-bold text-slate-800 text-base">-</td>
+                                        <td class="py-3 px-3 text-xs text-slate-500">Stam + t</td>
+                                    </tr>
+                                    <tr class="bg-slate-50/70">
+                                        <td class="py-3 px-3 font-semibold text-slate-900">wij / jullie / zij <span class="text-xs text-slate-400 font-normal">(plurales)</span></td>
+                                        <td id="conj-plural" class="py-3 px-3 font-bold text-dutch-orange text-base">-</td>
+                                        <td class="py-3 px-3 text-xs text-slate-500">Infinitivo completo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Past Tense & Participle Column -->
+                <div class="space-y-6 flex flex-col justify-between">
+                    <!-- Past Tense Box -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Pretérito (OVT)</h3>
+                        <p class="text-sm font-semibold text-slate-700 mb-3">Pasado Simple</p>
+                        
+                        <div class="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-100 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-slate-500">Singular (ik/jij/hij):</span>
+                                <span id="res-past-sing" class="font-bold text-slate-800">-</span>
+                            </div>
+                            <div class="flex justify-between items-center border-t border-slate-200 pt-2">
+                                <span class="text-xs text-slate-500">Plural (wij/jullie/zij):</span>
+                                <span id="res-past-plur" class="font-bold text-slate-800">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Past Participle Box -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-1">Participio (VTT)</h3>
+                        <p class="text-sm font-semibold text-slate-700 mb-3">Voltooid Deelwoord</p>
+                        
+                        <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-100 text-center">
+                            <span id="res-participle" class="text-2xl font-black text-dutch-blue block">-</span>
+                            <span id="res-auxiliary" class="text-xs text-slate-500 mt-1 block">Auxiliar: hebben / zijn</span>
+                        </div>
+                    </div>
+
+                    <!-- 't Kofschip Rule Card -->
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900">
+                        <p class="font-bold text-amber-950 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Regla de 't Kofschip:
+                        </p>
+                        <p class="text-amber-800">
+                            Para saber si el pasado lleva <strong>-te/-ten</strong> o <strong>-de/-den</strong>, mira la última letra de la raíz sin <em>-en</em>. Si está en <strong>'T KOFSCHIP</strong> (t, k, f, s, ch, p), ¡usa <strong>T</strong>!
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+        <div class="max-w-5xl mx-auto px-4 text-center space-y-2">
+            <p>Herramienta Interactiva de Gramática Holandesa — Diseñada para aprendizaje continuo.</p>
+            <p class="text-slate-600">Tip: Recuerda que todas las palabras en plural llevan siempre el artículo <strong class="text-slate-400">DE</strong>.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Engine Logic -->
+    <script>
+        // ================= DATABASE OF NOUNS =================
+        const NOUN_DATABASE = {
+            'man': { gender: 'de', plural: 'mannen', trans: 'hombre' },
+            'vrouw': { gender: 'de', plural: 'vrouwen', trans: 'mujer' },
+            'kind': { gender: 'het', plural: 'kinderen', trans: 'niño / niña' },
+            'huis': { gender: 'het', plural: 'huizen', trans: 'casa' },
+            'auto': { gender: 'de', plural: 'auto\'s', trans: 'coche / auto' },
+            'boek': { gender: 'het', plural: 'boeken', trans: 'libro' },
+            'tafel': { gender: 'de', plural: 'tafels', trans: 'mesa' },
+            'stoel': { gender: 'de', plural: 'stoelen', trans: 'silla' },
+            'meisje': { gender: 'het', plural: 'meisjes', trans: 'chica / niña (diminutivo)' },
+            'hond': { gender: 'de', plural: 'honden', trans: 'perro' },
+            'kat': { gender: 'de', plural: 'katten', trans: 'gato' },
+            'appel': { gender: 'de', plural: 'appels', trans: 'manzana' },
+            'water': { gender: 'het', plural: '-', trans: 'agua' },
+            'werk': { gender: 'het', plural: 'werken', trans: 'trabajo' },
+            'stad': { gender: 'de', plural: 'steden', trans: 'ciudad' },
+            'land': { gender: 'het', plural: 'landen', trans: 'país' },
+            'vriend': { gender: 'de', plural: 'vrienden', trans: 'amigo' },
+            'vriendin': { gender: 'de', plural: 'vriendinnen', trans: 'amiga' },
+            'dag': { gender: 'de', plural: 'dagen', trans: 'día' },
+            'nacht': { gender: 'de', plural: 'nachten', trans: 'noche' },
+            'jaar': { gender: 'het', plural: 'jaren', trans: 'año' },
+            'tijd': { gender: 'de', plural: 'tijden', trans: 'tiempo' },
+            'vraag': { gender: 'de', plural: 'vragen', trans: 'pregunta' },
+            'antwoord': { gender: 'het', plural: 'antwoorden', trans: 'respuesta' },
+            'fiets': { gender: 'de', plural: 'fietsen', trans: 'bicicleta' },
+            'kopje': { gender: 'het', plural: 'kopjes', trans: 'taza' },
+            'raam': { gender: 'het', plural: 'ramen', trans: 'ventana' },
+            'deur': { gender: 'de', plural: 'deuren', trans: 'puerta' },
+            'school': { gender: 'de', plural: 'scholen', trans: 'escuela' },
+            'probleem': { gender: 'het', plural: 'problemen', trans: 'problema' },
+            'idee': { gender: 'het', plural: 'ideeën', trans: 'idea' }
+        };
+
+        // ================= DATABASE OF VERBS =================
+        const VERB_DATABASE = {
+            'zijn': {
+                trans: 'ser / estar',
+                type: 'Irregular',
+                ik: 'ben', jij: 'bent', u: 'bent', hij: 'is', plural: 'zijn',
+                pastSing: 'was', pastPlur: 'waren', participle: 'geweest', aux: 'zijn'
+            },
+            'hebben': {
+                trans: 'haber / tener',
+                type: 'Irregular',
+                ik: 'heb', jij: 'hebt', u: 'heeft / hebt', hij: 'heeft', plural: 'hebben',
+                pastSing: 'had', pastPlur: 'hadden', participle: 'gehad', aux: 'hebben'
+            },
+            'gaan': {
+                trans: 'ir',
+                type: 'Irregular',
+                ik: 'ga', jij: 'gaat', u: 'gaat', hij: 'gaat', plural: 'gaan',
+                pastSing: 'ging', pastPlur: 'gingen', participle: 'gegaan', aux: 'zijn'
+            },
+            'komen': {
+                trans: 'venir',
+                type: 'Irregular',
+                ik: 'kom', jij: 'komt', u: 'komt', hij: 'komt', plural: 'komen',
+                pastSing: 'kwam', pastPlur: 'kwamen', participle: 'gekomen', aux: 'zijn'
+            },
+            'doen': {
+                trans: 'hacer',
+                type: 'Irregular',
+                ik: 'doe', jij: 'doet', u: 'doet', hij: 'doet', plural: 'doen',
+                pastSing: 'deed', pastPlur: 'deden', participle: 'gedaan', aux: 'hebben'
+            },
+            'zien': {
+                trans: 'ver',
+                type: 'Irregular',
+                ik: 'zie', jij: 'ziet', u: 'ziet', hij: 'ziet', plural: 'zien',
+                pastSing: 'zag', pastPlur: 'zagen', participle: 'gezien', aux: 'hebben'
+            },
+            'eten': {
+                trans: 'comer',
+                type: 'Irregular',
+                ik: 'eet', jij: 'eet', u: 'eet', hij: 'eet', plural: 'eten',
+                pastSing: 'at', pastPlur: 'aten', participle: 'gegeten', aux: 'hebben'
+            },
+            'lopen': {
+                trans: 'caminar / andar',
+                type: 'Irregular (Cambio vocálico en pasado)',
+                ik: 'loop', jij: 'loopt', u: 'loopt', hij: 'loopt', plural: 'lopen',
+                pastSing: 'liep', pastPlur: 'liepen', participle: 'gelopen', aux: 'hebben / zijn'
+            },
+            'werken': {
+                trans: 'trabajar',
+                type: 'Regular',
+                ik: 'werk', jij: 'werkt', u: 'werkt', hij: 'werkt', plural: 'werken',
+                pastSing: 'werkte', pastPlur: 'werkten', participle: 'gewerkt', aux: 'hebben'
+            },
+            'maken': {
+                trans: 'hacer / fabricar',
+                type: 'Regular',
+                ik: 'maak', jij: 'maakt', u: 'maakt', hij: 'maakt', plural: 'maken',
+                pastSing: 'maakte', pastPlur: 'maakten', participle: 'gemaakt', aux: 'hebben'
+            },
+            'wonen': {
+                trans: 'vivir / residir',
+                type: 'Regular',
+                ik: 'woon', jij: 'woont', u: 'woont', hij: 'woont', plural: 'wonen',
+                pastSing: 'woonde', pastPlur: 'woonden', participle: 'gewoond', aux: 'hebben'
+            },
+            'luisteren': {
+                trans: 'escuchar',
+                type: 'Regular',
+                ik: 'luister', jij: 'luistert', u: 'luistert', hij: 'luistert', plural: 'luisteren',
+                pastSing: 'luisterde', pastPlur: 'luisterden', participle: 'geluisterd', aux: 'hebben'
+            }
+        };
+
+        // Active State
+        let currentNoun = 'huis';
+        let currentVerb = 'werken';
+        let forcedArticle = null;
+
+        // Init App
+        window.onload = function() {
+            analyzeNoun();
+            analyzeVerb();
+        };
+
+        // Tab Switching Logic
+        function switchTab(tab) {
+            const btnNouns = document.getElementById('tab-nouns-btn');
+            const btnVerbs = document.getElementById('tab-verbs-btn');
+            const secNouns = document.getElementById('section-nouns');
+            const secVerbs = document.getElementById('section-verbs');
+
+            if (tab === 'nouns') {
+                btnNouns.classList.add('active-tab');
+                btnNouns.classList.remove('text-slate-500');
+                btnVerbs.classList.remove('active-tab');
+                btnVerbs.classList.add('text-slate-500');
+
+                secNouns.classList.remove('hidden');
+                secVerbs.classList.add('hidden');
+            } else {
+                btnVerbs.classList.add('active-tab');
+                btnVerbs.classList.remove('text-slate-500');
+                btnNouns.classList.remove('active-tab');
+                btnNouns.classList.add('text-slate-500');
+
+                secVerbs.classList.remove('hidden');
+                secNouns.classList.add('hidden');
+            }
+        }
+
+        // ================= NOUN ANALYZER LOGIC =================
+        function setNoun(word) {
+            document.getElementById('noun-input').value = word;
+            forcedArticle = null;
+            analyzeNoun();
+        }
+
+        function forceNounArticle(gender) {
+            forcedArticle = gender;
+            analyzeNoun();
+        }
+
+        function analyzeNoun() {
+            let input = document.getElementById('noun-input').value.trim().toLowerCase();
+            if (!input) input = 'huis';
+
+            const overrideBox = document.getElementById('noun-override-box');
+            let data = NOUN_DATABASE[input];
+            let gender = 'de';
+            let plural = input + 'en';
+            let trans = 'Sustantivo holandés';
+            let isDiminutive = input.endsWith('je') || input.endsWith('tje') || input.endsWith('pje') || input.endsWith('kje');
+
+            if (data) {
+                gender = data.gender;
+                plural = data.plural;
+                trans = data.trans;
+                overrideBox.classList.add('hidden');
+            } else if (forcedArticle) {
+                gender = forcedArticle;
+                overrideBox.classList.add('hidden');
+            } else {
+                // Heuristics for unknown word
+                if (isDiminutive) {
+                    gender = 'het';
+                } else if (input.endsWith('ing') || input.endsWith('heid') || input.endsWith('teit')) {
+                    gender = 'de';
+                } else {
+                    // Show override box asking user to clarify gender if unknown
+                    overrideBox.classList.remove('hidden');
+                    gender = 'de'; // default fallback guess
+                }
+            }
+
+            // Fill HTML UI
+            const isHet = (gender === 'het');
+
+            // Titles & Badges
+            document.getElementById('res-noun-title').textContent = (isHet ? 'het ' : 'de ') + input;
+            document.getElementById('res-noun-trans').textContent = trans;
+
+            const badge = document.getElementById('res-gender-badge');
+            badge.textContent = gender.toUpperCase();
+            if (isHet) {
+                badge.className = "px-4 py-1.5 text-sm font-extrabold rounded-full bg-dutch-orange text-white shadow-sm";
+            } else {
+                badge.className = "px-4 py-1.5 text-sm font-extrabold rounded-full bg-dutch-blue text-white shadow-sm";
+            }
+
+            // Singular Demonstratives
+            if (isHet) {
+                document.getElementById('res-near').textContent = 'dit ' + input;
+                document.getElementById('res-near-ex').textContent = '(este / esta / esto)';
+                document.getElementById('res-far').textContent = 'dat ' + input;
+                document.getElementById('res-far-ex').textContent = '(ese / aquel)';
+
+                document.getElementById('res-diezelfde').textContent = 'datzelfde ' + input;
+                document.getElementById('res-dezelfde').textContent = 'hetzelfde ' + input;
+            } else {
+                document.getElementById('res-near').textContent = 'deze ' + input;
+                document.getElementById('res-near-ex').textContent = '(este / esta)';
+                document.getElementById('res-far').textContent = 'die ' + input;
+                document.getElementById('res-far-ex').textContent = '(ese / aquel / esa)';
+
+                document.getElementById('res-diezelfde').textContent = 'diezelfde ' + input;
+                document.getElementById('res-dezelfde').textContent = 'dezelfde ' + input;
+            }
+
+            // Plural Section
+            document.getElementById('res-plural-form').textContent = 'de ' + plural;
+            document.getElementById('res-plural-deze').textContent = 'deze ' + plural;
+            document.getElementById('res-plural-die').textContent = 'die ' + plural;
+        }
+
+        // ================= VERB CONJUGATOR LOGIC =================
+        function setVerb(word) {
+            document.getElementById('verb-input').value = word;
+            analyzeVerb();
+        }
+
+        function analyzeVerb() {
+            let input = document.getElementById('verb-input').value.trim().toLowerCase();
+            if (!input) input = 'werken';
+
+            let data = VERB_DATABASE[input];
+
+            if (!data) {
+                // Algorithmic conjugation for regular verbs
+                data = calculateRegularVerb(input);
+            }
+
+            // Fill UI UI
+            document.getElementById('res-verb-title').textContent = input;
+            document.getElementById('res-verb-trans').textContent = data.trans;
+            document.getElementById('res-verb-type').textContent = data.type;
+
+            // Present Tense Table
+            document.getElementById('conj-ik').textContent = data.ik;
+            document.getElementById('conj-jij').textContent = data.jij;
+            document.getElementById('conj-u').textContent = data.u;
+            document.getElementById('conj-hij').textContent = data.hij;
+            document.getElementById('conj-plural').textContent = data.plural;
+
+            // Past & Participle
+            document.getElementById('res-past-sing').textContent = data.pastSing;
+            document.getElementById('res-past-plur').textContent = data.pastPlur;
+            document.getElementById('res-participle').textContent = data.participle;
+            document.getElementById('res-auxiliary').textContent = 'Auxiliar: ' + (data.aux || 'hebben');
+        }
+
+        // Helper: Calculate stem and conjugations for unknown regular verbs
+        function calculateRegularVerb(infinitive) {
+            let stem = infinitive;
+            if (infinitive.endsWith('en')) {
+                stem = infinitive.slice(0, -2);
+            } else if (infinitive.endsWith('n')) {
+                stem = infinitive.slice(0, -1);
+            }
+
+            // Basic Dutch Vowel length adjust heuristics for stem (e.g. maken -> maak, wonen -> woon)
+            if (stem.length >= 3) {
+                const lastChar = stem.slice(-1);
+                const secondLast = stem.slice(-2, -1);
+                const thirdLast = stem.slice(-3, -2);
+                const vowels = ['a', 'e', 'i', 'o', 'u'];
+
+                // Open syllable long vowel rule (simple heuristic)
+                if (vowels.includes(secondLast) && !vowels.includes(thirdLast) && !vowels.includes(lastChar)) {
+                    if (secondLast === 'a') stem = stem.slice(0, -2) + 'aa' + lastChar;
+                    if (secondLast === 'o') stem = stem.slice(0, -2) + 'oo' + lastChar;
+                    if (secondLast === 'u') stem = stem.slice(0, -2) + 'uu' + lastChar;
+                    if (secondLast === 'e') stem = stem.slice(0, -2) + 'ee' + lastChar;
+                }
+            }
+
+            // Fix double consonants at stem end (e.g., bakken -> bak, not bakk)
+            if (stem.length >= 2 && stem[stem.length - 1] === stem[stem.length - 2]) {
+                stem = stem.slice(0, -1);
+            }
+
+            // Adjust v -> f and z -> s at stem end
+            if (stem.endsWith('v')) stem = stem.slice(0, -1) + 'f';
+            if (stem.endsWith('z')) stem = stem.slice(0, -1) + 's';
+
+            // Check 't kofschip rule
+            const kofschipLetters = ['t', 'k', 'f', 's', 'c', 'h', 'p'];
+            const lastStemChar = stem.slice(-1);
+            const isKofschip = kofschipLetters.includes(lastStemChar);
+
+            const pastSuffix = isKofschip ? 'te' : 'de';
+            const participleSuffix = isKofschip ? 't' : 'd';
+
+            const ik = stem;
+            const jij = stem.endsWith('t') ? stem : stem + 't';
+            const pastSing = stem + pastSuffix;
+            const pastPlur = stem + pastSuffix + 'n';
+            const participle = 'ge' + stem + participleSuffix;
+
+            return {
+                trans: 'Verbo regular en holandés',
+                type: 'Regular (Calculado)',
+                ik: ik,
+                jij: jij,
+                u: jij,
+                hij: jij,
+                plural: infinitive,
+                pastSing: pastSing,
+                pastPlur: pastPlur,
+                participle: participle,
+                aux: 'hebben'
+            };
+        }
+    </script>
+</body>
+</html>
