@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794264263";</script>
+<script>window.WB_V="?v=1794264414";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -300,6 +300,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <button class="tab" type="button" data-go="diccionario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="tl" data-nl="Woordenboek">Diccionario</span></button>
       <button class="tab" type="button" data-go="gramatica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M8 7h7"/></svg><span class="tl" data-nl="Grammatica">Gramática</span></button>
       <button class="tab" type="button" data-go="vocabulario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg><span class="tl" data-nl="Woordenschat">Vocabulario</span></button>
+      <button class="tab" type="button" data-go="conjugador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg><span class="tl" data-nl="Vervoegen">Conjugador</span></button>
     </nav>
     <select class="learn" id="learn" aria-label="Idioma que aprendes / Taal die je leert"><option value="nl">🇪🇸 Aprendo neerlandés</option><option value="es">🇳🇱 Ik leer Spaans</option></select>
     <div class="dir" title="Dirección de las tarjetas, los tests y las frases">
@@ -331,6 +332,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <main class="view" id="v-gram" hidden></main>
 <main class="view" id="v-vocab" hidden></main>
+<main class="view" id="v-conj" hidden></main>
 
 <footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B1) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
 
@@ -1026,11 +1028,11 @@ let contentP=null;
 const getContent=()=>contentP||(contentP=fetch('content.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(c=>(APP.content=c)).catch(e=>{contentP=null;throw e}));
 const getTheme=id=>APP.themes[id]?Promise.resolve(APP.themes[id]):fetch('v/'+id+'.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(t=>(APP.themes[id]=t));
 
-const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab')};
+const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab'),conj:$('v-conj')};
 function show(v){
   for(const k in VIEWS)VIEWS[k].hidden=k!==v;
   $('credits').hidden=v==='dict';
-  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false')});
+  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab',conjugador:'conj'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false')});
 }
 function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 function openDict(w){go('diccionario');$q.value=w;search(w)}
@@ -1041,6 +1043,7 @@ async function route(){
   const h=decodeURIComponent(location.hash.slice(1));
   window.scrollTo(0,0);
   if(!h||h==='diccionario'){show('dict');return}
+  if(h==='conjugador'){show('conj');renderConj();return}
   const isG=h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-');
   if(!isG&&!isV){show('dict');return}
   const el=isG?VIEWS.gram:VIEWS.vocab;show(isG?'gram':'vocab');
@@ -1296,6 +1299,46 @@ search=async function(q,remember){
   if(slot){if(!hits.length)slot.innerHTML='';slot.insertAdjacentHTML('beforebegin',html)}else $res.insertAdjacentHTML('beforeend',html);
   const head=$res.querySelector('.res-head');if(head&&!hits.length)head.textContent=L('Verbo español: «','Spaans werkwoord: «')+qn+'»';
 };
+
+/* ---------- pestaña Conjugador ---------- */
+let conjQ='';
+function conjDetect(raw){
+  const q=raw.trim().toLowerCase();if(!q)return null;
+  if(/(ar|er|ir|ír)(se)?$/.test(q)&&esConj(q))return{lang:'es',inf:q};
+  if(/n$/.test(q))return{lang:'nl',inf:q};
+  const hit=lookup(q).find(x=>x.e&&x.e.pos==='verb');           // forma conjugada: liep → lopen
+  if(hit)return{lang:'nl',inf:hit.e.nl,via:hit.via};
+  return null;
+}
+function conjTrans(d){ // traducciones del verbo al otro idioma
+  if(d.lang==='nl'){const e=lookup(d.inf).find(x=>x.e&&x.e.pos==='verb'&&!x.via);
+    return e?[...new Set(e.e.es.map(s=>s.replace(/\(.*?\)/g,'').trim()).filter(s=>/^[a-záéíóúñü]+(ar|er|ir|ír)(se)?$/.test(s)))].slice(0,4):[]}
+  const base=d.inf.replace(/se$/,'');
+  const hs=lookup(base).filter(x=>x.e&&x.e.pos==='verb'&&!x.via&&x.e.es.some(s=>norm(s).split(/[,;]/).map(t=>t.trim()).includes(norm(base))));
+  const base1=hs.filter(x=>x.e.src==='base');return [...new Set((base1.length?base1:hs).map(x=>x.e.nl))].slice(0,3);
+}
+function renderConj(){
+  const el=VIEWS.conj;
+  const ex=APP.learn==='es'?['tener','ir','levantarse','pedir','hacer','lopen','zijn']:['lopen','hebben','opbellen','zijn','tener','ir','levantarse'];
+  el.innerHTML=`<h2 class="h-sec">${L('Conjugador','Werkwoorden vervoegen')}</h2>
+  <p class="lead">${L('Escribe un verbo en neerlandés o en español: la app detecta el idioma y muestra todos los tiempos. También entiende formas conjugadas neerlandesas como «liep».','Typ een Nederlands of Spaans werkwoord: de app herkent de taal en toont alle tijden. Spaanse infinitieven eindigen op -ar, -er of -ir.')}</p>
+  <form class="search" id="cjf" autocomplete="off"><input id="cjq" type="search" placeholder="${L('lopen, tener, levantarse, liep…','tener, hablar, ir, lopen…')}" aria-label="${L('Verbo','Werkwoord')}"><button class="btn-main" type="submit">${L('Conjugar','Vervoegen')}</button></form>
+  <div class="chips"><span class="lbl">${L('Prueba','Probeer')}</span>${ex.map(w=>`<button type="button" class="chip" data-cj="${w}">${w}</button>`).join('')}</div>
+  <div id="cjo" style="display:flex;flex-direction:column;gap:16px"></div>`;
+  const run=async v=>{conjQ=v;const out=$('cjo');await loadP.catch(()=>{});const d=conjDetect(v);
+    if(!d){out.innerHTML=`<p class="tip">${L('No reconozco ese verbo. Escribe el infinitivo: en neerlandés acaba en -en o -n (werken, gaan); en español, en -ar, -er o -ir (hablar, comer, vivir).','Dat werkwoord herken ik niet. Typ de infinitief: Nederlands eindigt op -en of -n (werken, gaan), Spaans op -ar, -er of -ir (hablar, comer, vivir).')}</p>`;return}
+    const tr=conjTrans(d),other=d.lang==='nl'?L('En español','In het Spaans'):L('En neerlandés','In het Nederlands');
+    const trHtml=tr.length?`<p class="via">${other}: ${tr.map(t=>`<button type="button" class="chip" data-cj="${esc(t)}">${esc(t)} →</button>`).join(' ')}</p>`:'';
+    if(d.lang==='es'){const c=esConj(d.inf);
+      out.innerHTML=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${trHtml}${esConjHtml(c)}</article>`}
+    else{const v2=conjugate(d.inf);const e={nl:d.inf,verb:v2};
+      out.innerHTML=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(d.inf)}</h2>${sayBtn(d.inf,'')}<span class="pill">${L('verbo neerlandés','Nederlands werkwoord')}</span></div>${d.via?`<p class="via">«${esc(v)}» ${L('es','is')} ${esc(d.via)} ${L('de','van')} <b>${esc(d.inf)}</b>.</p>`:''}${trHtml}${verbBlock(e)}</article>`}
+    out.querySelectorAll('[data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
+  };
+  $('cjf').onsubmit=e=>{e.preventDefault();run($('cjq').value)};
+  el.querySelectorAll('.chips [data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
+  const start=conjQ||ex[0];$('cjq').value=start;run(start);
+}
 
 /* ================= APP: vocabulario, juegos y frases ================= */
 const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Básicos'];
