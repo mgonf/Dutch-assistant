@@ -1,519 +1,650 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gramática Holandesa Completa / Dutch Grammar</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style>
-    .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; font-weight: 600; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 font-sans">
-  <div class="max-w-4xl mx-auto p-4 md:p-8">
-    
-    <!-- Top Bar & Language Switcher -->
-    <div class="flex justify-end mb-4">
-      <div class="bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm flex items-center space-x-2 text-sm">
-        <i class="fa-solid fa-globe text-slate-400"></i>
-        <button id="langEs" onclick="setLanguage('es')" class="font-bold text-blue-600">ES</button>
-        <span class="text-slate-300">|</span>
-        <button id="langEn" onclick="setLanguage('en')" class="font-normal text-slate-500 hover:text-blue-600">EN</button>
-      </div>
-    </div>
+<body>
+<title>Woordenboek ES–NL</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,500&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; search on top, entry cards below; de = Delft blue, het = tulip red */
+:root{
+  --paper:#f4f6fa; --surface:#ffffff; --ink:#152038; --muted:#5a6680; --line:#d9e0ec;
+  --de:#24449c; --de-soft:#e4eaf8; --het:#c0431b; --het-soft:#fbe9e2; --focus:#24449c;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-ui:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0e1422; --surface:#151d2f; --ink:#e7ecf6; --muted:#9aa6c0; --line:#26314a;
+  --de:#8fa9f2; --de-soft:#1c2948; --het:#f2895f; --het-soft:#3a2219; --focus:#8fa9f2; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#0e1422; --surface:#151d2f; --ink:#e7ecf6; --muted:#9aa6c0; --line:#26314a;
+  --de:#8fa9f2; --de-soft:#1c2948; --het:#f2895f; --het-soft:#3a2219; --focus:#8fa9f2; color-scheme:dark }
 
-    <!-- Header -->
-    <header class="text-center mb-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-      <h1 class="text-3xl font-bold text-slate-900 mb-2" id="uiHeaderTitle">
-        <i class="fa-solid fa-language text-blue-600 mr-2"></i>Herramienta de Gramática Holandesa
-      </h1>
-      <p class="text-slate-600 text-sm md:text-base" id="uiHeaderSubtitle">
-        Diccionario masivo con traducciones automáticas, artículos (DE/HET), demostrativos, plurales y conjugador de verbos.
-      </p>
-    </header>
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px;display:flex;flex-direction:column;gap:22px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:1.9rem;font-weight:600;letter-spacing:-.01em;margin:0}
+.brand i{font-weight:500;color:var(--de)}
+.legend{display:flex;gap:8px;font-size:.8rem;color:var(--muted);align-items:center}
+.art{display:inline-block;font-family:var(--f-ui);font-weight:700;font-size:.62em;letter-spacing:.04em;padding:.12em .45em;border-radius:6px;vertical-align:.32em;margin-right:.35em}
+.art-de{color:var(--de);background:var(--de-soft)} .art-het{color:var(--het);background:var(--het-soft)}
+.art-dh{color:var(--ink);background:linear-gradient(90deg,var(--de-soft) 50%,var(--het-soft) 50%)}
+.pill.open{color:var(--de);background:var(--de-soft);border-color:var(--de-soft)}
+.loadline{font-size:.8rem;color:var(--muted);margin:-12px 0 0}
+.notr{color:var(--muted);font-style:italic}
+.say{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--de-soft);color:var(--de);border:0;padding:0;align-self:center;flex:none}
+.say svg{width:20px;height:20px;fill:currentColor}
+.say.sm{width:28px;height:28px;vertical-align:middle;margin-left:6px}.say.sm svg{width:14px;height:14px}
+.say.on{background:var(--de);color:var(--surface)}
+.say:hover{filter:brightness(.95)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:.9rem;max-width:calc(100% - 32px);z-index:20}
+.legend .art{font-size:.75rem;vertical-align:0;margin:0}
 
-    <!-- Tabs Navigation -->
-    <div class="flex border-b border-slate-200 mb-6 bg-white rounded-t-xl px-4 pt-2 shadow-sm">
-      <button onclick="switchTab('nouns')" id="tab-nouns" class="tab-active py-3 px-6 text-slate-600 hover:text-blue-600 font-medium transition-all">
-        <i class="fa-solid fa-font mr-2"></i><span id="uiTabNouns">Sustantivos y Demostrativos</span>
-      </button>
-      <button onclick="switchTab('verbs')" id="tab-verbs" class="py-3 px-6 text-slate-600 hover:text-blue-600 font-medium transition-all">
-        <i class="fa-solid fa-bolt mr-2"></i><span id="uiTabVerbs">Conjugador de Verbos</span>
-      </button>
-    </div>
+form.search{display:flex;gap:8px}
+#q{flex:1;min-width:0;font:500 1.2rem var(--f-ui);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+#q:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px var(--de-soft)}
+button{font:600 .95rem var(--f-ui);cursor:pointer;border-radius:10px;border:1.5px solid transparent}
+.btn-main{background:var(--de);color:var(--surface);padding:0 20px}
+.btn-ghost{background:transparent;color:var(--de);border-color:var(--line);padding:8px 14px}
+button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px}
+.chip{background:var(--surface);border:1px solid var(--line);color:var(--ink);font-weight:500;font-size:.85rem;padding:4px 11px;border-radius:999px}
+.chip:hover{border-color:var(--de);color:var(--de)}
 
-    <!-- TAB 1: NOUNS & DEMONSTRATIVES -->
-    <div id="content-nouns" class="space-y-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <label class="block text-sm font-semibold text-slate-700 mb-2" id="uiLabelNounInput">Escribe CUALQUIER sustantivo en holandés:</label>
-        <div class="relative">
-          <input type="text" id="nounInput" value="restaurant" placeholder="Ej. restaurant, auto, huis, boek, kind, tafels..." 
-            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-            oninput="handleNounInput()">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-4 text-slate-400"></i>
-        </div>
-        <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
-          <span id="uiLabelSuggestions">Prueba estos:</span>
-          <button onclick="setNoun('restaurant')" class="underline hover:text-blue-600 font-bold">restaurant</button>,
-          <button onclick="setNoun('auto')" class="underline hover:text-blue-600">auto</button>,
-          <button onclick="setNoun('huis')" class="underline hover:text-blue-600">huis</button>,
-          <button onclick="setNoun('supermarkt')" class="underline hover:text-blue-600">supermarkt</button>,
-          <button onclick="setNoun('fiets')" class="underline hover:text-blue-600">fiets</button>,
-          <button onclick="setNoun('tafels')" class="underline hover:text-blue-600">tafels (plural)</button>
-        </div>
-      </div>
+#results{display:flex;flex-direction:column;gap:16px}
+.res-head{font-size:.85rem;color:var(--muted);margin:0}
+.entry{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.hw-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.hw{font-family:var(--f-display);font-weight:600;font-size:2.4rem;line-height:1.1;margin:0;letter-spacing:-.01em}
+.pill{font-size:.75rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.pill.ai{color:var(--het);border-color:var(--het-soft);background:var(--het-soft)}
+.tr{font-family:var(--f-display);font-size:1.25rem;margin:-8px 0 0}
+.via{font-size:.88rem;color:var(--muted);margin:-10px 0 0}
+h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 8px;font-weight:700}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px}
+.fact{display:flex;flex-direction:column}
+.fact span{font-size:.75rem;color:var(--muted)}
+.fact b{font-family:var(--f-display);font-weight:500;font-size:1.15rem}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;font-weight:700;padding:6px 10px;border-bottom:1.5px solid var(--line)}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{color:var(--muted);font-size:.85rem;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td .d{font-weight:700}
+.col-de .d{color:var(--de)} .col-het .d{color:var(--het)} .col-pl .d{color:var(--de)}
+.conj{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.tense{border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.tense h4{margin:0 0 6px;font-size:.95rem;display:flex;justify-content:space-between;gap:8px}
+.tense h4 small{color:var(--muted);font-weight:500}
+.tense dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 12px}
+.tense dt{color:var(--muted);font-size:.85rem}
+.tense dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.extra{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:12px}
+.note{background:var(--de-soft);border-radius:10px;padding:10px 14px;font-size:.92rem;margin:0}
+.ex{font-family:var(--f-display);font-size:1.05rem;margin:0}
+.ex span{display:block;font-family:var(--f-ui);font-size:.88rem;color:var(--muted)}
+.status{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.status p{margin:0;flex:1;min-width:200px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--de);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+footer{font-size:.8rem;color:var(--muted);max-width:65ch}
+@media (max-width:520px){.hw{font-size:2rem}.entry{padding:18px}.btn-main{padding:0 14px}}
+</style>
 
-      <!-- Result Card -->
-      <div id="nounResult" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-        <div class="flex flex-wrap items-center justify-between border-b pb-4 gap-4">
-          <div>
-            <div class="flex items-center">
-              <span id="articleBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 mr-2">HET</span>
-              <span id="nounDisplay" class="text-2xl font-bold text-slate-900">restaurant</span>
-            </div>
-            <!-- Translation Badge -->
-            <p class="text-sm font-medium text-slate-500 mt-1 flex items-center">
-              <i class="fa-solid fa-language text-slate-400 mr-1.5"></i>
-              <span id="uiLabelTrans">Traducción:</span>&nbsp;<strong id="nounTranslation" class="text-slate-800">restaurante</strong>
-            </p>
-          </div>
-          <div class="text-right">
-            <span class="text-xs text-slate-500 block" id="uiLabelPluralHeader">Plural (siempre usa DE):</span>
-            <strong id="pluralDisplay" class="text-lg text-blue-600 font-bold">de restaurants</strong>
-          </div>
-        </div>
+<div class="wrap">
+  <header>
+    <h1 class="brand">Woordenboek <i>es ⇄ nl</i></h1>
+    <div class="legend"><span class="art art-de">de</span> de-woord <span class="art art-het">het</span> het-woord</div>
+  </header>
 
-        <!-- Section: How Plural is Formed -->
-        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100 space-y-2">
-          <h4 class="font-bold text-blue-900 text-sm flex items-center">
-            <i class="fa-solid fa-layer-group text-blue-600 mr-2"></i><span id="uiPluralRuleTitle">¿Cómo se construye el plural?</span>
-          </h4>
-          <p id="pluralExplanation" class="text-xs text-blue-900 leading-relaxed">
-            Palabras prestadas de otro idioma terminadas en consonante suelen hacer el plural en <strong>-s</strong>.
-          </p>
-          <p class="text-xs font-semibold text-blue-700 mt-1" id="uiPluralNote">
-            📌 Recuerda: Todos los plurales en holandés son palabras DE y usan <strong>deze</strong> (cerca) y <strong>die</strong> (lejos).
-          </p>
-        </div>
+  <form class="search" id="f" autocomplete="off">
+    <input id="q" type="search" placeholder="casa, lopen, el mismo, liep…" aria-label="Palabra en español o neerlandés">
+    <button class="btn-main" type="submit">Buscar</button>
+  </form>
 
-        <div class="grid md:grid-cols-2 gap-4">
-          <!-- Direct Dem -->
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <h4 class="font-bold text-slate-700 text-sm mb-3" id="uiDemTitle">
-              <i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>Demostrativos
-            </h4>
-            <ul class="space-y-2 text-sm">
-              <li class="flex justify-between"><span class="text-slate-500" id="uiDemNear">Cerca:</span> <strong id="demNear" class="text-blue-600 font-semibold">dit restaurant</strong></li>
-              <li class="flex justify-between"><span class="text-slate-500" id="uiDemFar">Lejos:</span> <strong id="demFar" class="text-blue-600 font-semibold">dat restaurant</strong></li>
-            </ul>
-          </div>
+  <p class="loadline" id="loadline">Cargando el diccionario completo…</p>
+  <div class="chips" id="chips"></div>
+  <div id="results"></div>
 
-          <!-- Identifiers -->
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <h4 class="font-bold text-slate-700 text-sm mb-3" id="uiIdTitle">
-              <i class="fa-solid fa-clone text-indigo-500 mr-2"></i>Identificadores
-            </h4>
-            <ul class="space-y-2 text-sm">
-              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameType">Mismo tipo (réplica):</span> <strong id="idSameType" class="text-indigo-600 font-semibold">hetzelfde restaurant</strong></li>
-              <li class="flex justify-between"><span class="text-slate-500" id="uiIdSameExact">Misma unidad exacta:</span> <strong id="idSameExact" class="text-indigo-600 font-semibold">datzelfde restaurant</strong></li>
-            </ul>
-          </div>
-        </div>
+  <footer>Unas 44.000 palabras neerlandesas: 200 revisadas a mano, y el resto procedente de datos abiertos. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet y MCR) y FreeDict; los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
+</div>
 
-        <!-- Explanation box -->
-        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
-          <p class="font-bold"><i class="fa-regular fa-lightbulb text-amber-600 mr-1"></i><span id="uiRuleTitle">Regla de uso:</span></p>
-          <p id="ruleText">Como <strong>restaurant</strong> es una palabra <strong>HET</strong>, sus demostrativos de cerca usan <strong>dit</strong>, de lejos <strong>dat</strong>, de modelo <strong>hetzelfde</strong> y de unidad exacta <strong>datzelfde</strong>.</p>
-        </div>
-      </div>
-    </div>
+<script>
+/* ---------- datos base ---------- */
+const NOUNS=[
+['man','de','mannen','mannetje','hombre'],['vrouw','de','vrouwen','vrouwtje','mujer'],['kind','het','kinderen','kindje','niño, niña; hijo, hija'],
+['huis','het','huizen','huisje','casa'],['boek','het','boeken','boekje','libro'],['tafel','de','tafels','tafeltje','mesa'],
+['stoel','de','stoelen','stoeltje','silla'],['auto','de',"auto's",'autootje','coche'],['fiets','de','fietsen','fietsje','bicicleta'],
+['trein','de','treinen','treintje','tren'],['station','het','stations','stationnetje','estación'],['stad','de','steden','stadje','ciudad'],
+['land','het','landen','landje','país'],['straat','de','straten','straatje','calle'],['water','het',null,null,'agua'],
+['brood','het','broden','broodje','pan'],['kaas','de','kazen','kaasje','queso'],['melk','de',null,null,'leche'],
+['appel','de','appels','appeltje','manzana'],['koffie','de','koffies','koffietje','café'],['thee','de','theeën','theetje','té'],
+['bier','het','bieren','biertje','cerveza'],['ei','het','eieren','eitje','huevo'],['dag','de','dagen','dagje','día'],
+['week','de','weken','weekje','semana'],['jaar','het','jaren','jaartje','año'],['tijd','de','tijden','tijdje','tiempo (duración)'],
+['weer','het',null,null,'tiempo (clima)'],['werk','het',null,'werkje','trabajo'],['baan','de','banen','baantje','empleo, puesto de trabajo'],
+['geld','het',null,null,'dinero'],['vriend','de','vrienden','vriendje','amigo'],['vriendin','de','vriendinnen','vriendinnetje','amiga'],
+['jongen','de','jongens','jongetje','chico'],['meisje','het','meisjes',null,'chica'],['hond','de','honden','hondje','perro'],
+['kat','de','katten','katje','gato'],['hand','de','handen','handje','mano'],['hoofd','het','hoofden','hoofdje','cabeza'],
+['oog','het','ogen','oogje','ojo'],['raam','het','ramen','raampje','ventana'],['deur','de','deuren','deurtje','puerta'],
+['kamer','de','kamers','kamertje','habitación'],['taal','de','talen','taaltje','idioma, lengua'],['woord','het','woorden','woordje','palabra'],
+['vraag','de','vragen','vraagje','pregunta'],['antwoord','het','antwoorden','antwoordje','respuesta'],['universiteit','de','universiteiten',null,'universidad'],
+['onderzoek','het','onderzoeken','onderzoekje','investigación'],['zon','de',null,'zonnetje','sol'],['regen','de',null,null,'lluvia'],
+['eten','het',null,'etentje','comida'],['probleem','het','problemen','probleempje','problema'],['idee','het','ideeën','ideetje','idea'],
+['museum','het','musea / museums',null,'museo'],['fout','de','fouten','foutje','error, fallo'],['winkel','de','winkels','winkeltje','tienda'],
+['ziekenhuis','het','ziekenhuizen',null,'hospital'],['school','de','scholen','schooltje','escuela, colegio'],['zee','de','zeeën',null,'mar']
+];
+const NOUN_NOTES={idee:'En Bélgica también se oye "de idee"; en los Países Bajos lo normal es "het idee".',weer:'"Het weer" es el tiempo atmosférico; "de tijd" es el tiempo cronológico.',eten:'Como sustantivo, "het eten" es la comida; como verbo, "eten" es comer.',meisje:'Todos los diminutivos (-je, -tje, -pje…) son het, aunque se refieran a una mujer: het meisje.'};
 
-    <!-- TAB 2: VERBS -->
-    <div id="content-verbs" class="hidden space-y-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <label class="block text-sm font-semibold text-slate-700 mb-2" id="uiLabelVerbInput">Escribe un verbo en infinitivo:</label>
-        <div class="relative">
-          <input type="text" id="verbInput" value="werken" placeholder="Ej. werken, hebben, zijn, lopen, maken, gaan..." 
-            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-            oninput="conjugateVerb()">
-          <i class="fa-solid fa-bolt absolute left-3.5 top-4 text-slate-400"></i>
-        </div>
-        <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
-          <span id="uiLabelVerbSuggestions">Verbos comunes:</span>
-          <button onclick="setVerb('werken')" class="underline hover:text-blue-600">werken</button>,
-          <button onclick="setVerb('hebben')" class="underline hover:text-blue-600">hebben</button>,
-          <button onclick="setVerb('zijn')" class="underline hover:text-blue-600">zijn</button>,
-          <button onclick="setVerb('lopen')" class="underline hover:text-blue-600">lopen</button>,
-          <button onclick="setVerb('maken')" class="underline hover:text-blue-600">maken</button>,
-          <button onclick="setVerb('eten')" class="underline hover:text-blue-600">eten</button>
-        </div>
-      </div>
+// [infinitivo, es, raíz | presente irregular, pasado sg, pasado pl, participio, aux(h/z/hz), partícula separable]
+const VERBS=[
+['zijn','ser, estar',['ben','bent','is','zijn','zijn','zijn'],'was','waren','geweest','z'],
+['hebben','tener; haber (auxiliar)',['heb','hebt','heeft','hebben','hebben','hebben'],'had','hadden','gehad','h'],
+['gaan','ir',['ga','gaat','gaat','gaan','gaan','gaan'],'ging','gingen','gegaan','z'],
+['komen','venir','kom','kwam','kwamen','gekomen','z'],
+['doen','hacer',['doe','doet','doet','doen','doen','doen'],'deed','deden','gedaan','h'],
+['maken','hacer, fabricar; arreglar','maak','maakte','maakten','gemaakt','h'],
+['werken','trabajar; funcionar','werk','werkte','werkten','gewerkt','h'],
+['wonen','vivir (residir)','woon','woonde','woonden','gewoond','h'],
+['leven','vivir','leef','leefde','leefden','geleefd','h'],
+['spreken','hablar','spreek','sprak','spraken','gesproken','h'],
+['praten','hablar, charlar','praat','praatte','praatten','gepraat','h'],
+['zeggen','decir','zeg','zei','zeiden','gezegd','h'],
+['zien','ver',['zie','ziet','ziet','zien','zien','zien'],'zag','zagen','gezien','h'],
+['kijken','mirar','kijk','keek','keken','gekeken','h'],
+['eten','comer','eet','at','aten','gegeten','h'],
+['drinken','beber','drink','dronk','dronken','gedronken','h'],
+['lopen','andar, caminar','loop','liep','liepen','gelopen','hz'],
+['fietsen','ir en bici','fiets','fietste','fietsten','gefietst','hz'],
+['wandelen','pasear','wandel','wandelde','wandelden','gewandeld','hz'],
+['lezen','leer','lees','las','lazen','gelezen','h'],
+['schrijven','escribir','schrijf','schreef','schreven','geschreven','h'],
+['leren','aprender; enseñar','leer','leerde','leerden','geleerd','h'],
+['weten','saber','weet','wist','wisten','geweten','h'],
+['kennen','conocer','ken','kende','kenden','gekend','h'],
+['kunnen','poder (capacidad)',['kan','kunt / kan','kan','kunnen','kunnen','kunnen'],'kon','konden','gekund','h'],
+['willen','querer',['wil','wilt / wil','wil','willen','willen','willen'],'wilde / wou','wilden','gewild','h'],
+['moeten','deber, tener que','moet','moest','moesten','gemoeten','h'],
+['mogen','poder (permiso)',['mag','mag','mag','mogen','mogen','mogen'],'mocht','mochten','gemogen','h'],
+['staan','estar (de pie)',['sta','staat','staat','staan','staan','staan'],'stond','stonden','gestaan','h'],
+['zitten','estar sentado','zit','zat','zaten','gezeten','h'],
+['liggen','estar tumbado','lig','lag','lagen','gelegen','h'],
+['denken','pensar','denk','dacht','dachten','gedacht','h'],
+['vinden','encontrar; opinar','vind','vond','vonden','gevonden','h'],
+['krijgen','recibir','krijg','kreeg','kregen','gekregen','h'],
+['geven','dar','geef','gaf','gaven','gegeven','h'],
+['nemen','tomar, coger','neem','nam','namen','genomen','h'],
+['kopen','comprar','koop','kocht','kochten','gekocht','h'],
+['betalen','pagar','betaal','betaalde','betaalden','betaald','h'],
+['begrijpen','entender','begrijp','begreep','begrepen','begrepen','h'],
+['slapen','dormir','slaap','sliep','sliepen','geslapen','h'],
+['reizen','viajar','reis','reisde','reisden','gereisd','hz'],
+['wachten','esperar','wacht','wachtte','wachtten','gewacht','h'],
+['houden','mantener, sujetar; (houden van) querer',['houd / hou','houdt','houdt','houden','houden','houden'],'hield','hielden','gehouden','h'],
+['helpen','ayudar','help','hielp','hielpen','geholpen','h'],
+['vragen','preguntar; pedir','vraag','vroeg','vroegen','gevraagd','h'],
+['zoeken','buscar','zoek','zocht','zochten','gezocht','h'],
+['brengen','traer, llevar','breng','bracht','brachten','gebracht','h'],
+['beginnen','empezar','begin','begon','begonnen','begonnen','z'],
+['worden','llegar a ser, volverse','word','werd','werden','geworden','z'],
+['blijven','quedarse','blijf','bleef','bleven','gebleven','z'],
+['opbellen','llamar por teléfono','bel','belde','belden','opgebeld','h','op'],
+['opstaan','levantarse',['sta','staat','staat','staan','staan','staan'],'stond','stonden','opgestaan','z','op'],
+['meenemen','llevarse (consigo)','neem','nam','namen','meegenomen','h','mee']
+];
+const IMP={zijn:'wees',hebben:'heb',kunnen:null,willen:null,moeten:null,mogen:null,houden:'houd / hou'};
+const VERB_NOTES={
+  houden:'"Houden van" significa querer o gustar: Ik hou van jou (te quiero), Ik hou van kaas (me gusta el queso).',
+  kennen:'Kennen = conocer (personas, lugares). Weten = saber (datos).',
+  weten:'Weten = saber un dato. Kennen = conocer a alguien o algo.',
+  spreken:'Spreken es más formal o se usa para idiomas (Ik spreek Nederlands). Praten es charlar.',
+  zijn:'Zijn cubre ser y estar. También es el auxiliar de los verbos de cambio de estado y de movimiento con destino.',
+  begrijpen:'Los verbos con prefijo be-, ge-, ver-, her-, ont-, er- no añaden ge- en el participio.',
+  betalen:'Los verbos con prefijo be-, ge-, ver-, her-, ont-, er- no añaden ge- en el participio.'
+};
 
-      <!-- Verb Output -->
-      <div id="verbResult" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
-        <div class="border-b pb-4 flex flex-wrap justify-between items-center gap-4">
-          <div>
-            <h3 id="verbTitle" class="text-2xl font-bold text-slate-900 inline-block mr-3">werken</h3>
-            <span id="verbTypeBadge" class="text-xs px-3 py-1 rounded-full font-bold bg-green-100 text-green-700">Regular</span>
-            <p class="text-sm font-medium text-slate-500 mt-1 flex items-center">
-              <i class="fa-solid fa-language text-slate-400 mr-1.5"></i>
-              <span id="uiLabelVerbTrans">Traducción:</span>&nbsp;<strong id="verbTranslation" class="text-slate-800">trabajar</strong>
-            </p>
-          </div>
-        </div>
+// [nl, es, flexionada, comparativo, superlativo]
+const ADJS=[
+['groot','grande','grote','groter','grootst'],['klein','pequeño','kleine','kleiner','kleinst'],['goed','bueno, bien','goede','beter','best'],
+['mooi','bonito','mooie','mooier','mooist'],['nieuw','nuevo','nieuwe','nieuwer','nieuwst'],['oud','viejo','oude','ouder','oudst'],
+['jong','joven','jonge','jonger','jongst'],['lang','largo','lange','langer','langst'],['kort','corto','korte','korter','kortst'],
+['duur','caro','dure','duurder','duurst'],['goedkoop','barato','goedkope','goedkoper','goedkoopst'],['moeilijk','difícil','moeilijke','moeilijker','moeilijkst'],
+['makkelijk','fácil','makkelijke','makkelijker','makkelijkst'],['snel','rápido','snelle','sneller','snelst'],['langzaam','lento','langzame','langzamer','langzaamst'],
+['druk','ocupado; concurrido','drukke','drukker','drukst'],['lekker','rico, sabroso','lekkere','lekkerder','lekkerst'],['blij','contento','blije','blijer','blijst'],
+['moe','cansado','moeie','moeier','moest'],['koud','frío','koude','kouder','koudst'],['warm','caliente, cálido','warme','warmer','warmst'],
+['veel','mucho','vele','meer','meest'],['weinig','poco','weinige','minder','minst']
+];
+const ADJ_NOTES={goed:'Comparativo y superlativo irregulares: beter, best.',veel:'Irregular: meer (más), meest (lo más).',weinig:'Irregular: minder (menos), minst.',duur:'Tras -r se añade -der en el comparativo: duurder.',lekker:'Tras -r se añade -der en el comparativo: lekkerder.'};
 
-        <!-- Present Tense -->
-        <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-3" id="uiPresTitle">Tegenwoordige Tijd (Presente)</h4>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            <div class="p-2 bg-slate-50 rounded flex justify-between"><span>ik (yo / I):</span> <strong id="presIk" class="text-blue-600">werk</strong></div>
-            <div class="p-2 bg-slate-50 rounded flex justify-between"><span>jij/je (tú / you):</span> <strong id="presJij" class="text-blue-600">werkt</strong></div>
-            <div class="p-2 bg-slate-50 rounded flex justify-between"><span>jij (inversión / inversion):</span> <strong id="presJijInv" class="text-blue-600">werk je?</strong></div>
-            <div class="p-2 bg-slate-50 rounded flex justify-between"><span>u / hij / zij / het:</span> <strong id="presHij" class="text-blue-600">werkt</strong></div>
-            <div class="p-2 bg-slate-50 rounded flex justify-between md:col-span-2"><span>wij / jullie / zij (plural):</span> <strong id="presPlural" class="text-blue-600">werken</strong></div>
-          </div>
-        </div>
+// [nl, es, categoría, nota]
+const OTHER=[
+['ook','también','adverbio'],['niet','no','adverbio','Niega verbos y adjetivos: Ik werk niet. Con un sustantivo indefinido se usa geen: Ik heb geen auto.'],
+['geen','ningún, ninguna; no (con sustantivo)','determinante','Ik heb geen tijd = no tengo tiempo.'],['graag','con gusto','adverbio','Ik drink graag koffie = me gusta tomar café.'],
+['altijd','siempre','adverbio'],['nooit','nunca','adverbio'],['vaak','a menudo','adverbio'],['soms','a veces','adverbio'],
+['vandaag','hoy','adverbio'],['morgen','mañana','adverbio','"De morgen" también es la mañana como parte del día.'],['gisteren','ayer','adverbio'],
+['nu','ahora','adverbio'],['hier','aquí','adverbio'],['daar','allí','adverbio'],
+['waar','dónde; verdadero','interrogativo / adjetivo'],['wanneer','cuándo','interrogativo'],['waarom','por qué','interrogativo'],['hoe','cómo','interrogativo'],
+['wat','qué','interrogativo'],['wie','quién','interrogativo'],['en','y','conjunción'],['maar','pero','conjunción'],['of','o; si (interrogativa indirecta)','conjunción'],
+['want','porque','conjunción','Tras want el orden de la frase no cambia: ..., want ik ben moe.'],['omdat','porque','conjunción','Con omdat el verbo va al final: ..., omdat ik moe ben.'],
+['met','con','preposición'],['zonder','sin','preposición'],['naar','a, hacia','preposición'],['van','de','preposición'],['in','en, dentro de','preposición'],
+['op','en, sobre','preposición'],['voor','para; delante de; antes de','preposición'],['na','después de','preposición'],['bij','junto a, en casa de','preposición'],
+['dank je wel','gracias','expresión','Dank u wel es la forma formal.'],['alsjeblieft','por favor; aquí tienes','expresión','Alstublieft es la forma formal.']
+];
 
-        <!-- Past Tenses -->
-        <div class="grid md:grid-cols-2 gap-4 pt-2">
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <h4 class="font-bold text-slate-800 text-sm mb-2" id="uiOvtTitle">OVT (Pasado Simple / Simple Past)</h4>
-            <p class="text-xs text-slate-500 mb-2" id="uiSingularPlural">Singular / Plural:</p>
-            <p class="text-base font-semibold text-slate-800"><span id="ovtSingular">werkte</span> / <span id="ovtPlural">werkten</span></p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
-            <h4 class="font-bold text-slate-800 text-sm mb-2" id="uiVttTitle">VTT (Participio / Past Participle)</h4>
-            <p class="text-xs text-slate-500 mb-2" id="uiAuxPart">Auxiliar + Participio:</p>
-            <p class="text-base font-semibold text-slate-800"><span id="auxVerb">heeft</span> <span id="pastParticiple" class="text-indigo-600">gewerkt</span></p>
-          </div>
-        </div>
-      </div>
-    </div>
+/* ---------- motor ---------- */
+const PRON=['ik','jij / u','hij / zij / het','wij','jullie','zij'];
+const HEB=['heb','hebt','heeft','hebben','hebben','hebben'],BEN=['ben','bent','is','zijn','zijn','zijn'],
+HAD=['had','had','had','hadden','hadden','hadden'],WAS=['was','was','was','waren','waren','waren'],
+ZAL=['zal','zult / zal','zal','zullen','zullen','zullen'],ZOU=['zou','zou','zou','zouden','zouden','zouden'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,"«»]/g,'').replace(/\s+/g,' ').trim();
+const stripArt=s=>{const m=s.match(/^(de|het|een|el|la|lo|los|las|un|una)\s+(.+)$/);return m?m[2]:s};
+const splitEs=s=>s.split(/[;,]/).map(x=>x.trim()).filter(Boolean);
 
-  </div>
+function presentFromStem(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[stem,t,t,inf,t,inf]}
+function buildVerb(r){
+  const[inf,es,st,ps,pp,part,aux,pre]=r;const base=pre?inf.slice(pre.length):inf;
+  let present=Array.isArray(st)?st.slice():presentFromStem(st,base);
+  let imp=inf in IMP?IMP[inf]:(Array.isArray(st)?st[0]:st);
+  let past=[ps,pp];
+  if(pre){present=present.map(f=>f+' '+pre);past=past.map(f=>f+' '+pre);if(imp)imp=imp+' '+pre}
+  return{inf,present,past,participle:part,aux,imperative:imp,prefix:pre||null,regularStem:Array.isArray(st)?null:st};
+}
 
-  <script>
-    let currentLang = 'es';
-    let debounceTimer = null;
+const ENTRIES=[];const idx=new Map();
+function add(key,e,via){if(!key)return;key=norm(key);if(!key)return;if(!idx.has(key))idx.set(key,[]);const l=idx.get(key);if(!l.some(x=>x.e===e))l.push({e,via})}
+function addEs(e){for(const t of e.es){add(t,e);const c=t.replace(/\(.*?\)/g,'').trim();if(c)add(c,e)}}
 
-    const translations = {
-      es: {
-        headerTitle: '<i class="fa-solid fa-language text-blue-600 mr-2"></i>Herramienta de Gramática Holandesa',
-        headerSubtitle: 'Diccionario masivo con traducciones automáticas, artículos (DE/HET), demostrativos, plurales y conjugador de verbos.',
-        tabNouns: 'Sustantivos y Demostrativos',
-        tabVerbs: 'Conjugador de Verbos',
-        labelNounInput: 'Escribe CUALQUIER sustantivo en holandés:',
-        labelSuggestions: 'Prueba estos:',
-        labelTrans: 'Traducción:',
-        pluralHeader: 'Plural (siempre usa DE):',
-        pluralRuleTitle: '¿Cómo se construye el plural?',
-        pluralNote: '📌 Recuerda: Todos los plurales en holandés son palabras DE y usan deze (cerca) y die (lejos).',
-        demTitle: '<i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>Demostrativos',
-        demNear: 'Cerca (este/esta):',
-        demFar: 'Lejos (ese/aquel):',
-        idTitle: '<i class="fa-solid fa-clone text-indigo-500 mr-2"></i>Identificadores',
-        idSameType: 'Mismo tipo (copia/réplica):',
-        idSameExact: 'Misma unidad exacta:',
-        ruleTitle: 'Regla de uso:',
-        labelVerbInput: 'Escribe un verbo en infinitivo:',
-        labelVerbSuggestions: 'Verbos comunes:',
-        labelVerbTrans: 'Traducción:',
-        presTitle: 'Tegenwoordige Tijd (Presente)',
-        ovtTitle: 'OVT (Pasado Simple)',
-        singularPlural: 'Singular / Plural:',
-        vttTitle: 'VTT (Participio)',
-        auxPart: 'Auxiliar + Participio:'
-      },
-      en: {
-        headerTitle: '<i class="fa-solid fa-language text-blue-600 mr-2"></i>Dutch Grammar Tool',
-        headerSubtitle: 'Massive dictionary with auto-translation, DE/HET articles, demonstratives, plurals, and verb conjugations.',
-        tabNouns: 'Nouns & Demonstratives',
-        tabVerbs: 'Verb Conjugator',
-        labelNounInput: 'Type ANY Dutch noun:',
-        labelSuggestions: 'Try these:',
-        labelTrans: 'Translation:',
-        pluralHeader: 'Plural (always uses DE):',
-        pluralRuleTitle: 'How is the plural formed?',
-        pluralNote: '📌 Remember: All plurals in Dutch are DE words and use deze (near) and die (far).',
-        demTitle: '<i class="fa-solid fa-location-dot text-blue-500 mr-2"></i>Demonstratives',
-        demNear: 'Near (this):',
-        demFar: 'Far (that):',
-        idTitle: '<i class="fa-solid fa-clone text-indigo-500 mr-2"></i>Identifiers',
-        idSameType: 'Same type (replica/model):',
-        idSameExact: 'Exact same item:',
-        ruleTitle: 'Usage rule:',
-        labelVerbInput: 'Type an infinitive verb:',
-        labelVerbSuggestions: 'Common verbs:',
-        labelVerbTrans: 'Translation:',
-        presTitle: 'Tegenwoordige Tijd (Present)',
-        ovtTitle: 'OVT (Simple Past)',
-        singularPlural: 'Singular / Plural:',
-        vttTitle: 'VTT (Past Participle)',
-        auxPart: 'Auxiliary + Participle:'
-      }
-    };
+for(const[nl,a,pl,dim,es]of NOUNS){const e={nl,es:splitEs(es),pos:'noun',noun:{article:a,plural:pl,diminutive:dim},note:NOUN_NOTES[nl]||null,src:'base'};ENTRIES.push(e);add(nl,e);addEs(e);
+  if(pl)for(const p of pl.split('/'))add(p.trim(),e,'el plural');if(dim)add(dim,e,'el diminutivo')}
+for(const r of VERBS){const v=buildVerb(r);const e={nl:r[0],es:splitEs(r[1]),pos:'verb',verb:v,note:VERB_NOTES[r[0]]||null,src:'base'};ENTRIES.push(e);add(r[0],e);addEs(e);
+  v.present.forEach(f=>f.split('/').forEach(x=>{x=x.trim();if(norm(x)!==norm(r[0]))add(x,e,'una forma del presente')}));
+  v.past.forEach(f=>f.split('/').forEach(x=>add(x.trim(),e,'una forma del pasado')));add(v.participle,e,'el participio')}
+for(const[nl,es,inf,c,s]of ADJS){const e={nl,es:splitEs(es),pos:'adj',adj:{inflected:inf,comparative:c,superlative:s},note:ADJ_NOTES[nl]||null,src:'base'};ENTRIES.push(e);add(nl,e);addEs(e);
+  add(inf,e,'la forma flexionada');add(c,e,'el comparativo');add(s,e,'el superlativo');add(s+'e',e,'el superlativo')}
+for(const[nl,es,cat,note]of OTHER){const e={nl,es:splitEs(es),pos:'other',posLabel:cat,note:note||null,src:'base'};ENTRIES.push(e);add(nl,e);addEs(e)}
+const GRAMMAR={pos:'grammar',nl:'de / het',src:'base'};
+['de','het','een','el','la','lo','los','las','un','una','deze','dit','die','dat','dezelfde','hetzelfde','diezelfde','datzelfde','ditzelfde','dezezelfde','zelfde','welke','welk','elke','elk','iedere','ieder','este','esta','esto','estos','estas','ese','esa','eso','esos','esas','aquel','aquella','aquello','mismo','misma','mismos','el mismo','lo mismo','cual','cada','que'].forEach(k=>add(k,GRAMMAR));
 
-    // Dictionary database
-    const nounDb = {
-      "restaurant": { art: "het", plural: "restaurants", es: "restaurante", en: "restaurant", pluralRuleEs: "Añade <strong>-s</strong> al ser una palabra extranjera terminada en consonante.", pluralRuleEn: "Adds <strong>-s</strong> as a foreign loanword." },
-      "auto": { art: "de", plural: "auto's", es: "coche / automóvil", en: "car", pluralRuleEs: "Vocal larga final (o) requiere <strong>'s</strong> para mantener la pronunciación.", pluralRuleEn: "Long vowel (o) requires <strong>'s</strong>." },
-      "huis": { art: "het", plural: "huizen", es: "casa", en: "house", pluralRuleEs: "Añade <strong>-en</strong> y la <strong>s</strong> final cambia a <strong>z</strong> sonora.", pluralRuleEn: "Adds <strong>-en</strong> and final <strong>s</strong> changes to <strong>z</strong>." },
-      "supermarkt": { art: "de", plural: "supermarkten", es: "supermercado", en: "supermarket", pluralRuleEs: "Se añade <strong>-en</strong> al final.", pluralRuleEn: "Add <strong>-en</strong> directly." },
-      "fiets": { art: "de", plural: "fietsen", es: "bicicleta", en: "bicycle", pluralRuleEs: "Se añade <strong>-en</strong> al final.", pluralRuleEn: "Add <strong>-en</strong> directly." },
-      "man": { art: "de", plural: "mannen", es: "hombre", en: "man", pluralRuleEs: "Se añade <strong>-en</strong> y se duplica la consonante (n) para mantener la vocal corta.", pluralRuleEn: "Add <strong>-en</strong> and double final consonant (n)." },
-      "vrouw": { art: "de", plural: "vrouwen", es: "mujer", en: "woman", pluralRuleEs: "Se añade <strong>-en</strong> directamente.", pluralRuleEn: "Add <strong>-en</strong> directly." },
-      "boek": { art: "het", plural: "boeken", es: "libro", en: "book", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "kind": { art: "het", plural: "kinderen", es: "niño / niña", en: "child", pluralRuleEs: "Plural irregular especial terminado en <strong>-eren</strong>.", pluralRuleEn: "Special irregular plural ending in <strong>-eren</strong>." },
-      "tafel": { art: "de", plural: "tafels", es: "mesa", en: "table", pluralRuleEs: "Terminación en <strong>-el</strong> requiere una <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-el</strong>, takes <strong>-s</strong>." },
-      "stoel": { art: "de", plural: "stoelen", es: "silla", en: "chair", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "hond": { art: "de", plural: "honden", es: "perro", en: "dog", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "kat": { art: "de", plural: "katten", es: "gato", en: "cat", pluralRuleEs: "Se añade <strong>-en</strong> y duplica la t final.", pluralRuleEn: "Add <strong>-en</strong> and double final t." },
-      "sleutel": { art: "de", plural: "sleutels", es: "llave", en: "key", pluralRuleEs: "Termina en <strong>-el</strong>, añade <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-el</strong>, adds <strong>-s</strong>." },
-      "bier": { art: "het", plural: "bieren", es: "cerveza", en: "beer", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "wijn": { art: "de", plural: "wijnen", es: "vino", en: "wine", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "brood": { art: "het", plural: "broden", es: "pan", en: "bread", pluralRuleEs: "Pierde una o (oo &rarr; o) y cambia a <strong>-den</strong>.", pluralRuleEn: "Drops one o (oo &rarr; o) and adds <strong>-den</strong>." },
-      "water": { art: "het", plural: "waters", es: "agua", en: "water", pluralRuleEs: "Termina en <strong>-er</strong>, toma <strong>-s</strong>.", pluralRuleEn: "Ends in <strong>-er</strong>, takes <strong>-s</strong>." },
-      "stad": { art: "de", plural: "steden", es: "ciudad", en: "city", pluralRuleEs: "Plural irregular con cambio vocálico (a &rarr; e): steden.", pluralRuleEn: "Irregular vowel shift (a &rarr; e): steden." },
-      "land": { art: "het", plural: "landen", es: "país", en: "country", pluralRuleEs: "Se añade <strong>-en</strong>.", pluralRuleEn: "Add <strong>-en</strong>." },
-      "meisje": { art: "het", plural: "meisjes", es: "chica / niña", en: "girl", pluralRuleEs: "Todos los diminutivos (<strong>-je</strong>) llevan <strong>-s</strong>.", pluralRuleEn: "All diminutives (<strong>-je</strong>) take <strong>-s</strong>." }
-    };
-
-    const verbDb = {
-      "werken": { es: "trabajar", en: "to work", type: "Regular", ik: "werk", jij: "werkt", jijInv: "werk je?", hij: "werkt", plural: "werken", ovtS: "werkte", ovtP: "werkten", aux: "heeft", part: "gewerkt" },
-      "maken": { es: "hacer / crear", en: "to make", type: "Regular", ik: "maak", jij: "maakt", jijInv: "maak je?", hij: "maakt", plural: "maken", ovtS: "maakte", ovtP: "maakten", aux: "heeft", part: "gemaakt" },
-      "zijn": { es: "ser / estar", en: "to be", type: "Irregular", ik: "ben", jij: "bent", jijInv: "ben je?", hij: "is", plural: "zijn", ovtS: "was", ovtP: "waren", aux: "is", part: "geweest" },
-      "hebben": { es: "tener / haber", en: "to have", type: "Irregular", ik: "heb", jij: "hebt", jijInv: "heb je?", hij: "heeft", plural: "hebben", ovtS: "had", ovtP: "haten", aux: "heeft", part: "gehad" },
-      "gaan": { es: "ir", en: "to go", type: "Irregular", ik: "ga", jij: "gaat", jijInv: "ga je?", hij: "gaat", plural: "gaan", ovtS: "ging", ovtP: "gingen", aux: "is", part: "gegaan" },
-      "lopen": { es: "caminar / andar", en: "to walk", type: "Irregular", ik: "loop", jij: "loopt", jijInv: "loop je?", hij: "loopt", plural: "lopen", ovtS: "liep", ovtP: "liepen", aux: "heeft/is", part: "gelopen" },
-      "komen": { es: "venir", en: "to come", type: "Irregular", ik: "kom", jij: "komt", jijInv: "kom je?", hij: "komt", plural: "komen", ovtS: "kwam", ovtP: "kwamen", aux: "is", part: "gekomen" },
-      "zien": { es: "ver", en: "to see", type: "Irregular", ik: "zie", jij: "ziet", jijInv: "zie je?", hij: "ziet", plural: "zien", ovtS: "zag", ovtP: "zagen", aux: "heeft", part: "gezien" },
-      "eten": { es: "comer", en: "to eat", type: "Irregular", ik: "eet", jij: "eet", jijInv: "eet je?", hij: "eet", plural: "eten", ovtS: "at", ovtP: "aten", aux: "heeft", part: "gegeten" }
-    };
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      document.getElementById('langEs').className = lang === 'es' ? 'font-bold text-blue-600' : 'font-normal text-slate-500 hover:text-blue-600';
-      document.getElementById('langEn').className = lang === 'en' ? 'font-bold text-blue-600' : 'font-normal text-slate-500 hover:text-blue-600';
-
-      const t = translations[lang];
-      document.getElementById('uiHeaderTitle').innerHTML = t.headerTitle;
-      document.getElementById('uiHeaderSubtitle').innerText = t.headerSubtitle;
-      document.getElementById('uiTabNouns').innerText = t.tabNouns;
-      document.getElementById('uiTabVerbs').innerText = t.tabVerbs;
-      document.getElementById('uiLabelNounInput').innerText = t.labelNounInput;
-      document.getElementById('uiLabelSuggestions').innerText = t.labelSuggestions;
-      document.getElementById('uiLabelTrans').innerText = t.labelTrans;
-      document.getElementById('uiLabelPluralHeader').innerText = t.pluralHeader;
-      document.getElementById('uiPluralRuleTitle').innerText = t.pluralRuleTitle;
-      document.getElementById('uiPluralNote').innerText = t.pluralNote;
-      document.getElementById('uiDemTitle').innerHTML = t.demTitle;
-      document.getElementById('uiDemNear').innerText = t.demNear;
-      document.getElementById('uiDemFar').innerText = t.demFar;
-      document.getElementById('uiIdTitle').innerHTML = t.idTitle;
-      document.getElementById('uiIdSameType').innerText = t.idSameType;
-      document.getElementById('uiIdSameExact').innerText = t.idSameExact;
-      document.getElementById('uiRuleTitle').innerText = t.ruleTitle;
-      document.getElementById('uiLabelVerbInput').innerText = t.labelVerbInput;
-      document.getElementById('uiLabelVerbSuggestions').innerText = t.labelVerbSuggestions;
-      document.getElementById('uiLabelVerbTrans').innerText = t.labelVerbTrans;
-      document.getElementById('uiPresTitle').innerText = t.presTitle;
-      document.getElementById('uiOvtTitle').innerText = t.ovtTitle;
-      document.getElementById('uiSingularPlural').innerText = t.singularPlural;
-      document.getElementById('uiVttTitle').innerText = t.vttTitle;
-      document.getElementById('uiAuxPart').innerText = t.auxPart;
-
-      analyzeNoun();
-      conjugateVerb();
+/* ---------- morfología para la base grande ---------- */
+const STRONG_SRC='bakken:bakte:bakten:gebakken:h|barsten:barstte:barstten:gebarsten:z|bederven:bedierf:bedierven:bedorven:hz|bedriegen:bedroog:bedrogen:bedrogen:h|bergen:borg:borgen:geborgen:h|bevelen:beval:bevalen:bevolen:h|bewegen:bewoog:bewogen:bewogen:h|bidden:bad:baden:gebeden:h|bieden:bood:boden:geboden:h|bijten:beet:beten:gebeten:h|binden:bond:bonden:gebonden:h|blazen:blies:bliezen:geblazen:h|blijken:bleek:bleken:gebleken:z|blinken:blonk:blonken:geblonken:h|braden:braadde:braadden:gebraden:h|breken:brak:braken:gebroken:hz|brouwen:brouwde:brouwden:gebrouwen:h|buigen:boog:bogen:gebogen:h|dragen:droeg:droegen:gedragen:h|drijven:dreef:dreven:gedreven:hz|dringen:drong:drongen:gedrongen:hz|druipen:droop:dropen:gedropen:hz|duiken:dook:doken:gedoken:hz|dwingen:dwong:dwongen:gedwongen:h|fluiten:floot:floten:gefloten:h|gelden:gold:golden:gegolden:h|gelijken:geleek:geleken:geleken:h|genezen:genas:genazen:genezen:hz|genieten:genoot:genoten:genoten:h|gieten:goot:goten:gegoten:h|glijden:gleed:gleden:gegleden:hz|graven:groef:groeven:gegraven:h|grijpen:greep:grepen:gegrepen:h|hangen:hing:hingen:gehangen:h|heffen:hief:hieven:geheven:h|heten:heette:heetten:geheten:h|houwen:hieuw:hieuwen:gehouwen:h|jagen:joeg / jaagde:joegen / jaagden:gejaagd:h|kiezen:koos:kozen:gekozen:h|klimmen:klom:klommen:geklommen:hz|klinken:klonk:klonken:geklonken:h|knijpen:kneep:knepen:geknepen:h|krimpen:kromp:krompen:gekrompen:z|kruipen:kroop:kropen:gekropen:hz|lachen:lachte:lachten:gelachen:h|laden:laadde:laadden:geladen:h|laten:liet:lieten:gelaten:h|liegen:loog:logen:gelogen:h|lijden:leed:leden:geleden:h|lijken:leek:leken:geleken:h|malen:maalde:maalden:gemalen:h|meten:mat:maten:gemeten:h|mijden:meed:meden:gemeden:h|prijzen:prees:prezen:geprezen:h|raden:raadde / ried:raadden / rieden:geraden:h|rijden:reed:reden:gereden:hz|rijzen:rees:rezen:gerezen:z|roepen:riep:riepen:geroepen:h|ruiken:rook:roken:geroken:h|scheiden:scheidde:scheidden:gescheiden:hz|schelden:schold:scholden:gescholden:h|schenken:schonk:schonken:geschonken:h|scheppen:schiep:schiepen:geschapen:h|scheren:schoor:schoren:geschoren:h|schieten:schoot:schoten:geschoten:h|schijnen:scheen:schenen:geschenen:h|schrikken:schrok:schrokken:geschrokken:z|schuiven:schoof:schoven:geschoven:h|slaan:sloeg:sloegen:geslagen:h|slijpen:sleep:slepen:geslepen:h|sluipen:sloop:slopen:geslopen:hz|sluiten:sloot:sloten:gesloten:h|smelten:smolt:smolten:gesmolten:hz|snijden:sneed:sneden:gesneden:h|spijten:speet:speten:gespeten:h|spinnen:spon:sponnen:gesponnen:h|springen:sprong:sprongen:gesprongen:hz|steken:stak:staken:gestoken:h|stelen:stal:stalen:gestolen:h|sterven:stierf:stierven:gestorven:z|stijgen:steeg:stegen:gestegen:z|stinken:stonk:stonken:gestonken:h|stoten:stootte:stootten:gestoten:h|strijden:streed:streden:gestreden:h|strijken:streek:streken:gestreken:h|trekken:trok:trokken:getrokken:hz|treden:trad:traden:getreden:hz|vallen:viel:vielen:gevallen:z|vangen:ving:vingen:gevangen:h|varen:voer:voeren:gevaren:hz|vechten:vocht:vochten:gevochten:h|verdwijnen:verdween:verdwenen:verdwenen:z|vergeten:vergat:vergaten:vergeten:hz|verliezen:verloor:verloren:verloren:h|vliegen:vloog:vlogen:gevlogen:hz|vouwen:vouwde:vouwden:gevouwen:h|vreten:vrat:vraten:gevreten:h|vriezen:vroor:vroren:gevroren:h|wassen:waste:wasten:gewassen:h|wegen:woog:wogen:gewogen:h|werpen:wierp:wierpen:geworpen:h|werven:wierf:wierven:geworven:h|wijken:week:weken:geweken:z|wijzen:wees:wezen:gewezen:h|winden:wond:wonden:gewonden:h|winnen:won:wonnen:gewonnen:h|zenden:zond:zonden:gezonden:h|zingen:zong:zongen:gezongen:h|zinken:zonk:zonken:gezonken:z|zuigen:zoog:zogen:gezogen:h|zwemmen:zwom:zwommen:gezwommen:hz|zweren:zwoer:zwoeren:gezworen:h|zwijgen:zweeg:zwegen:gezwegen:h|verschijnen:verscheen:verschenen:verschenen:z';
+const STRONG={};
+STRONG_SRC.split('|').forEach(s=>{const[a,b,c,d,e]=s.split(':');STRONG[a]={ps:b,pp:c,part:d,aux:e}});
+const IRRPRES={slaan:['sla','slaat','slaat','slaan','slaan','slaan'],zullen:['zal','zult / zal','zal','zullen','zullen','zullen']};
+STRONG.zullen={ps:'zou',pp:'zouden',part:'—',aux:'h'};
+const CUR_VERB={};
+for(const r of VERBS){if(r[7])continue;CUR_VERB[r[0]]=buildVerb(r);if(Array.isArray(r[2]))IRRPRES[r[0]]=r[2];STRONG[r[0]]=STRONG[r[0]]||{ps:r[3],pp:r[4],part:r[5],aux:r[6]}}
+const STEM_OVR={komen:'kom',bevelen:'beveel',bewegen:'beweeg',vergeten:'vergeet',genezen:'genees',bederven:'bederf',verliezen:'verlies',bedriegen:'bedrieg',genieten:'geniet',verdwijnen:'verdwijn',verschijnen:'verschijn',gelijken:'gelijk'};
+const NO_SPLIT=new Set(['ontmoeten','vermoeden','bedoelen','gebeuren','geloven','genieten','verdwijnen','verschijnen','vergeten','verliezen','bewegen','bevelen']);
+const SEP=['terecht','voorbij','achter','binnen','buiten','samen','tegen','terug','thuis','kapot','schoon','dicht','langs','klaar','open','door','onder','over','voor','vast','weg','mee','neer','rond','aan','bij','toe','uit','los','af','in','na','om','op'];
+const INSEP_WORDS=new Set('onderzoeken ondernemen onderhouden ondersteunen onderscheiden onderbreken onderwijzen onderhandelen ondertekenen onderstrepen ondervinden ondergaan overleggen overwegen overtuigen overleven overnachten overschrijden overtreden overdrijven overhandigen overheersen overwinnen overlijden overvallen overkomen overzien voorspellen voorzien voorkomen doorzien omringen omvatten omschrijven omarmen achterhalen achtervolgen aanvaarden aanbidden'.split(' '));
+const AUX_OVR={vertrekken:'z',opstaan:'z',ontstaan:'z',gebeuren:'z',overlijden:'z',verhuizen:'hz',ontsnappen:'z',slagen:'z',lukken:'z',mislukken:'z',groeien:'z',dalen:'z',veranderen:'hz',toenemen:'z',afnemen:'hz',inslapen:'z',terugkeren:'z',verdwijnen:'z',landen:'hz',vertrekken_:'z'};
+const LATIN_NO=new Set(['luisteren','slenteren','verbeteren']);
+const isV=c=>'aeiouyëïéè'.includes(c||'');
+const latin=inf=>inf.length>=7&&!LATIN_NO.has(inf)&&/(iëren|ieren|(is|ys|in|orm|at|ul|il|ol|al|id|ud|ec|oc|tr|st|pt|nt|ct|ag|on|ar|rv|ot|it|ig|ur|er|ab|ep|ob)eren)$/.test(inf);
+const knownBase=b=>!!(STRONG[b]||IRRPRES[b]||CUR_VERB[b]);
+function splitVerb(inf){
+  if(knownBase(inf)||latin(inf))return null;
+  if(NO_SPLIT.has(inf)){const m=inf.match(/^(ver|ont|her|be|ge)(.+)$/);return m&&!STRONG[inf]?{pre:m[1],type:'insep',base:m[2],reg:true}:null}
+  for(const p of SEP){
+    if(!inf.startsWith(p))continue;const rest=inf.slice(p.length);
+    if(knownBase(rest)||(rest.length>=5&&/en$/.test(rest)&&!isV(rest[0])&&!/^(.)\1/.test(rest)))return{pre:p,type:INSEP_WORDS.has(inf)?'insep':'sep',base:rest};
+  }
+  for(const p of['ver','ont','her','be','ge','er']){
+    if(!inf.startsWith(p))continue;const rest=inf.slice(p.length);
+    if(knownBase(rest))return{pre:p,type:'insep',base:rest};
+    if(p==='er')continue;
+    if(rest.length>=(p==='ge'?5:4)&&/en$/.test(rest)&&!isV(rest[0])&&!/^(.)\1/.test(rest))return{pre:p,type:'insep',base:rest};
+  }
+  return null;
+}
+function regStem(inf){
+  if(STEM_OVR[inf])return{stem:STEM_OVR[inf],orig:STEM_OVR[inf]};
+  if(latin(inf)){const st=inf.slice(0,-3)+'er';return{stem:st,orig:st}}
+  let r=inf.endsWith('en')?inf.slice(0,-2):inf.slice(0,-1);
+  if(/(bb|dd|ff|gg|kk|ll|mm|nn|pp|rr|ss|tt)$/.test(r)){r=r.slice(0,-1);return{stem:r,orig:r}}
+  const orig=r,L=r.length,c=r[L-1],v=r[L-2],b=r[L-3];
+  if(L>=2&&!isV(c)&&'aeou'.includes(v)&&!isV(b)){
+    const schwa=v==='e'&&/[aeiouy]/.test(r.slice(0,L-2));
+    if(!schwa)r=r.slice(0,L-1)+v+c;
+  }
+  r=r.replace(/z$/,'s').replace(/v$/,'f');
+  return{stem:r,orig};
+}
+const geJoin=s=>/^[eiu]/.test(s)?'ge'+({e:'ë',i:'ï',u:'ü'}[s[0]])+s.slice(1):'ge'+s;
+function presentOf(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[stem,t,t,inf,t,inf]}
+function conjCore(inf,reg){
+  if(!reg&&CUR_VERB[inf])return{...CUR_VERB[inf]};
+  const S=reg?null:STRONG[inf];
+  if(!reg&&IRRPRES[inf])return{inf,present:IRRPRES[inf].slice(),past:[S.ps,S.pp],participle:S.part,aux:S.aux,imperative:IRRPRES[inf][0],regularStem:null};
+  const{stem,orig}=regStem(inf);
+  if(S)return{inf,present:presentOf(stem,inf),past:[S.ps,S.pp],participle:S.part,aux:S.aux,imperative:stem,regularStem:stem};
+  const vl=/([tkfsp]|ch|x)$/.test(orig);
+  const ps=stem+(vl?'te':'de');
+  const noGe=!reg&&inf.length>=7&&/^(be|ver|ont|her)/.test(inf);
+  return{inf,present:presentOf(stem,inf),past:[ps,ps+'n'],participle:(noGe?stem:geJoin(stem))+(/[td]$/.test(stem)?'':(vl?'t':'d')),aux:'h',imperative:stem,regularStem:stem};
+}
+const VERBSET=new Set();
+function conjugate(inf){
+  if(CUR_VERB[inf])return CUR_VERB[inf];
+  if(inf.includes(' ')){
+    const w=inf.split(' ');const isVb=x=>knownBase(x)||VERBSET.has(x);
+    const last=w[w.length-1],AUXV=new Set(['laten','gaan','komen','blijven','doen','leren','helpen','horen','zien']);
+    const k=isVb(last)&&!(AUXV.has(w[0])&&w.length===2)?w.length-1:(isVb(w[0])?0:w.length-1);
+    const rest=w.filter((_,i)=>i!==k).join(' ');
+    const v={...conjugate(w[k])};
+    const fin=f=>f.split(' / ').map(x=>x+' '+rest).join(' / ');
+    v.present=v.present.map(fin);v.past=v.past.map(fin);
+    v.participle=k===0?(isVb(last)?w[0]:v.participle)+' '+rest:rest+' '+v.participle;
+    v.imperative=v.imperative?fin(v.imperative):null;v.inf=inf;v.regularStem=null;v.prefix=null;v.auto=true;
+    return v;
+  }
+  const sp=splitVerb(inf);
+  const c=conjCore(sp?sp.base:inf,sp&&sp.reg);
+  const v={...c,inf,prefix:null,auto:true};
+  if(sp&&sp.type==='sep'){
+    const add=f=>f.split(' / ').map(x=>x+' '+sp.pre).join(' / ');
+    v.present=c.present.map(add);v.past=c.past.map(add);v.participle=sp.pre+c.participle;v.imperative=c.imperative?add(c.imperative):null;v.prefix=sp.pre;
+    v.present[3]=v.present[5]=c.inf+' '+sp.pre;
+  }else if(sp){
+    const add=f=>f.split(' / ').map(x=>sp.pre+x).join(' / ');
+    v.present=c.present.map(add);v.past=c.past.map(add);v.imperative=c.imperative?add(c.imperative):null;
+    const baseHasPfx=!sp.reg&&!!STRONG[sp.base]&&/^(be|ge|ver|ont|her)/.test(sp.base);
+    const strip=c.participle.startsWith('gege')||(c.participle.startsWith('ge')&&!baseHasPfx);
+    v.participle=sp.pre+(strip?c.participle.slice(2).replace(/^[ëïü]/,m=>({ë:'e',ï:'i',ü:'u'}[m])):c.participle);
+    v.present[3]=v.present[5]=inf;v.regularStem=null;
+  }
+  v.aux=AUX_OVR[inf]||c.aux||'h';
+  return v;
+}
+const ADJ_IRR={goed:['goede','beter','best'],veel:['vele','meer','meest'],weinig:['weinige','minder','minst'],graag:['','liever','liefst'],dichtbij:['','dichterbij','dichtstbij']};
+const ADJ_INV=new Set(['gratis','oranje','roze','prima','super','beige','plus','lila','sexy','cool','top','extra']);
+function adjForms(a){
+  if(ADJ_IRR[a]){const[i,c,s]=ADJ_IRR[a];return{inflected:i||a,comparative:c,superlative:s}}
+  let inf;
+  if(ADJ_INV.has(a)||/e$/.test(a)||(/[^aeiou]en$/.test(a)&&a.length>=4))inf=a;
+  else{
+    let r=a;
+    const m=r.match(/^(.*[^aeiou])(aa|ee|oo|uu)([^aeiou])$/);
+    if(m)r=m[1]+m[2][0]+m[3];
+    const groups=(a.match(/[aeiouyë]+/g)||[]).length;
+    if(!m&&groups===1&&/[^aeiou][aeiou][bcdfgklmnprstz]$/.test(a)&&!/(ie|ij|ui|eu|ou|ei|oe|au)[a-z]$/.test(a))r=a+a.slice(-1);
+    else{
+      if(/([aeiouy]|[lr])f$/.test(r))r=r.slice(0,-1)+'v';
+      if(/(ie|ij|ui|eu|ou|ei|oe|au|[^aeiou][aeou])s$/.test(r)&&(m||/(ie|ij|ui|eu|ou|ei|oe|au)s$/.test(r)))r=r.slice(0,-1)+'z';
     }
+    inf=r+'e';
+  }
+  if(ADJ_INV.has(a))return{inflected:a,comparative:null,superlative:null};
+  const comparative=/r$/.test(a)?a+'der':(inf===a?a+'er':inf+'r');
+  const superlative=/s$/.test(a)?a+'t':a+'st';
+  return{inflected:inf,comparative,superlative};
+}
 
-    function switchTab(tab) {
-      document.getElementById('content-nouns').classList.toggle('hidden', tab !== 'nouns');
-      document.getElementById('content-verbs').classList.toggle('hidden', tab !== 'verbs');
-      document.getElementById('tab-nouns').className = tab === 'nouns' ? 'tab-active py-3 px-6 text-blue-600 font-semibold' : 'py-3 px-6 text-slate-600 hover:text-blue-600 font-medium';
-      document.getElementById('tab-verbs').className = tab === 'verbs' ? 'tab-active py-3 px-6 text-blue-600 font-semibold' : 'py-3 px-6 text-slate-600 hover:text-blue-600 font-medium';
+/* ---------- base grande ---------- */
+let BIG_N=0;
+const loadP=fetch('dict.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(rows=>{
+  const have=new Set(ENTRIES.map(e=>e.nl+'|'+e.pos));
+  for(const r of rows){
+    const[nl,p,es,a,pl,dim]=r;const pos=p==='o'?'other':p==='n'?'noun':p==='v'?'verb':'adj';
+    if(have.has(nl+'|'+pos)||nl.split(' ').length>2)continue;
+    if(pos==='verb'&&!nl.includes(' ')){if(!/en$/.test(nl)&&!/^(gaan|staan|slaan|zien|doen)$/.test(nl)||nl==='open')continue;VERBSET.add(nl)}
+    const e={nl,es:es?es.split(/;\s*/).filter(Boolean):[],pos,src:'open',note:null};
+    if(pos==='noun')e.noun={article:a||'de',plural:pl||null,diminutive:dim||null};
+    if(pos==='other')e.posLabel='palabra';
+    BIG_N++;
+    add(nl,e);
+    for(const t of e.es){add(t,e);for(const piece of t.split(/,\s*/))add(piece,e)}
+    if(pos==='noun'&&pl)for(const x of pl.split('/'))add(x.trim(),e,'el plural');
+    if(pos==='noun'&&dim)add(dim,e,'el diminutivo');
+    if(pos==='verb'){e.lazy=true;Object.defineProperty(e,'verb',{get(){return this._v||(this._v=conjugate(this.nl))},configurable:true})}
+    if(pos==='adj')Object.defineProperty(e,'adj',{get(){return this._a||(this._a=adjForms(this.nl))},configurable:true});
+  }
+  // formas verbales y adjetivas, en segundo plano por tramos
+  const verbs=[],adjs=[];
+  for(const list of idx.values())for(const{e}of list){if(e.src==='open'&&e.pos==='verb')verbs.push(e);if(e.src==='open'&&e.pos==='adj')adjs.push(e)}
+  const uniq=a=>[...new Set(a)];
+  const V=uniq(verbs),A=uniq(adjs);let i=0;
+  (function chunk(){
+    const end=Math.min(i+400,V.length+A.length);
+    for(;i<end;i++){
+      if(i<V.length){const e=V[i],v=e.verb;
+        v.present.forEach(f=>f.split(' / ').forEach(x=>{x=x.trim();if(x&&x!==e.nl&&!x.includes(' '))add(x,e,'una forma del presente')}));
+        v.past.forEach(f=>f.split(' / ').forEach(x=>{if(!x.includes(' '))add(x.trim(),e,'una forma del pasado')}));
+        add(v.participle,e,'el participio');
+      }else{const e=A[i-V.length],a=e.adj;
+        if(a.inflected!==e.nl)add(a.inflected,e,'la forma flexionada');add(a.comparative,e,'el comparativo');add(a.superlative,e,'el superlativo')}
     }
+    if(i<V.length+A.length)setTimeout(chunk,0);
+  })();
+  document.getElementById('loadline').textContent=`${(BIG_N+ENTRIES.length).toLocaleString('es-ES')} palabras disponibles sin conexión.`;
+}).catch(()=>{document.getElementById('loadline').textContent='No se pudo cargar el diccionario completo; funciona la base revisada y la consulta a Claude.'});
 
-    function setNoun(word) {
-      document.getElementById('nounInput').value = word;
-      analyzeNoun();
-    }
+function lookup(q){
+  const tries=[norm(q),norm(stripArt(q))];
+  const s=norm(stripArt(q));
+  if(s.endsWith('es'))tries.push(s.slice(0,-2));
+  if(s.endsWith('s'))tries.push(s.slice(0,-1));
+  for(const k of tries){const r=idx.get(k);if(r&&r.length){
+    const prio=x=>(x.e.pos==='grammar'?0:x.e.src==='base'?1:2)+(x.via?0.5:0);
+    return r.slice().sort((a,b)=>prio(a)-prio(b));
+  }}
+  return[];
+}
 
-    function handleNounInput() {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        analyzeNoun();
-      }, 300);
-    }
+/* ---------- render ---------- */
+const d=s=>`<span class="d">${esc(s)}</span>`;
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+const sayBtn=(t,cls)=>`<button type="button" class="say ${cls||''}" data-say="${esc(t)}" aria-label="Escuchar «${esc(t)}»" title="Escuchar">${SPK}</button>`;
+const PRON_SAY=['ik','jij','hij','wij','jullie','zij'];
+function detRows(n,A,P){
+  const de=A==='de';n=esc(n);const p=P?esc(P.split('/')[0].trim()):null;const no='—';
+  return[
+    ['Artículo',`${d(A)} ${n}`,p?`${d('de')} ${p}`:no],
+    ['Indefinido',`${d('een')} ${n}`,p?p:no],
+    ['este, esta',`${d(de?'deze':'dit')} ${n}`,p?`${d('deze')} ${p}`:no],
+    ['ese, aquel',`${d(de?'die':'dat')} ${n}`,p?`${d('die')} ${p}`:no],
+    ['el mismo',`${d(de?'dezelfde':'hetzelfde')} ${n}`,p?`${d('dezelfde')} ${p}`:no],
+    ['ese mismo',`${d(de?'diezelfde':'datzelfde')} ${n}`,p?`${d('diezelfde')} ${p}`:no],
+    ['este mismo',`${d(de?'dezezelfde':'ditzelfde')} ${n}${de?' <small>(poco usado)</small>':''}`,p?`${d('dezezelfde')} ${p}`:no],
+    ['¿qué?, ¿cuál?',`${d(de?'welke':'welk')} ${n}`,p?`${d('welke')} ${p}`:no],
+    ['cada',`${d(de?'elke / iedere':'elk / ieder')} ${n}`,no],
+    ['ningún',`${d('geen')} ${n}`,p?`${d('geen')} ${p}`:no],
+    ['Relativo (que…)',`${d(A)} ${n} ${d(de?'die':'dat')} …`,p?`${d('de')} ${p} ${d('die')} …`:no],
+    ['Adjetivo + artículo',`${d(A+' mooie')} ${n}`,p?`${d('de mooie')} ${p}`:no],
+    ['Adjetivo + een',`${d(de?'een mooie':'een mooi')} ${n}`,p?`${d('mooie')} ${p}`:no],
+    ['Pronombre',`${d(de?'hij':'het')} · ${d(de?'die':'dat')}`,p?`${d('ze')} · ${d('die')}`:no]
+  ];
+}
+function nounBlock(e){
+  let{article:A,plural:P,diminutive:D}=e.noun;if(A==='de/het')A='de';
+  const rows=detRows(e.nl,A,P).map(r=>`<tr><td>${r[0]}</td><td class="col-${A}">${r[1]}</td><td class="col-pl">${r[2]}</td></tr>`).join('');
+  return`<section><div class="facts">
+    <div class="fact"><span>Plural</span><b>${P?'de '+esc(P)+sayBtn('de '+P.split('/')[0].trim(),'sm'):'sin plural habitual'}</b></div>
+    <div class="fact"><span>Diminutivo</span><b>${D?'het '+esc(D):'—'}</b></div>
+    <div class="fact"><span>Se sustituye por</span><b>${A==='de'?'hij / die':'het / dat'}</b></div></div></section>
+  <section><h3>Determinantes y concordancia</h3><div class="tbl"><table><thead><tr><th>Función</th><th>Singular</th><th>Plural</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+function tenses(v){
+  const hz=v.aux==='hz',z=v.aux==='z';
+  const perf=i=>hz?`${HEB[i]} / ${BEN[i]} ${v.participle}`:`${(z?BEN:HEB)[i]} ${v.participle}`;
+  const plus=i=>hz?`${HAD[i]} / ${WAS[i]} ${v.participle}`:`${(z?WAS:HAD)[i]} ${v.participle}`;
+  return[['Presente','o.t.t.',v.present],['Pasado','o.v.t.',PRON.map((_,i)=>v.past[i<3?0:1])],
+    ['Perfecto','v.t.t.',PRON.map((_,i)=>perf(i))],['Pluscuamperfecto','v.v.t.',PRON.map((_,i)=>plus(i))],
+    ['Futuro','o.t.t.t.',ZAL.map(a=>a+' '+v.inf)],['Condicional','o.v.t.t.',ZOU.map(a=>a+' '+v.inf)]];
+}
+function verbBlock(e){
+  const v=e.verb;
+  const grid=tenses(v).map(([t,abbr,f])=>`<div class="tense"><h4>${t}<small>${abbr}${sayBtn(f.map((x,i)=>PRON_SAY[i]+' '+x.split(' / ')[0]).join(', '),'sm')}</small></h4><dl>${f.map((x,i)=>`<dt>${PRON[i]}</dt><dd>${esc(x)}</dd>`).join('')}</dl></div>`).join('');
+  const auxTxt=v.aux==='z'?'zijn':v.aux==='hz'?'hebben o zijn':'hebben';
+  let notes=[];
+  if(v.aux==='hz')notes.push('Con verbos de movimiento: hebben si hablas de la actividad (ik heb gelopen); zijn si hay destino (ik ben naar huis gelopen).');
+  const j=v.present[1],ik=v.present[0];
+  if(v.regularStem&&j!==ik){const base=ik.split(' ')[0];notes.push(`Con inversión, jij pierde la -t: ${base.charAt(0).toUpperCase()+base.slice(1)} jij${v.prefix?' '+v.prefix:''}?`)}
+  if(v.prefix)notes.push(`Verbo separable: la partícula "${v.prefix}" va al final de la frase en presente y pasado, y se une en el infinitivo y el participio.`);
+  return`<section><div class="facts">
+    <div class="fact"><span>Participio</span><b>${esc(v.participle)}</b></div>
+    <div class="fact"><span>Auxiliar</span><b>${auxTxt}</b></div>
+    <div class="fact"><span>Imperativo</span><b>${v.imperative?esc(v.imperative)+'!':'—'}</b></div>
+    <div class="fact"><span>Pasado</span><b>${esc(v.past[0])} · ${esc(v.past[1])}</b></div></div></section>
+  <section><h3>Conjugación</h3><div class="conj">${grid}</div>${notes.map(n=>`<p class="note" style="margin-top:10px">${esc(n)}</p>`).join('')}</section>`;
+}
+function adjBlock(e){
+  const a=e.adj,nl=esc(e.nl),inf=esc(a.inflected||e.nl);
+  const rows=[
+    ['Con de-woord',`de ${d(inf)} tafel · een ${d(inf)} tafel`],
+    ['Con het-woord definido',`het ${d(inf)} huis`],
+    ['Con het-woord + een',`een ${d(nl)} huis`],
+    ['Plural',`de ${d(inf)} huizen · ${d(inf)} huizen`],
+    ['Predicativo',`de tafel is ${d(nl)}`],
+    ['Comparativo',`${d(a.comparative||'—')} (dan …)`],
+    ['Superlativo',`de / het ${d(a.superlative?a.superlative+'e':'—')} · het ${d(a.superlative||'—')}`]
+  ].map(r=>`<tr><td>${r[0]}</td><td class="col-de">${r[1]}</td></tr>`).join('');
+  return`<section><h3>Formas</h3><div class="tbl"><table><tbody>${rows}</tbody></table></div>
+  <p class="note" style="margin-top:10px">El adjetivo lleva -e delante del sustantivo, excepto con un het-woord singular indefinido (een, geen, elk, welk, zo'n o sin artículo).</p></section>`;
+}
+function grammarCard(){
+  const m=detRows('man','de','mannen'),h=detRows('huis','het','huizen');
+  const rows=m.map((r,i)=>`<tr><td>${r[0]}</td><td class="col-de">${r[1]}</td><td class="col-het">${h[i][1]}</td><td class="col-pl">${h[i][2]}</td></tr>`).join('');
+  return`<article class="entry"><div class="hw-row"><h2 class="hw"><span class="art art-de">de</span>/ <span class="art art-het">het</span></h2><span class="pill">gramática</span></div>
+  <p class="tr">Determinantes según el género del sustantivo</p>
+  <section><div class="tbl"><table><thead><tr><th>Función</th><th>de-woord</th><th>het-woord</th><th>Plural (siempre de)</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+  <p class="note">"Lo mismo" sin sustantivo se dice hetzelfde: Dat is hetzelfde. En plural todo funciona como un de-woord: de, deze, die, dezelfde, welke.</p></article>`;
+}
+const POS={noun:'sustantivo',verb:'verbo',adj:'adjetivo'};
+function card(e,via,q){
+  if(e.pos==='grammar')return grammarCard();
+  const A=e.pos==='noun'?e.noun.article:null;const dh=A==='de/het';
+  const art=A?`<span class="art art-${dh?'dh':A}">${A}</span>`:'';
+  const srcPill=e.src==='claude'?'<span class="pill ai">Claude</span>':e.src==='open'?'<span class="pill open">datos abiertos</span>':'';
+  const sayTxt=A&&A!=='de/het'?A+' '+e.nl:e.nl;
+  const head=`<div class="hw-row"><h2 class="hw">${art}${esc(e.nl)}</h2>${sayBtn(sayTxt,'')}<span class="pill">${esc(e.posLabel||POS[e.pos]||'')}${A?' · '+A+'-woord':''}</span>${srcPill}</div>`;
+  const viaTxt=via?`<p class="via">«${esc(q)}» es ${esc(via)} de <b>${esc(e.nl)}</b>.</p>`:'';
+  const trTxt=(e.es&&e.es.length)?`<p class="tr">${esc(e.es.join(' · '))}</p>`:`<p class="tr notr">Sin traducción en la base. Usa «Consultar a Claude» abajo.</p>`;
+  if(dh&&!e.note)e.note='Este sustantivo admite de y het (según la región o el significado). La tabla muestra las formas con de.';
+  if(e.pos==='verb'&&e.verb&&e.verb.auto&&!e.note)e.note='Conjugación generada por reglas a partir del infinitivo. En verbos poco comunes, compruébala con «Consultar a Claude».';
+  let body='';
+  if(e.pos==='noun'&&e.noun)body=nounBlock(e);else if(e.pos==='verb'&&e.verb)body=verbBlock(e);else if(e.pos==='adj'&&e.adj)body=adjBlock(e);
+  const ex=e.example&&e.example.nl?`<p class="ex">${esc(e.example.nl)}${sayBtn(e.example.nl,'sm')}<span>${esc(e.example.es||'')}</span></p>`:'';
+  const note=e.note?`<p class="note">${esc(e.note)}</p>`:'';
+  return`<article class="entry">${head}${viaTxt}${trTxt}${body}${ex}${note}</article>`;
+}
 
-    async function analyzeNoun() {
-      const input = document.getElementById('nounInput').value.trim().toLowerCase();
-      if (!input) return;
+/* ---------- almacenamiento local ---------- */
+let store={hist:[],cache:{}};
+try{const s=JSON.parse(localStorage.getItem('wb.v1')||'null');if(s&&s.cache)store=s}catch(_){}
+const save=()=>{try{localStorage.setItem('wb.v1',JSON.stringify(store))}catch(_){}};
 
-      let art = "de";
-      let plural = input + "en";
-      let translationText = "...";
-      let ruleEs = "Regla general: Añade <strong>-en</strong> para formar el plural.";
-      let ruleEn = "General rule: Add <strong>-en</strong> to form the plural.";
-      let isPluralDetected = false;
+/* ---------- Claude ---------- */
+const sampleP=(window.claude&&claude.use)?Promise.resolve(claude.use('sample')).catch(()=>null):Promise.resolve(null);
+function fromAI(x){
+  if(!x||!x.nl)return null;
+  const e={nl:String(x.nl),es:Array.isArray(x.es)?x.es.map(String):[String(x.es||'')],pos:['noun','verb','adj'].includes(x.pos)?x.pos:'other',posLabel:x.posLabel||null,example:x.example||null,note:x.note||null,src:'claude'};
+  if(e.pos==='noun'){const n=x.noun||{};const a=n.article==='het'?'het':'de';e.noun={article:a,plural:n.plural||null,diminutive:n.diminutive||null};e.posLabel=null}
+  if(e.pos==='verb'){const v=x.verb||{};if(Array.isArray(v.present)&&v.present.length===6&&Array.isArray(v.past)&&v.past.length===2){
+      const aux=/hebben\s*\/\s*zijn|zijn\s*\/\s*hebben/.test(v.aux||'')?'hz':(v.aux==='zijn'?'z':'h');
+      e.verb={inf:e.nl,present:v.present.map(String),past:v.past.map(String),participle:String(v.participle||''),aux,imperative:v.imperative||null,prefix:v.separable||null,regularStem:null};
+    }else{e.pos='other';e.posLabel='verbo'}e.posLabel=e.pos==='verb'?null:e.posLabel}
+  if(e.pos==='adj'){const a=x.adj||{};e.adj={inflected:a.inflected||e.nl,comparative:a.comparative||null,superlative:a.superlative||null};e.posLabel=null}
+  return e;
+}
+function prompt(q){return`Eres un diccionario español–neerlandés para un hispanohablante que aprende neerlandés (nivel inicial-intermedio). Consulta: "${q}".
+Detecta si está en español o en neerlandés (puede ser una forma conjugada, un plural o un diminutivo; en ese caso devuelve el lema).
+Responde SOLO con JSON de esta forma:
+{"lang":"es"|"nl","entries":[ENTRY,...],"note":null}
+Hasta 4 entradas: si la palabra española tiene varias traducciones neerlandesas con sentidos distintos, una entrada por cada una, la más común primero.
+ENTRY = {"nl":"lema en neerlandés sin artículo (infinitivo si es verbo)","es":["traducción","..."],"pos":"noun"|"verb"|"adj"|"other","posLabel":"solo si pos es other: categoría en español (adverbio, preposición...)","noun":{"article":"de"|"het","plural":"forma plural o null","diminutive":"diminutivo o null"},"verb":{"present":["ik","jij","hij","wij","jullie","zij"],"past":["pasado singular","pasado plural"],"participle":"voltooid deelwoord","aux":"hebben"|"zijn"|"hebben/zijn","imperative":"imperativo o null","separable":"partícula o null"},"adj":{"inflected":"forma con -e","comparative":"...","superlative":"sin -e"},"example":{"nl":"frase corta y natural","es":"su traducción"},"note":"nota breve en español sobre uso, irregularidad o falsos amigos, o null"}
+Incluye solo el objeto que corresponde al pos. En "present" pon solo la forma del verbo (sin pronombre). En verbos separables, las formas conjugadas llevan la partícula detrás ("bel op", "belde op") y el participio unido ("opgebeld"). Si el sustantivo admite de y het, elige el estándar de los Países Bajos y explícalo en note. Si la consulta no es una palabra reconocible, devuelve entries vacío y explica en note.`}
 
-      // 1. Local Database lookup
-      if (nounDb[input]) {
-        art = nounDb[input].art;
-        plural = nounDb[input].plural;
-        translationText = currentLang === 'es' ? nounDb[input].es : nounDb[input].en;
-        ruleEs = nounDb[input].pluralRuleEs;
-        ruleEn = nounDb[input].pluralRuleEn;
-      } 
-      // 2. Heuristics for Het words (Diminutives, ge-, be-, ver-, -isme, -ment)
-      else if (input.endsWith("tje") || input.endsWith("je") || input.endsWith("pje") || input.endsWith("kje") || input.endsWith("fe")) {
-        art = "het";
-        plural = input + "s";
-        ruleEs = "Al ser un diminutivo (terminado en <strong>-je</strong>), es siempre <strong>HET</strong> y su plural añade <strong>-s</strong>.";
-        ruleEn = "As a diminutive (ending in <strong>-je</strong>), it is always <strong>HET</strong> and adds <strong>-s</strong> for plural.";
-      } else if (input.endsWith("ment") || input.endsWith("isme") || input.endsWith("um")) {
-        art = "het";
-        plural = input + "s";
-        ruleEs = "Palabras terminadas en -ment, -isme o -um son casi siempre <strong>HET</strong>.";
-        ruleEn = "Words ending in -ment, -isme, or -um are almost always <strong>HET</strong>.";
-      } else if (input.endsWith("el") || input.endsWith("er") || input.endsWith("en") || input.endsWith("em")) {
-        plural = input + "s";
-        ruleEs = "Terminaciones en <strong>-el, -er, -en</strong> añaden <strong>-s</strong> en plural.";
-        ruleEn = "Endings in <strong>-el, -er, -en</strong> add <strong>-s</strong> in plural.";
-      }
+let ctl=null;
+async function askClaude(q,slot){
+  slot.innerHTML=`<div class="status"><span class="dot"></span><p>Consultando a Claude «${esc(q)}»…</p><button class="btn-ghost" id="stop" type="button">Cancelar</button></div>`;
+  const sample=await sampleP;
+  if(!sample){slot.innerHTML=`<div class="status"><p>No está en el diccionario base, y la consulta a Claude solo funciona cuando abres esta página dentro de Claude.</p></div>`;return}
+  ctl?.abort();ctl=new AbortController();const my=ctl;
+  slot.querySelector('#stop').onclick=()=>my.abort();
+  try{
+    const r=await sample.json(prompt(q),{signal:my.signal,cache:{gcTime:86400000}});
+    const ents=(Array.isArray(r?.entries)?r.entries:[]).map(fromAI).filter(Boolean);
+    if(!ents.length){slot.innerHTML=`<div class="status"><p>${esc(r?.note||'No he encontrado esa palabra. Revisa la ortografía.')}</p></div>`;return}
+    store.cache[norm(stripArt(q))]=ents;for(const e of ents)store.cache[norm(e.nl)]=store.cache[norm(e.nl)]||[e];save();
+    slot.innerHTML=ents.map(e=>card(e,null,q)).join('');
+  }catch(e){
+    if(e?.code==='cancelled'){slot.innerHTML='';return}
+    const msg={not_granted:'Has denegado el acceso a Claude para esta página, así que solo funciona el diccionario base.',rate_limited:'Demasiadas consultas seguidas. Espera un momento y vuelve a buscar.',invalid_json:'La respuesta no llegó con el formato esperado. Vuelve a intentarlo.',session_expired:'Tu sesión ha caducado. Vuelve a iniciar sesión en Claude.',sampling_disabled:'Claude no está disponible para tu cuenta en esta página.'}[e?.code]||'No se pudo completar la consulta. Vuelve a intentarlo.';
+    slot.innerHTML=`<div class="status"><p>${esc(msg)}</p><button class="btn-ghost" type="button" id="retry">Reintentar</button></div>`;
+    const b=slot.querySelector('#retry');if(b)b.onclick=()=>askClaude(q,slot);
+  }
+}
 
-      // Check if user input is plural directly (ends in -en or -s)
-      if (input.endsWith("en") && !nounDb[input] && input.length > 4) {
-        isPluralDetected = true;
-      }
+/* ---------- búsqueda ---------- */
+const $res=document.getElementById('results'),$q=document.getElementById('q');
+let searchId=0;
+async function search(q,remember=true){
+  q=q.trim();if(!q)return;
+  if(remember){store.hist=[q,...store.hist.filter(h=>norm(h)!==norm(q))].slice(0,12);save();renderChips()}
+  const my=++searchId;
+  let base=lookup(q);
+  if(!base.length){$res.innerHTML='<p class="res-head">Buscando…</p>';await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==searchId)return;base=lookup(q)}
+  const MAX=6;const hidden=base.length>MAX?base.slice(MAX):[];base=base.slice(0,MAX);const cached=store.cache[norm(stripArt(q))]||store.cache[norm(q)]||null;
+  const seen=new Set(base.map(b=>b.e.nl+'|'+b.e.pos));
+  const extra=(cached||[]).filter(e=>!seen.has(e.nl+'|'+e.pos));
+  const tot=base.length+hidden.length+extra.length;
+  let html=`<p class="res-head">${tot?`${tot} resultado${tot>1?'s':''} para «${esc(q)}»`:`«${esc(q)}» no está en el diccionario`}</p>`;
+  html+=base.map(b=>card(b.e,b.via,q)).join('')+extra.map(e=>card(e,null,q)).join('');
+  if(hidden.length)html+=`<div id="morebox"><button class="btn-ghost" type="button" id="showmore">Mostrar ${hidden.length} resultado${hidden.length>1?'s':''} más</button></div>`;
+  html+=`<div id="ai"></div>`;
+  $res.innerHTML=html;
+  const sm=document.getElementById('showmore');
+  if(sm)sm.onclick=()=>{document.getElementById('morebox').outerHTML=hidden.map(b=>card(b.e,b.via,q)).join('')};
+  const slot=document.getElementById('ai');
+  if(!base.length&&!cached)askClaude(q,slot);
+  else if(!cached&&!(base.length===1&&base[0].e.pos==='grammar')){
+    slot.innerHTML=`<div class="status"><p>¿Buscas otra acepción o más ejemplos?</p><button class="btn-ghost" type="button" id="more">Consultar a Claude</button></div>`;
+    slot.querySelector('#more').onclick=()=>askClaude(q,slot);
+  }
+}
+const EXAMPLES=['huis','lopen','el mismo','mooi','opbellen','ventana','hablar','liep'];
+function renderChips(){
+  const c=document.getElementById('chips');
+  const mk=w=>`<button type="button" class="chip" data-w="${esc(w)}">${esc(w)}</button>`;
+  c.innerHTML=store.hist.length?`<span class="lbl">Recientes</span>${store.hist.map(mk).join('')}`:`<span class="lbl">Prueba</span>${EXAMPLES.map(mk).join('')}`;
+}
+document.getElementById('chips').addEventListener('click',ev=>{const b=ev.target.closest('.chip');if(b){$q.value=b.dataset.w;search(b.dataset.w)}});
+document.getElementById('f').addEventListener('submit',ev=>{ev.preventDefault();search($q.value)});
+/* ---------- pronunciación ---------- */
+const synth=('speechSynthesis' in window)?window.speechSynthesis:null;
+let nlVoice=null;
+function pickVoice(){
+  if(!synth)return;
+  const vs=synth.getVoices().filter(v=>/^nl([-_]|$)/i.test(v.lang));
+  nlVoice=vs.find(v=>/nl[-_]NL/i.test(v.lang)&&/google|natural|premium|enhanced|neural/i.test(v.name))||vs.find(v=>/nl[-_]NL/i.test(v.lang))||vs[0]||null;
+}
+if(synth){pickVoice();try{synth.addEventListener('voiceschanged',pickVoice)}catch(_){}}
+let toastT;
+function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},4000)}
+function speak(text,btn){
+  if(!synth){toast('Tu navegador no permite reproducir voz.');return}
+  if(!nlVoice)pickVoice();
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/\s*\/\s*/g,', '));
+  u.lang=nlVoice?nlVoice.lang:'nl-NL';if(nlVoice)u.voice=nlVoice;u.rate=0.85;
+  document.querySelectorAll('.say.on').forEach(b=>b.classList.remove('on'));
+  if(btn){btn.classList.add('on');u.onend=u.onerror=()=>btn.classList.remove('on')}
+  synth.speak(u);
+  if(!nlVoice)toast('No hay voz neerlandesa instalada en este dispositivo; puede sonar con acento. Instala «Nederlands» en los ajustes de voz del sistema.');
+}
+document.getElementById('results').addEventListener('click',ev=>{const b=ev.target.closest('.say');if(b){ev.preventDefault();speak(b.dataset.say,b)}});
 
-      // 3. Online Auto-Translation Fallback via MyMemory API
-      document.getElementById('nounTranslation').innerText = "Cargando traducción...";
-      try {
-        const langPair = currentLang === 'es' ? 'nl|es' : 'nl|en';
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`);
-        const data = await res.json();
-        if (data && data.responseData && data.responseData.translatedText) {
-          let trans = data.responseData.translatedText.toLowerCase();
-          // Clean up articles if translation includes them
-          trans = trans.replace(/^(el|la|los|las|un|una|the|a|an)\s+/, '');
-          translationText = trans;
-        }
-      } catch (e) {
-        translationText = currentLang === 'es' ? "Traducción general" : "General translation";
-      }
+renderChips();search('huis',false);
+</script>
 
-      document.getElementById('articleBadge').innerText = art.toUpperCase();
-      document.getElementById('articleBadge').className = art === "de" ? 
-        "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 mr-2" :
-        "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 mr-2";
-      
-      document.getElementById('nounDisplay').innerText = input;
-      document.getElementById('nounTranslation').innerText = translationText;
-      document.getElementById('pluralDisplay').innerText = "de " + plural;
-      document.getElementById('pluralExplanation').innerHTML = currentLang === 'es' ? ruleEs : ruleEn;
-
-      if (art === "de") {
-        document.getElementById('demNear').innerText = `deze ${input}`;
-        document.getElementById('demFar').innerText = `die ${input}`;
-        document.getElementById('idSameType').innerText = `dezelfde ${input}`;
-        document.getElementById('idSameExact').innerText = `diezelfde ${input}`;
-        if (currentLang === 'es') {
-          document.getElementById('ruleText').innerHTML = `Como <strong>${input}</strong> es una palabra <strong>DE</strong>, sus demostrativos de cerca terminan en <strong>-e</strong> (deze / die / dezelfde / diezelfde).`;
-        } else {
-          document.getElementById('ruleText').innerHTML = `Since <strong>${input}</strong> is a <strong>DE</strong> word, its demonstratives end with <strong>-e</strong> (deze / die / dezelfde / diezelfde).`;
-        }
-      } else {
-        document.getElementById('demNear').innerText = `dit ${input}`;
-        document.getElementById('demFar').innerText = `dat ${input}`;
-        document.getElementById('idSameType').innerText = `hetzelfde ${input}`;
-        document.getElementById('idSameExact').innerText = `datzelfde ${input}`;
-        if (currentLang === 'es') {
-          document.getElementById('ruleText').innerHTML = `Como <strong>${input}</strong> es una palabra <strong>HET</strong>, usa <strong>dit</strong> (cerca), <strong>dat</strong> (lejos), <strong>hetzelfde</strong> (mismo modelo) y <strong>datzelfde</strong> (mismo objeto exacto).`;
-        } else {
-          document.getElementById('ruleText').innerHTML = `Since <strong>${input}</strong> is a <strong>HET</strong> word, it uses <strong>dit</strong> (near), <strong>dat</strong> (far), <strong>hetzelfde</strong> (same model) and <strong>datzelfde</strong> (exact same item).`;
-        }
-      }
-    }
-
-    function setVerb(verb) {
-      document.getElementById('verbInput').value = verb;
-      conjugateVerb();
-    }
-
-    async function conjugateVerb() {
-      const input = document.getElementById('verbInput').value.trim().toLowerCase();
-      if (!input) return;
-
-      document.getElementById('verbTitle').innerText = input;
-      let vTrans = "...";
-
-      if (verbDb[input]) {
-        const data = verbDb[input];
-        vTrans = currentLang === 'es' ? data.es : data.en;
-        document.getElementById('verbTypeBadge').innerText = data.type;
-        document.getElementById('verbTypeBadge').className = data.type === "Irregular" ? 
-          "text-xs px-3 py-1 rounded-full font-bold bg-amber-100 text-amber-700" :
-          "text-xs px-3 py-1 rounded-full font-bold bg-green-100 text-green-700";
-
-        document.getElementById('presIk').innerText = data.ik;
-        document.getElementById('presJij').innerText = data.jij;
-        document.getElementById('presJijInv').innerText = data.jijInv;
-        document.getElementById('presHij').innerText = data.hij;
-        document.getElementById('presPlural').innerText = data.plural;
-        document.getElementById('ovtSingular').innerText = data.ovtS;
-        document.getElementById('ovtPlural').innerText = data.ovtP;
-        document.getElementById('auxVerb').innerText = data.aux;
-        document.getElementById('pastParticiple').innerText = data.part;
-      } else {
-        document.getElementById('verbTypeBadge').innerText = "Regular";
-        document.getElementById('verbTypeBadge').className = "text-xs px-3 py-1 rounded-full font-bold bg-green-100 text-green-700";
-
-        let stem = input.endsWith("en") ? input.slice(0, -2) : input;
-        
-        if (stem.length > 2 && !/[aeiou]{2}/.test(stem) && /[aeiou]/.test(stem[stem.length-2]) && !/[aeiou]/.test(stem[stem.length-1])) {
-          let v = stem[stem.length-2];
-          if (["a", "e", "o", "u"].includes(v)) {
-            stem = stem.slice(0, -2) + v + stem.slice(-2);
-          }
-        }
-        if (stem.endsWith("z")) stem = stem.slice(0, -1) + "s";
-        if (stem.endsWith("v")) stem = stem.slice(0, -1) + "f";
-
-        const kofschip = ["t", "k", "f", "s", "c", "h", "p"];
-        const lastChar = input.endsWith("en") ? input[input.length - 3] : stem[stem.length - 1];
-        const isKofschip = kofschip.includes(lastChar);
-        const pastEnding = isKofschip ? "te" : "de";
-        const partEnding = isKofschip ? "t" : "d";
-
-        document.getElementById('presIk').innerText = stem;
-        document.getElementById('presJij').innerText = stem + "t";
-        document.getElementById('presJijInv').innerText = stem + " je?";
-        document.getElementById('presHij').innerText = stem + "t";
-        document.getElementById('presPlural').innerText = input;
-        document.getElementById('ovtSingular').innerText = stem + pastEnding;
-        document.getElementById('ovtPlural').innerText = stem + pastEnding + "n";
-        document.getElementById('auxVerb').innerText = "heeft";
-        document.getElementById('pastParticiple').innerText = "ge" + stem + partEnding;
-      }
-
-      try {
-        const langPair = currentLang === 'es' ? 'nl|es' : 'nl|en';
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`);
-        const data = await res.json();
-        if (data && data.responseData && data.responseData.translatedText) {
-          vTrans = data.responseData.translatedText.toLowerCase();
-        }
-      } catch (e) {
-        vTrans = currentLang === 'es' ? "Traducción general" : "General translation";
-      }
-
-      document.getElementById('verbTranslation').innerText = vTrans;
-    }
-
-    // Initialize default view
-    analyzeNoun();
-    conjugateVerb();
-  </script>
 </body>
 </html>
