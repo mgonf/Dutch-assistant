@@ -175,7 +175,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .prow .p2{color:var(--muted);font-size:.92rem}
 .prow .say{grid-row:span 2;width:36px;height:36px}
 .prow.hide .p2{color:transparent;background:var(--paper);border-radius:6px;user-select:none}
-.prow.hide .p2::after{content:"Toca para ver";color:var(--muted);font-size:.8rem;margin-left:-6.5em}
+.prow.hide .p2{position:relative}.prow.hide .p2::after{content:attr(data-hint);position:absolute;left:8px;color:var(--muted);font-size:.8rem}
 .toggle{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted);cursor:pointer}
 
 /* games */
@@ -272,19 +272,38 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .kof span{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .kof b{font-family:var(--f-display);font-weight:600;font-size:1.15rem}
 .empty{color:var(--muted);text-align:center;padding:30px}
+
+.art-es{color:#8a5a00;background:#fff1cc}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .art-es{color:#f2c14e;background:#3a2e12}}
+:root[data-theme="dark"] .art-es{color:#f2c14e;background:#3a2e12}
+.learn{font:600 .85rem var(--f-ui);color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:6px 10px;max-width:100%}
+.tn{margin:6px 0 0;font-size:.75rem;color:var(--muted)}
+.esform{display:flex;gap:8px;width:100%}
+.esform input{flex:1;min-width:0;font:500 1rem var(--f-ui);color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px}
+@media (max-width:640px){.learn{order:1}}
+
+.dir .cw{display:none}
+.learn{margin-left:auto}
+.dir{margin-left:0}
+@media (max-width:1100px){.logo i{display:none}.tab{padding:8px 11px}}
+@media (max-width:640px){.learn{margin-left:0;order:1;flex:1}.dir{order:1}}
+.topbar-in{gap:10px 12px}
+@media (max-width:1240px){.logo i{display:none}}
+.learn{max-width:190px}
 </style>
 
 <div class="topbar">
   <div class="topbar-in">
     <h1 class="logo" id="logo">Woordenboek <i>es ⇄ nl</i></h1>
     <nav class="tabs" aria-label="Secciones">
-      <button class="tab" type="button" data-go="diccionario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="tl">Diccionario</span></button>
-      <button class="tab" type="button" data-go="gramatica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M8 7h7"/></svg><span class="tl">Gramática</span></button>
-      <button class="tab" type="button" data-go="vocabulario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg><span class="tl">Vocabulario</span></button>
+      <button class="tab" type="button" data-go="diccionario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="tl" data-nl="Woordenboek">Diccionario</span></button>
+      <button class="tab" type="button" data-go="gramatica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M8 7h7"/></svg><span class="tl" data-nl="Grammatica">Gramática</span></button>
+      <button class="tab" type="button" data-go="vocabulario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg><span class="tl" data-nl="Woordenschat">Vocabulario</span></button>
     </nav>
+    <select class="learn" id="learn" aria-label="Idioma que aprendes / Taal die je leert"><option value="nl">🇪🇸 Aprendo neerlandés</option><option value="es">🇳🇱 Ik leer Spaans</option></select>
     <div class="dir" title="Dirección de las tarjetas, los tests y las frases">
       <span class="lang" id="dirlabel">NL → ES</span>
-      <button type="button" id="dirbtn" aria-label="Cambiar la dirección de traducción">⇄<span class="cw"> cambiar</span></button>
+      <button type="button" id="dirbtn" aria-label="Cambiar la dirección de traducción">⇄<span class="cw" data-nl=" wisselen"> cambiar</span></button>
     </div>
   </div>
 </div>
@@ -292,13 +311,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <main class="view" id="v-dict">
   <div class="wrap">
     <header>
-      <h2 class="h-sec">Diccionario</h2>
+      <h2 class="h-sec" data-nl="Woordenboek">Diccionario</h2>
       <div class="legend"><span class="art art-de">de</span> de-woord <span class="art art-het">het</span> het-woord</div>
     </header>
 
     <form class="search" id="f" autocomplete="off">
       <input id="q" type="search" placeholder="casa, lopen, el mismo, liep…" aria-label="Palabra en español o neerlandés">
-      <button class="btn-main" type="submit">Buscar</button>
+      <button class="btn-main" type="submit" data-nl="Zoeken">Buscar</button>
     </form>
 
     <p class="loadline" id="loadline">Cargando el diccionario completo…</p>
@@ -314,7 +333,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B1) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
 
-<script>
+<script>const Lx=(es,nl)=>{try{return APP.learn==='es'?nl:es}catch(_){return es}};
+
 /* ---------- datos base ---------- */
 const NOUNS=[
 ['man','de','mannen','mannetje','hombre'],['vrouw','de','vrouwen','vrouwtje','mujer'],['kind','het','kinderen','kindje','niño, niña; hijo, hija'],
@@ -621,7 +641,7 @@ const loadP=fetch('dict.json').then(r=>{if(!r.ok)throw new Error(r.status);retur
     }
     if(i<V.length+A.length)setTimeout(chunk,0);
   })();
-  document.getElementById('loadline').textContent=`${(BIG_N+ENTRIES.length).toLocaleString('es-ES')} palabras disponibles sin conexión.`;
+  document.getElementById('loadline').textContent=`${(BIG_N+ENTRIES.length).toLocaleString('es-ES')} ${Lx('palabras disponibles sin conexión.','woorden offline beschikbaar.')}`;
 }).catch(()=>{document.getElementById('loadline').textContent='No se pudo cargar el diccionario completo; funciona la base revisada y la consulta a Claude.'});
 
 function lookup(q){
@@ -639,7 +659,7 @@ function lookup(q){
 /* ---------- render ---------- */
 const d=s=>`<span class="d">${esc(s)}</span>`;
 const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
-const sayBtn=(t,cls)=>`<button type="button" class="say ${cls||''}" data-say="${esc(t)}" aria-label="Escuchar «${esc(t)}»" title="Escuchar">${SPK}</button>`;
+const sayBtn=(t,cls,lang)=>`<button type="button" class="say ${cls||''}" data-say="${esc(t)}" data-lang="${lang||'nl'}" aria-label="${lang==='es'?'Escuchar en español':'Escuchar'} «${esc(t)}»" title="${lang==='es'?'Escuchar (español)':'Escuchar'}">${SPK}</button>`;
 const PRON_SAY=['ik','jij','hij','wij','jullie','zij'];
 function detRows(n,A,P){
   const de=A==='de';n=esc(n);const p=P?esc(P.split('/')[0].trim()):null;const no='—';
@@ -664,10 +684,10 @@ function nounBlock(e){
   let{article:A,plural:P,diminutive:D}=e.noun;if(A==='de/het')A='de';
   const rows=detRows(e.nl,A,P).map(r=>`<tr><td>${r[0]}</td><td class="col-${A}">${r[1]}</td><td class="col-pl">${r[2]}</td></tr>`).join('');
   return`<section><div class="facts">
-    <div class="fact"><span>Plural</span><b>${P?'de '+esc(P)+sayBtn('de '+P.split('/')[0].trim(),'sm'):'sin plural habitual'}</b></div>
-    <div class="fact"><span>Diminutivo</span><b>${D?'het '+esc(D):'—'}</b></div>
-    <div class="fact"><span>Se sustituye por</span><b>${A==='de'?'hij / die':'het / dat'}</b></div></div></section>
-  <section><h3>Determinantes y concordancia</h3><div class="tbl"><table><thead><tr><th>Función</th><th>Singular</th><th>Plural</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+    <div class="fact"><span>${Lx('Plural','Meervoud')}</span><b>${P?'de '+esc(P)+sayBtn('de '+P.split('/')[0].trim(),'sm'):'sin plural habitual'}</b></div>
+    <div class="fact"><span>${Lx('Diminutivo','Verkleinwoord')}</span><b>${D?'het '+esc(D):'—'}</b></div>
+    <div class="fact"><span>${Lx('Se sustituye por','Vervangen door')}</span><b>${A==='de'?'hij / die':'het / dat'}</b></div></div></section>
+  <section><h3>${Lx('Determinantes y concordancia','Lidwoorden en aanwijzende vnw.')}</h3><div class="tbl"><table><thead><tr><th>Función</th><th>Singular</th><th>Plural</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 function tenses(v){
   const hz=v.aux==='hz',z=v.aux==='z';
@@ -687,11 +707,11 @@ function verbBlock(e){
   if(v.regularStem&&j!==ik){const base=ik.split(' ')[0];notes.push(`Con inversión, jij pierde la -t: ${base.charAt(0).toUpperCase()+base.slice(1)} jij${v.prefix?' '+v.prefix:''}?`)}
   if(v.prefix)notes.push(`Verbo separable: la partícula "${v.prefix}" va al final de la frase en presente y pasado, y se une en el infinitivo y el participio.`);
   return`<section><div class="facts">
-    <div class="fact"><span>Participio</span><b>${esc(v.participle)}</b></div>
-    <div class="fact"><span>Auxiliar</span><b>${auxTxt}</b></div>
-    <div class="fact"><span>Imperativo</span><b>${v.imperative?esc(v.imperative)+'!':'—'}</b></div>
-    <div class="fact"><span>Pasado</span><b>${esc(v.past[0])} · ${esc(v.past[1])}</b></div></div></section>
-  <section><h3>Conjugación</h3><div class="conj">${grid}</div>${notes.map(n=>`<p class="note" style="margin-top:10px">${esc(n)}</p>`).join('')}</section>`;
+    <div class="fact"><span>${Lx('Participio','Voltooid deelwoord')}</span><b>${esc(v.participle)}</b></div>
+    <div class="fact"><span>${Lx('Auxiliar','Hulpwerkwoord')}</span><b>${auxTxt}</b></div>
+    <div class="fact"><span>${Lx('Imperativo','Gebiedende wijs')}</span><b>${v.imperative?esc(v.imperative)+'!':'—'}</b></div>
+    <div class="fact"><span>${Lx('Pasado','Verleden tijd')}</span><b>${esc(v.past[0])} · ${esc(v.past[1])}</b></div></div></section>
+  <section><h3>${Lx('Conjugación','Vervoeging')}</h3><div class="conj">${grid}</div>${notes.map(n=>`<p class="note" style="margin-top:10px">${esc(n)}</p>`).join('')}</section>`;
 }
 function adjBlock(e){
   const a=e.adj,nl=esc(e.nl),inf=esc(a.inflected||e.nl);
@@ -794,7 +814,7 @@ async function search(q,remember=true){
   const seen=new Set(base.map(b=>b.e.nl+'|'+b.e.pos));
   const extra=(cached||[]).filter(e=>!seen.has(e.nl+'|'+e.pos));
   const tot=base.length+hidden.length+extra.length;
-  let html=`<p class="res-head">${tot?`${tot} resultado${tot>1?'s':''} para «${esc(q)}»`:`«${esc(q)}» no está en el diccionario`}</p>`;
+  let html=`<p class="res-head">${tot?`${tot} ${Lx('resultado'+(tot>1?'s':''),'resultat'+(tot>1?'en':''))} ${Lx('para','voor')} «${esc(q)}»`:`«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}`}</p>`;
   html+=base.map(b=>card(b.e,b.via,q)).join('')+extra.map(e=>card(e,null,q)).join('');
   if(hidden.length)html+=`<div id="morebox"><button class="btn-ghost" type="button" id="showmore">Mostrar ${hidden.length} resultado${hidden.length>1?'s':''} más</button></div>`;
   html+=`<div id="ai"></div>`;
@@ -804,7 +824,7 @@ async function search(q,remember=true){
   const slot=document.getElementById('ai');
   if(!base.length&&!cached)askClaude(q,slot);
   else if(!cached&&!(base.length===1&&base[0].e.pos==='grammar')){
-    slot.innerHTML=`<div class="status"><p>¿Buscas otra acepción o más ejemplos?</p><button class="btn-ghost" type="button" id="more">Consultar a Claude</button></div>`;
+    slot.innerHTML=`<div class="status"><p>${Lx('¿Buscas otra acepción o más ejemplos?','Meer betekenissen of voorbeelden?')}</p><button class="btn-ghost" type="button" id="more">${Lx('Consultar a Claude','Vraag het Claude')}</button></div>`;
     slot.querySelector('#more').onclick=()=>askClaude(q,slot);
   }
 }
@@ -812,48 +832,193 @@ const EXAMPLES=['huis','lopen','el mismo','mooi','opbellen','ventana','hablar','
 function renderChips(){
   const c=document.getElementById('chips');
   const mk=w=>`<button type="button" class="chip" data-w="${esc(w)}">${esc(w)}</button>`;
-  c.innerHTML=store.hist.length?`<span class="lbl">Recientes</span>${store.hist.map(mk).join('')}`:`<span class="lbl">Prueba</span>${EXAMPLES.map(mk).join('')}`;
+  c.innerHTML=store.hist.length?`<span class="lbl">${Lx('Recientes','Recent')}</span>${store.hist.map(mk).join('')}`:`<span class="lbl">${Lx('Prueba','Probeer')}</span>${EXAMPLES.map(mk).join('')}`;
 }
 document.getElementById('chips').addEventListener('click',ev=>{const b=ev.target.closest('.chip');if(b){$q.value=b.dataset.w;search(b.dataset.w)}});
 document.getElementById('f').addEventListener('submit',ev=>{ev.preventDefault();search($q.value)});
 /* ---------- pronunciación ---------- */
 const synth=('speechSynthesis' in window)?window.speechSynthesis:null;
-let nlVoice=null;
+let nlVoice=null,esVoice=null;
 function pickVoice(){
   if(!synth)return;
   const vs=synth.getVoices().filter(v=>/^nl([-_]|$)/i.test(v.lang));
   nlVoice=vs.find(v=>/nl[-_]NL/i.test(v.lang)&&/google|natural|premium|enhanced|neural/i.test(v.name))||vs.find(v=>/nl[-_]NL/i.test(v.lang))||vs[0]||null;
+  const es=synth.getVoices().filter(v=>/^es([-_]|$)/i.test(v.lang));
+  esVoice=es.find(v=>/es[-_]ES/i.test(v.lang)&&/google|natural|premium|enhanced|neural/i.test(v.name))||es.find(v=>/es[-_]ES/i.test(v.lang))||es[0]||null;
 }
 if(synth){pickVoice();try{synth.addEventListener('voiceschanged',pickVoice)}catch(_){}}
 let toastT;
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},4000)}
-function speak(text,btn){
+function speak(text,btn,lang){
+  lang=lang==='es'?'es':'nl';
   if(!synth){toast('Tu navegador no permite reproducir voz.');return}
-  if(!nlVoice)pickVoice();
+  if(!nlVoice||!esVoice)pickVoice();
+  const V=lang==='es'?esVoice:nlVoice;
   synth.cancel();
-  const u=new SpeechSynthesisUtterance(text.replace(/\s*\/\s*/g,', '));
-  u.lang=nlVoice?nlVoice.lang:'nl-NL';if(nlVoice)u.voice=nlVoice;u.rate=0.85;
+  const u=new SpeechSynthesisUtterance(text.replace(/\s*\/\s*/g,', ').replace(/\(.*?\)/g,''));
+  u.lang=V?V.lang:(lang==='es'?'es-ES':'nl-NL');if(V)u.voice=V;u.rate=lang==='es'?0.95:0.85;
   document.querySelectorAll('.say.on').forEach(b=>b.classList.remove('on'));
   if(btn){btn.classList.add('on');u.onend=u.onerror=()=>btn.classList.remove('on')}
   synth.speak(u);
-  if(!nlVoice&&!speak.warned&&(speak.warned=true))toast('No hay voz neerlandesa instalada en este dispositivo; puede sonar con acento. Instala «Nederlands» en los ajustes de voz del sistema.');
+  if(!V&&!speak['w'+lang]&&(speak['w'+lang]=true))toast(lang==='es'?(Lx(false,true)?'Er is geen Spaanse stem geïnstalleerd; installeer «Español» in de spraakinstellingen.':'No hay voz española instalada en este dispositivo.'):(Lx(false,true)?'Er is geen Nederlandse stem geïnstalleerd.':'No hay voz neerlandesa instalada en este dispositivo; puede sonar con acento. Instala «Nederlands» en los ajustes de voz del sistema.'));
 }
 
 
 renderChips();search('huis',false);
 
+/* ================= Conjugador español ================= */
+const ES_P=['yo','tú','él / ella / usted','nosotros','vosotros','ellos / ustedes'];
+const ES_RP=['me','te','se','nos','os','se'];
+const ES_SET=s=>new Set(s.split(' '));
+const ES_EIE=ES_SET('pensar empezar cerrar despertar entender perder preferir sentir mentir comenzar recomendar sentar nevar defender encender divertir convertir sugerir advertir referir calentar negar fregar regar tropezar atravesar confesar gobernar apretar merendar querer tener venir hervir consentir arrepentir herir invertir');
+const ES_OUE=ES_SET('poder dormir morir volver contar costar encontrar mostrar recordar soñar volar mover llover acostar probar devolver resolver envolver almorzar colgar rogar sonar soler doler torcer cocer demostrar aprobar comprobar renovar');
+const ES_EI=ES_SET('pedir servir repetir seguir vestir reír sonreír elegir corregir medir conseguir despedir impedir competir freír perseguir reñir teñir');
+const ES_ZC=ES_SET('conocer parecer ofrecer nacer crecer agradecer merecer desaparecer obedecer establecer reconocer aparecer pertenecer permanecer conducir traducir producir reducir introducir deducir lucir favorecer enriquecer');
+const ES_ACCI=ES_SET('enviar esquiar confiar fiar variar criar guiar ampliar vaciar desconfiar actuar continuar graduar evaluar situar acentuar');
+const ES_PART={abrir:'abierto',cubrir:'cubierto',descubrir:'descubierto',decir:'dicho',escribir:'escrito',describir:'descrito',inscribir:'inscrito',hacer:'hecho',deshacer:'deshecho',satisfacer:'satisfecho',morir:'muerto',poner:'puesto',componer:'compuesto',proponer:'propuesto',suponer:'supuesto',imponer:'impuesto',disponer:'dispuesto',exponer:'expuesto',oponer:'opuesto',resolver:'resuelto',romper:'roto',ver:'visto',prever:'previsto',volver:'vuelto',devolver:'devuelto',envolver:'envuelto',freír:'frito',imprimir:'impreso'};
+const ES_STRONG={estar:'estuv',tener:'tuv',poder:'pud',poner:'pus',saber:'sup',querer:'quis',hacer:'hic',venir:'vin',haber:'hub',andar:'anduv',caber:'cup',decir:'dij',traer:'traj',conducir:'conduj',traducir:'traduj',producir:'produj',reducir:'reduj',introducir:'introduj',deducir:'deduj'};
+const ES_FUT={tener:'tendr',poner:'pondr',venir:'vendr',salir:'saldr',valer:'valdr',poder:'podr',saber:'sabr',caber:'cabr',haber:'habr',querer:'querr',decir:'dir',hacer:'har'};
+const ES_YO={tener:'tengo',venir:'vengo',poner:'pongo',salir:'salgo',hacer:'hago',decir:'digo',traer:'traigo',caer:'caigo',oír:'oigo',valer:'valgo',caber:'quepo',saber:'sé',ver:'veo',dar:'doy',estar:'estoy',ser:'soy',ir:'voy',haber:'he'};
+const ES_IMP={ser:'sé',ir:'ve',tener:'ten',venir:'ven',poner:'pon',salir:'sal',hacer:'haz',decir:'di'};
+const ES_DER={mantener:'tener',obtener:'tener',contener:'tener',detener:'tener',sostener:'tener',entretener:'tener',retener:'tener',componer:'poner',proponer:'poner',suponer:'poner',imponer:'poner',disponer:'poner',exponer:'poner',oponer:'poner',deshacer:'hacer',rehacer:'hacer',satisfacer:'hacer',prevenir:'venir',convenir:'venir',intervenir:'venir',atraer:'traer',distraer:'traer',contraer:'traer',extraer:'traer',sobresalir:'salir',prever:'ver'};
+const ES_FULL={
+ ser:{pres:'soy eres es somos sois son',ind:'fui fuiste fue fuimos fuisteis fueron',imp:'era eras era éramos erais eran',subj:'sea seas sea seamos seáis sean'},
+ ir:{pres:'voy vas va vamos vais van',ind:'fui fuiste fue fuimos fuisteis fueron',imp:'iba ibas iba íbamos ibais iban',subj:'vaya vayas vaya vayamos vayáis vayan',ger:'yendo',vos:'id'},
+ estar:{pres:'estoy estás está estamos estáis están',subj:'esté estés esté estemos estéis estén',impTu:'está'},
+ haber:{pres:'he has ha hemos habéis han',subj:'haya hayas haya hayamos hayáis hayan'},
+ dar:{pres:'doy das da damos dais dan',ind:'di diste dio dimos disteis dieron',subj:'dé des dé demos deis den'},
+ ver:{pres:'veo ves ve vemos veis ven',ind:'vi viste vio vimos visteis vieron',imp:'veía veías veía veíamos veíais veían'},
+ saber:{subj:'sepa sepas sepa sepamos sepáis sepan'},
+ caber:{subj:'quepa quepas quepa quepamos quepáis quepan'},
+ oír:{pres:'oigo oyes oye oímos oís oyen'},
+ reír:{pres:'río ríes ríe reímos reís ríen',ind:'reí reíste rió reímos reísteis rieron',subj:'ría rías ría riamos riáis rían'},
+ sonreír:{pres:'sonrío sonríes sonríe sonreímos sonreís sonríen',ind:'sonreí sonreíste sonrió sonreímos sonreísteis sonrieron',subj:'sonría sonrías sonría sonriamos sonriáis sonrían'},
+ freír:{pres:'frío fríes fríe freímos freís fríen',ind:'freí freíste frió freímos freísteis frieron',subj:'fría frías fría friamos friáis frían'},
+ oler:{pres:'huelo hueles huele olemos oléis huelen',subj:'huela huelas huela olamos oláis huelan'},
+ jugar:{pres:'juego juegas juega jugamos jugáis juegan',subj:'juegue juegues juegue juguemos juguéis jueguen'},
+ errar:{pres:'yerro yerras yerra erramos erráis yerran'}
+};
+const esStrongV=c=>'aeo'.includes(c)?{a:'á',e:'é',o:'ó'}[c]:c==='i'?'í':c==='u'?'ú':c;
+function esAccentLast(w){ // pone tilde en la última vocal (para imperativos derivados: mantén)
+  for(let i=w.length-1;i>=0;i--){if('aeiou'.includes(w[i]))return w.slice(0,i)+esStrongV(w[i])+w.slice(i+1)}return w}
+function esGroups(w){ // grupos vocálicos con posición; u muda tras q/g ante e/i
+  const g=[];let cur=null;
+  for(let i=0;i<w.length;i++){const c=w[i];
+    const silentU=c==='u'&&i>0&&'qg'.includes(w[i-1])&&'eiéí'.includes(w[i+1]||'');
+    if('aeiouáéíóúü'.includes(c)&&!silentU){if(cur&&cur.end===i-1&&!('aeoáéó'.includes(c)&&'aeoáéó'.includes(w[i-1]))){cur.end=i}else{cur={start:i,end:i};g.push(cur)}}
+  }return g}
+function esEncl(word,pron){ // levanta + te → levántate
+  if(/[áéíóú]/.test(word))return word+pron;
+  const g=esGroups(word);
+  if(g.length<2||!/[aeiouns]$/.test(word))return word+pron;
+  const s=g[g.length-2];let k=-1;
+  for(let i=s.start;i<=s.end;i++)if('aeo'.includes(word[i])){k=i;break}
+  if(k<0)k=s.end;
+  return word.slice(0,k)+esStrongV(word[k])+word.slice(k+1)+pron;
+}
+function esChangeStem(stem0,type){ // cambia la última vocal de la raíz
+  const tail=/gu$/.test(stem0)?'u':'',stem=tail?stem0.slice(0,-1):stem0;
+  const re={eie:/e(?=[^aeiou]*$)/,oue:/o(?=[^aeiou]*$)/,ei:/e(?=[^aeiou]*$)/,ou:/o(?=[^aeiou]*$)/}[type];
+  return stem.replace(re,{eie:'ie',oue:'ue',ei:'i',ou:'u'}[type])+tail;
+}
+function esConj(input){
+  let inf=input.toLowerCase().trim(),refl=false;
+  if(/(ar|er|ir|ír)se$/.test(inf)){refl=true;inf=inf.slice(0,-2)}
+  if(!/(ar|er|ir|ír)$/.test(inf))return null;
+  const base=ES_DER[inf]||inf,pre=ES_DER[inf]?inf.slice(0,inf.length-base.length):'';
+  const F=ES_FULL[inf]||{};
+  const end=inf.slice(-2).replace('í','i'),stem=inf.slice(0,-2),vowelStem=/[aeo]$/.test(stem)&&end!=='ar';
+  const eie=ES_EIE.has(base)||(base.endsWith('venir')),oue=ES_OUE.has(base)&&base!=='poder'?true:ES_OUE.has(base),ei=ES_EI.has(base),zc=ES_ZC.has(base),uir=/[^gq]uir$/.test(inf),acc=ES_ACCI.has(base);
+  const irSC=end==='ir'&&(eie||oue||ei); // cambio también en indefinido y gerundio
+  const sp=x=>x.split(' ');
+  // ---- presente
+  const E={ar:['o','as','a','amos','áis','an'],er:['o','es','e','emos','éis','en'],ir:['o','es','e','imos','ís','en']}[end];
+  let pres;
+  if(F.pres)pres=sp(F.pres);
+  else{
+    const strong=k=>k<3||k===5;
+    pres=E.map((e,k)=>{let s=stem;
+      if(strong(k)){if(eie)s=esChangeStem(s,'eie');else if(oue)s=esChangeStem(s,'oue');else if(ei)s=esChangeStem(s,'ei');
+        if(acc)s=s.replace(/([iu])$/,m=>m==='i'?'í':'ú')}
+      if(uir&&strong(k))s=s+'y';
+      return s+e});
+    if(base==='oler')pres=sp(ES_FULL.oler.pres);
+    const yoB=ES_YO[base];
+    if(yoB)pres[0]=pre+yoB;
+    else if(zc)pres[0]=stem.slice(0,-1)+'zco';
+    else if(/ger$|gir$/.test(inf))pres[0]=pres[0].replace(/go$/,'jo');
+    else if(/guir$/.test(inf))pres[0]=pres[0].replace(/guo$/,'go');
+    else if(/[^aeiou]cer$|[^aeiou]cir$/.test(inf))pres[0]=pres[0].replace(/co$/,'zo');
+    if(base==='tener'||base==='venir'){pres[1]=pre+(base==='tener'?'tienes':'vienes');pres[2]=pre+(base==='tener'?'tiene':'viene');pres[5]=pre+(base==='tener'?'tienen':'vienen')}
+    if(base==='decir'){pres=['digo','dices','dice','decimos','decís','dicen'].map(x=>pre+x)}
+    if(base==='querer')pres=['quiero','quieres','quiere','queremos','queréis','quieren'];
+    if(base==='poder')pres=['puedo','puedes','puede','podemos','podéis','pueden'];
+  }
+  // ---- indefinido
+  let ind;
+  if(F.ind)ind=sp(F.ind);
+  else if(ES_STRONG[base]){const s=pre+ES_STRONG[base],j=s.endsWith('j');
+    ind=[s+'e',s+'iste',s+(base==='hacer'?'':'')+'o',s+'imos',s+'isteis',s+(j?'eron':'ieron')];if(base==='hacer')ind[2]=pre+'hizo'}
+  else{
+    if(end==='ar')ind=['é','aste','ó','amos','asteis','aron'].map(e=>stem+e);
+    else if(vowelStem||uir){const ac=!uir;ind=[stem+'í',stem+(ac?'íste':'iste'),stem+'yó',stem+(ac?'ímos':'imos'),stem+(ac?'ísteis':'isteis'),stem+'yeron']}
+    else{ind=['í','iste','ió','imos','isteis','ieron'].map(e=>stem+e);
+      if(irSC){const s3=esChangeStem(stem,eie||ei?'ei':'ou');ind[2]=s3+'ió';ind[5]=s3+'ieron'}}
+    if(end==='ar'){ind[0]=ind[0].replace(/cé$/,'qué').replace(/gé$/,'gué').replace(/zé$/,'cé').replace(/gué$/,(m)=>/guar$/.test(inf)?'güé':m)}
+  }
+  // ---- imperfecto
+  const imp=F.imp?sp(F.imp):(end==='ar'?['aba','abas','aba','ábamos','abais','aban']:['ía','ías','ía','íamos','íais','ían']).map(e=>stem+e);
+  // ---- futuro y condicional
+  const fs=ES_FUT[base]?pre+ES_FUT[base]:inf.replace('í','i');
+  const fut=['é','ás','á','emos','éis','án'].map(e=>fs+e),cond=['ía','ías','ía','íamos','íais','ían'].map(e=>fs+e);
+  // ---- subjuntivo presente
+  let subj;
+  if(F.subj)subj=sp(F.subj);
+  else{
+    let s=pres[0].replace(/o$/,'');if(base==='saber')s='sep';
+    const SE=end==='ar'?['e','es','e','emos','éis','en']:['a','as','a','amos','áis','an'];
+    subj=SE.map((e,k)=>{let t=s;
+      if(k===3||k===4){t=stem;if(irSC)t=esChangeStem(stem,eie||ei?'ei':'ou');if(ES_YO[base]||zc||uir||/ger$|gir$|guir$/.test(inf)||/[^aeiou]c[ei]r$/.test(inf))t=s}
+      if(end==='ar')t=t.replace(/c$/,'qu').replace(/g$/,'gu').replace(/z$/,'c').replace(/gu$/,m=>/guar$/.test(inf)?'gü':m);
+      return t+e});
+    if(base==='estar')subj=sp(ES_FULL.estar.subj);
+  }
+  // ---- subjuntivo imperfecto (-ra)
+  const si=ind[5].replace(/ron$/,''),subjI=['ra','ras','ra','ramos','rais','ran'].map((e,k)=>k===3?esAccentLast(si)+'ramos':si+e);
+  // ---- gerundio y participio
+  let ger=F.ger||(end==='ar'?stem+'ando':(vowelStem||uir||base==='traer'||base==='caer'||base==='oír'?stem+'yendo':(irSC?esChangeStem(stem,eie||ei?'ei':'ou'):stem)+'iendo'));
+  if(base==='poder')ger='pudiendo';if(base==='decir')ger=pre+'diciendo';if(base==='venir')ger=pre+'viniendo';if(/reír$/.test(inf))ger=inf.replace(/eír$/,'iendo');if(base==='ir')ger='yendo';
+  let part=ES_PART[inf]||(end==='ar'?stem+'ado':stem+(vowelStem?'ído':'ido'));
+  // ---- imperativo
+  let tu=ES_IMP[base]?pre+ES_IMP[base]:(F.impTu||pres[2]);if(pre&&ES_IMP[base]&&/n$/.test(tu))tu=esAccentLast(tu);
+  const vos=F.vos||inf.replace(/r$/,'d').replace('íd','íd');
+  const P=(k,f)=>refl?ES_RP[k]+' '+f:f;
+  const T=(nm,nl,arr)=>({nm,nl,f:arr.map((f,k)=>P(k,f))});
+  const HE=['he','has','ha','hemos','habéis','han'],HAB=['había','habías','había','habíamos','habíais','habían'];
+  const imper=refl?{tu:esEncl(tu,'te'),vos:inf==='ir'?'idos':vos.replace(/d$/,'os').replace(/íos$/,'íos'),ud:esEncl(subj[2],'se'),uds:esEncl(subj[5],'se').replace(/nse$/,'nse'),neg:'no te '+subj[1]}
+    :{tu,vos,ud:subj[2],uds:subj[5],neg:'no '+subj[1]};
+  return{inf:refl?inf+'se':inf,refl,ger:refl?esEncl(ger,'se'):ger,part,imper,
+    tenses:[T('Presente','tegenwoordige tijd',pres),T('Pretérito indefinido','verleden tijd (afgesloten)',ind),T('Pretérito imperfecto','verleden tijd (beschrijving, gewoonte)',imp),
+      T('Pretérito perfecto','voltooide tijd',HE.map(h=>h+' '+part)),T('Futuro','toekomende tijd',fut),T('Condicional','voorwaardelijke wijs',cond),
+      T('Pluscuamperfecto','voltooid verleden tijd',HAB.map(h=>h+' '+part)),T('Subjuntivo presente','aanvoegende wijs',subj),T('Subjuntivo imperfecto','aanvoegende wijs (verleden)',subjI)]};
+}
+
 /* ================= APP: estado, navegación, gramática ================= */
-const APP={dir:'nl-es',content:null,themes:{},prog:{g:{},v:{}}};
+const APP={dir:'nl-es',learn:'nl',content:null,themes:{},prog:{g:{},v:{}}};
+try{const l=localStorage.getItem('wb.learn');if(l==='es'||l==='nl')APP.learn=l}catch(_){}
+const L=(es,nl)=>APP.learn==='es'?nl:es;
+const gramSet=()=>APP.learn==='es'?APP.content.grammar_es:APP.content.grammar;
+const allLessons=()=>APP.content.grammar.concat(APP.content.grammar_es||[]);
 try{const d=localStorage.getItem('wb.dir');if(d==='es-nl'||d==='nl-es')APP.dir=d}catch(_){}
 try{const p=JSON.parse(localStorage.getItem('wb.prog')||'null');if(p&&p.g&&p.v)APP.prog=p}catch(_){}
 const saveProg=()=>{try{localStorage.setItem('wb.prog',JSON.stringify(APP.prog))}catch(_){}};
 const $=id=>document.getElementById(id);
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const NLES=()=>APP.dir==='nl-es';
-const dirTxt=()=>NLES()?'neerlandés → español':'español → neerlandés';
+const dirTxt=()=>NLES()?L('neerlandés → español','Nederlands → Spaans'):L('español → neerlandés','Spaans → Nederlands');
 function setDir(d,silent){APP.dir=d;try{localStorage.setItem('wb.dir',d)}catch(_){}
   $('dirlabel').textContent=d==='nl-es'?'NL → ES':'ES → NL';if(!silent)document.dispatchEvent(new Event('dirchange'))}
-$('dirbtn').onclick=()=>{setDir(NLES()?'es-nl':'nl-es');toast(NLES()?'Ahora: neerlandés → español':'Ahora: español → neerlandés')};
+$('dirbtn').onclick=()=>{setDir(NLES()?'es-nl':'nl-es');toast(L('Ahora: ','Nu: ')+dirTxt())};
 setDir(APP.dir,true);
 
 let contentP=null;
@@ -868,8 +1033,8 @@ function show(v){
 }
 function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 function openDict(w){go('diccionario');$q.value=w;search(w)}
-const loading=el=>{el.innerHTML='<p class="empty">Cargando…</p>'};
-const failed=el=>{el.innerHTML='<p class="empty">No se pudo cargar el contenido. Comprueba la conexión y vuelve a abrir la sección.</p>'};
+const loading=el=>{el.innerHTML=`<p class="empty">${L('Cargando…','Laden…')}</p>`};
+const failed=el=>{el.innerHTML=`<p class="empty">${L('No se pudo cargar el contenido. Comprueba la conexión y vuelve a abrir la sección.','De inhoud kon niet worden geladen. Controleer je verbinding en open de sectie opnieuw.')}</p>`};
 
 async function route(){
   const h=decodeURIComponent(location.hash.slice(1));
@@ -890,46 +1055,46 @@ document.addEventListener('dirchange',()=>{if(VIEWS.dict.hidden)route()});
 $('logo').onclick=()=>go('diccionario');
 
 document.addEventListener('click',ev=>{
-  const s=ev.target.closest('.say');if(s){ev.preventDefault();ev.stopPropagation();speak(s.dataset.say,s);return}
-  const n=ev.target.closest('.nl');if(n){speak(n.dataset.say||n.textContent,null);return}
+  const s=ev.target.closest('.say');if(s){ev.preventDefault();ev.stopPropagation();speak(s.dataset.say,s,s.dataset.lang);return}
+  const n=ev.target.closest('.nl');if(n){speak(n.dataset.say||n.textContent,null,n.dataset.lang);return}
   const dd=ev.target.closest('[data-dict]');if(dd){ev.stopPropagation();openDict(dd.dataset.dict);return}
   const g=ev.target.closest('[data-go]');if(g){go(g.dataset.go)}
 });
 
 /* ---------- gramática ---------- */
-const LVLNAME={A1:'Principiante',A2:'Básico',B1:'Intermedio'};
+const LVLN={A1:['Principiante','Beginner'],A2:['Básico','Basis'],B1:['Intermedio','Halfgevorderd']},LVLNAME=new Proxy({},{get:(_,k)=>LVLN[k]?L(...LVLN[k]):k});
 let gLevel='all';
 function lcard(g){const s=APP.prog.g[g.id];
-  return `<button class="lcard" type="button" data-go="g-${g.id}"><div class="pic">${g.icon}</div><b>${esc(g.title)}</b><small>${esc(g.sum)}</small><div class="meta"><span class="lv ${g.level}">${g.level}</span>${s!=null?`<span class="done">✓ ${s}/${g.quiz.length}</span>`:`<span>${g.quiz.length} ejercicios</span>`}</div></button>`}
+  return `<button class="lcard" type="button" data-go="g-${g.id}"><div class="pic">${g.icon}</div><b>${esc(g.title)}</b><small>${esc(g.sum)}</small><div class="meta"><span class="lv ${g.level}">${g.level}</span>${s!=null?`<span class="done">✓ ${s}/${g.quiz.length}</span>`:`<span>${g.quiz.length} ${L('ejercicios','oefeningen')}</span>`}</div></button>`}
 function renderGramList(){
-  const G=APP.content.grammar,el=VIEWS.gram;
+  const G=gramSet(),el=VIEWS.gram;
   const levels=['A1','A2','B1'].filter(l=>gLevel==='all'||gLevel===l);
-  el.innerHTML=`<h2 class="h-sec">Gramática</h2>
-  <p class="lead">${G.length} lecciones de A1 a B1, con ejemplos que puedes escuchar y ejercicios al final. Toca cualquier palabra en azul para oírla.</p>
-  <div class="lvls" role="group" aria-label="Nivel">${['all','A1','A2','B1'].map(l=>`<button class="lvl" type="button" data-lvl="${l}" aria-pressed="${gLevel===l}">${l==='all'?'Todos':l+' · '+LVLNAME[l]}</button>`).join('')}</div>
+  el.innerHTML=`<h2 class="h-sec">${L('Gramática neerlandesa','Spaanse grammatica')}</h2>
+  <p class="lead">${L(G.length+' lecciones de A1 a B1, con ejemplos que puedes escuchar y ejercicios al final. Toca cualquier palabra en azul para oírla.',G.length+' lessen van A1 tot B1, met voorbeelden om te beluisteren en oefeningen. Klik op een blauw woord om het te horen.')}</p>
+  <div class="lvls" role="group" aria-label="Nivel">${['all','A1','A2','B1'].map(l=>`<button class="lvl" type="button" data-lvl="${l}" aria-pressed="${gLevel===l}">${l==='all'?L('Todos','Alle'):l+' · '+LVLNAME[l]}</button>`).join('')}</div>
   ${levels.map(l=>{const ls=G.filter(g=>g.level===l),dn=ls.filter(g=>APP.prog.g[g.id]!=null).length;
-    return `<p class="grp">${l} · ${LVLNAME[l]} · ${dn} de ${ls.length} hechas</p><div class="lgrid">${ls.map(lcard).join('')}</div>`}).join('')}`;
+    return `<p class="grp">${l} · ${LVLNAME[l]} · ${dn} ${L('de','van')} ${ls.length} ${L('hechas','gedaan')}</p><div class="lgrid">${ls.map(lcard).join('')}</div>`}).join('')}`;
   el.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{gLevel=b.dataset.lvl;renderGramList()});
 }
-function fillExamples(root){
+function fillExamples(root,lang){
   root.querySelectorAll('.exs').forEach(x=>{const nl=x.dataset.nl,es=x.dataset.es;
     const [a,b]=NLES()?[nl,es]:[es,nl];
-    x.innerHTML=`${sayBtn(nl,'')}<span class="e1">${esc(a)}</span><span class="e2">${esc(b)}</span>`});
+    x.innerHTML=`${lang==='es'?sayBtn(es,'','es'):sayBtn(nl,'')}<span class="e1">${esc(a)}</span><span class="e2">${esc(b)}</span>`});
 }
 function renderLesson(id){
-  const G=APP.content.grammar,i=G.findIndex(g=>g.id===id),el=VIEWS.gram;
-  if(i<0){el.innerHTML='<p class="empty">No encuentro esa lección. <a href="#gramatica">Ver todas</a></p>';return}
+  const G0=allLessons().find(g=>g.id===id),G=G0&&G0.lang==='es'?APP.content.grammar_es:APP.content.grammar,i=G.findIndex(g=>g.id===id),el=VIEWS.gram;
+  if(i<0){el.innerHTML=`<p class="empty">${L('No encuentro esa lección.','Die les bestaat niet.')} <a href="#gramatica">${L('Ver todas','Alle lessen')}</a></p>`;return}
   const g=G[i],pv=G[i-1],nx=G[i+1];
-  el.innerHTML=`<nav class="crumbs"><a href="#gramatica">Gramática</a><span>›</span><span>${g.level} · ${LVLNAME[g.level]}</span></nav>
+  el.innerHTML=`<nav class="crumbs"><a href="#gramatica">${L('Gramática','Grammatica')}</a><span>›</span><span>${g.level} · ${LVLNAME[g.level]}</span></nav>
   <article class="lesson">
     <div class="lhead"><div class="pic">${g.icon}</div><div><span class="lv ${g.level}">${g.level}</span><h2>${esc(g.title)}</h2><p>${esc(g.nl)}</p></div></div>
     <div class="lbody">${g.html}</div>
-    ${g.ex.length?`<section class="quiz"><h3>Practica la traducción</h3><p class="lead" style="margin:0">Los ${g.ex.length} ejemplos de la lección, en dirección ${dirTxt()}. Cambia la dirección arriba.</p><div id="drill"><button class="btn-ghost" type="button" id="drillgo" style="align-self:flex-start">Empezar</button></div></section>`:''}
-    ${g.quiz.length?`<section class="quiz"><h3>Comprueba lo aprendido</h3><div id="qz" style="display:flex;flex-direction:column;gap:12px"></div><p class="fb" id="qres"></p></section>`:''}
+    ${g.ex.length?`<section class="quiz"><h3>${L('Practica la traducción','Oefen de vertaling')}</h3><p class="lead" style="margin:0">${L('Los '+g.ex.length+' ejemplos de la lección, en dirección '+dirTxt()+'. Cambia la dirección arriba.','De '+g.ex.length+' voorbeelden uit de les, in de richting '+dirTxt()+'. Wissel de richting bovenaan.')}</p><div id="drill"><button class="btn-ghost" type="button" id="drillgo" style="align-self:flex-start">${L('Empezar','Beginnen')}</button></div></section>`:''}
+    ${g.quiz.length?`<section class="quiz"><h3>${L('Comprueba lo aprendido','Test jezelf')}</h3><div id="qz" style="display:flex;flex-direction:column;gap:12px"></div><p class="fb" id="qres"></p></section>`:''}
     <nav class="lnav">${pv?`<button class="btn-ghost" type="button" data-go="g-${pv.id}">← ${esc(pv.title)}</button>`:''}${nx?`<button class="btn-ghost nx" type="button" data-go="g-${nx.id}">${esc(nx.title)} →</button>`:''}</nav>
   </article>`;
-  fillExamples(el);mountWidgets(el);
-  if(g.ex.length)$('drillgo').onclick=()=>drill($('drill'),g.ex.map(([nl,es])=>({nl,es})),()=>{});
+  fillExamples(el,g.lang);mountWidgets(el);
+  if(g.ex.length)$('drillgo').onclick=()=>drill($('drill'),g.ex.map(([nl,es])=>({nl,es})),()=>{},g.lang);
   if(g.quiz.length)renderQuiz(g);
 }
 function renderQuiz(g){
@@ -941,9 +1106,9 @@ function renderQuiz(g){
       const k=+b.dataset.k,ok=k===q.a;
       div.querySelectorAll('.qo button').forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('right')});
       if(!ok)b.classList.add('wrong');
-      const w=div.querySelector('.why');w.innerHTML=(ok?'<b style="color:var(--ok)">¡Correcto!</b> ':'<b style="color:var(--bad)">No es esa.</b> ')+(q.why||'');w.hidden=false;
+      const w=div.querySelector('.why');w.innerHTML=(ok?`<b style="color:var(--ok)">${L('¡Correcto!','Goed zo!')}</b> `:`<b style="color:var(--bad)">${L('No es esa.','Helaas.')}</b> `)+(q.why||'');w.hidden=false;
       answered++;if(ok)right++;
-      if(answered===g.quiz.length){const r=$('qres');r.textContent=`Resultado: ${right} de ${g.quiz.length}`;r.className='fb '+(right/g.quiz.length>=.6?'ok':'ko');
+      if(answered===g.quiz.length){const r=$('qres');r.textContent=`${L('Resultado','Resultaat')}: ${right} ${L('de','van')} ${g.quiz.length}`;r.className='fb '+(right/g.quiz.length>=.6?'ok':'ko');
         APP.prog.g[g.id]=Math.max(right,APP.prog.g[g.id]??0);saveProg()}
     });
   });
@@ -952,20 +1117,21 @@ function renderQuiz(g){
 /* ---------- práctica genérica (frases y ejemplos) ---------- */
 function endCard(el,ok,tot,again,extra){
   const pct=tot?Math.round(ok/tot*100):0;
-  el.innerHTML=`<div class="game"><div class="endcard pop"><span class="grp" style="margin:0">Resultado</span><div class="score">${ok} / ${tot}</div><p style="margin:0;color:var(--muted)">${pct>=90?'¡Excelente!':pct>=70?'¡Muy bien!':pct>=50?'Vas bien; repite para afianzar.':'Repite el ejercicio con calma.'}</p><div class="gbtns"><button class="btn-main" type="button" id="again" style="padding:10px 18px">Otra vez</button>${extra||''}</div></div></div>`;
+  el.innerHTML=`<div class="game"><div class="endcard pop"><span class="grp" style="margin:0">${L('Resultado','Resultaat')}</span><div class="score">${ok} / ${tot}</div><p style="margin:0;color:var(--muted)">${pct>=90?L('¡Excelente!','Uitstekend!'):pct>=70?L('¡Muy bien!','Heel goed!'):pct>=50?L('Vas bien; repite para afianzar.','Goed bezig; herhaal het nog eens.'):L('Repite el ejercicio con calma.','Doe de oefening nog eens rustig.')}</p><div class="gbtns"><button class="btn-main" type="button" id="again" style="padding:10px 18px">${L('Otra vez','Nog een keer')}</button>${extra||''}</div></div></div>`;
   $('again').onclick=again;return pct;
 }
-function drill(el,items,done){
+function drill(el,items,done,lang){
+  lang=lang||APP.learn;const tsay=it=>lang==='es'?it.es:it.nl;
   const order=shuffle(items.slice());let i=0,ok=0;
   const step=()=>{
-    if(i>=order.length){endCard(el,ok,order.length,()=>drill(el,items,done));done&&done(ok,order.length);return}
+    if(i>=order.length){endCard(el,ok,order.length,()=>drill(el,items,done,lang));done&&done(ok,order.length);return}
     const it=order[i],src=NLES()?it.nl:it.es,tgt=NLES()?it.es:it.nl;
-    el.innerHTML=`<div class="game"><div class="gstat"><span>Frase <b>${i+1}</b> de ${order.length}</span><span>Sabidas <b>${ok}</b></span></div>
-      <div class="endcard"><p class="qprompt" style="font-size:1.3rem">${esc(src)}</p>${NLES()?sayBtn(it.nl,''):''}<p class="ans" id="dans"></p>
-      <div class="gbtns" id="dbt"><button class="btn-main" type="button" id="dshow" style="padding:10px 18px">Mostrar traducción</button></div></div></div>`;
-    if(NLES())speak(it.nl);
-    $('dshow').onclick=()=>{$('dans').innerHTML=esc(tgt)+(NLES()?'':' '+sayBtn(it.nl,'sm'));if(!NLES())speak(it.nl);
-      $('dbt').innerHTML='<button class="btn-ghost" type="button" id="dno">No lo sabía</button><button class="btn-main" type="button" id="dyes" style="padding:10px 18px">Lo sabía</button>';
+    el.innerHTML=`<div class="game"><div class="gstat"><span>${L('Frase','Zin')} <b>${i+1}</b> ${L('de','van')} ${order.length}</span><span>${L('Sabidas','Gekend')} <b>${ok}</b></span></div>
+      <div class="endcard"><p class="qprompt" style="font-size:1.3rem">${esc(src)}</p>${(NLES()?'nl':'es')===lang?sayBtn(tsay(it),'',lang):''}<p class="ans" id="dans"></p>
+      <div class="gbtns" id="dbt"><button class="btn-main" type="button" id="dshow" style="padding:10px 18px">${L('Mostrar traducción','Toon vertaling')}</button></div></div></div>`;
+    const srcIsT=(NLES()?'nl':'es')===lang;if(srcIsT)speak(tsay(it),null,lang);
+    $('dshow').onclick=()=>{$('dans').innerHTML=esc(tgt)+(srcIsT?'':' '+sayBtn(tsay(it),'sm',lang));if(!srcIsT)speak(tsay(it),null,lang);
+      $('dbt').innerHTML=`<button class="btn-ghost" type="button" id="dno">${L('No lo sabía','Wist ik niet')}</button><button class="btn-main" type="button" id="dyes" style="padding:10px 18px">${L('Lo sabía','Wist ik')}</button>`;
       $('dno').onclick=()=>{i++;step()};$('dyes').onclick=()=>{ok++;i++;step()}};
   };step();
 }
@@ -1037,39 +1203,138 @@ const WIDGETS={
 };
 function mountWidgets(root){root.querySelectorAll('.widget[data-w]').forEach(w=>{const f=WIDGETS[w.dataset.w];if(f)f(w)})}
 
+/* ================= APP: modo mixto (ES/NL), widgets españoles ================= */
+function applyI18n(){
+  document.documentElement.lang=APP.learn==='es'?'nl':'es';
+  document.querySelectorAll('[data-nl]').forEach(el=>{if(el.dataset.es==null)el.dataset.es=el.textContent;el.textContent=APP.learn==='es'?el.dataset.nl:el.dataset.es});
+  $q.placeholder=L('casa, lopen, el mismo, liep…','huis, hablar, tengo, fui…');
+  $('learn').value=APP.learn;
+  $('credits').textContent=L('Dibujos: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles MCER A1–B1. La pronunciación usa las voces de tu dispositivo.','Tekeningen: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) en flag-icons (MIT); molen, klomp, apparaten, dijk en grachtenpand speciaal getekend. Lesstof volgens de ERK-niveaus A1–B1. De uitspraak gebruikt de stemmen van je apparaat.');
+}
+$('learn').onchange=e=>{APP.learn=e.target.value;try{localStorage.setItem('wb.learn',APP.learn)}catch(_){}
+  setDir(APP.learn==='es'?'es-nl':'nl-es',true);applyI18n();route();
+  renderChips();search($q.value||'huis',false);
+  toast(L('Modo: aprendo neerlandés','Modus: ik leer Spaans'))};
+applyI18n();if(APP.learn==='es'){renderChips();search('huis',false)}
+
+/* ---------- números y hora en español ---------- */
+const ES_U='cero uno dos tres cuatro cinco seis siete ocho nueve diez once doce trece catorce quince dieciséis diecisiete dieciocho diecinueve veinte veintiuno veintidós veintitrés veinticuatro veinticinco veintiséis veintisiete veintiocho veintinueve'.split(' ');
+const ES_T={3:'treinta',4:'cuarenta',5:'cincuenta',6:'sesenta',7:'setenta',8:'ochenta',9:'noventa'};
+const ES_H={1:'ciento',2:'doscientos',3:'trescientos',4:'cuatrocientos',5:'quinientos',6:'seiscientos',7:'setecientos',8:'ochocientos',9:'novecientos'};
+function numEs(n){
+  if(n<30)return ES_U[n];
+  if(n<100){const t=Math.floor(n/10),u=n%10;return ES_T[t]+(u?' y '+ES_U[u]:'')}
+  if(n<1000){if(n===100)return 'cien';const h=Math.floor(n/100),r=n%100;return ES_H[h]+(r?' '+numEs(r):'')}
+  if(n<1e6){const k=Math.floor(n/1000),r=n%1000;return (k===1?'mil':numEs(k).replace(/uno$/,'ún')+' mil')+(r?' '+numEs(r):'')}
+  return String(n);
+}
+function timeEs(h,m){
+  const hr=x=>{x=((x%12)+12)%12||12;return x};
+  let H=hr(h),rest='';
+  if(m===0)rest='';else if(m===15)rest=' y cuarto';else if(m===30)rest=' y media';else if(m<30)rest=' y '+numEs(m);
+  else{H=hr(h+1);rest=m===45?' menos cuarto':' menos '+numEs(60-m)}
+  return (H===1?'Es la una':'Son las '+numEs(H))+rest;
+}
+WIDGETS.esnumbers=function(el){
+  const R={'0–29':[0,29],'30–99':[30,99],'100–999':[100,999],'1000–9999':[1000,9999]};let range='30–99',n=0,quiet=true;
+  el.innerHTML=`<h5>${L('Practica los números','Oefen de getallen')}</h5><div class="lvls">${Object.keys(R).map(k=>`<button class="lvl" type="button" data-r="${k}">${k}</button>`).join('')}</div>
+    <div class="bignum" id="nq"></div><p class="ans" id="na"></p><div class="gbtns"><button class="btn-ghost" type="button" id="nsay">${L('Escuchar','Luisteren')}</button><button class="btn-ghost" type="button" id="nshow">${L('Mostrar','Tonen')}</button><button class="btn-main" type="button" id="nnext" style="padding:8px 16px">${L('Otro número','Ander getal')}</button></div>`;
+  const q=s=>el.querySelector(s),src=()=>NLES()?'digits':'words';
+  const draw=()=>{const [a,b]=R[range];n=a+Math.floor(Math.random()*(b-a+1));el.querySelectorAll('[data-r]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===range));
+    if(src()==='words'){q('#nq').textContent='?';q('#na').textContent=numEs(n);if(!quiet)speak(numEs(n),null,'es')}else{q('#nq').textContent=n.toLocaleString('es-ES');q('#na').textContent=''}quiet=false};
+  el.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{range=b.dataset.r;draw()});
+  q('#nsay').onclick=()=>speak(numEs(n),null,'es');
+  q('#nshow').onclick=()=>{q('#nq').textContent=n.toLocaleString('es-ES');q('#na').textContent=numEs(n);speak(numEs(n),null,'es')};
+  q('#nnext').onclick=draw;draw();
+};
+function clockWidget(el,lang,title,text,sayTxt){
+  let h=3,m=30,quiet=true;
+  const ticks=[...Array(12)].map((_,i)=>{const a=i*Math.PI/6,x1=100+Math.sin(a)*78,y1=100-Math.cos(a)*78,x2=100+Math.sin(a)*86,y2=100-Math.cos(a)*86,tx=100+Math.sin(a)*64,ty=104-Math.cos(a)*64;
+    return `<line class="tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><text class="num" x="${tx}" y="${ty}">${i===0?12:i}</text>`}).join('');
+  el.innerHTML=`<h5>${title}</h5><svg class="clock" viewBox="0 0 200 200" role="img" aria-label="Reloj"><circle class="face" cx="100" cy="100" r="92"/>${ticks}<line class="hh" x1="100" y1="100" x2="100" y2="55"/><line class="mh" x1="100" y1="100" x2="100" y2="30"/><circle cx="100" cy="100" r="5" fill="currentColor"/></svg>
+    <div class="bignum cd" style="font-size:2rem"></div><p class="ans ca"></p><div class="gbtns"><button class="btn-ghost csay" type="button">${L('Escuchar','Luisteren')}</button><button class="btn-ghost cshow" type="button">${L('Mostrar','Tonen')}</button><button class="btn-main cnext" type="button" style="padding:8px 16px">${L('Otra hora','Andere tijd')}</button></div>`;
+  const q=c=>el.querySelector(c),dig=()=>`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  const recog=()=>(NLES()?'nl':'es')===lang;
+  const put=()=>{q('.hh').setAttribute('transform',`rotate(${((h%12)+m/60)*30} 100 100)`);q('.mh').setAttribute('transform',`rotate(${m*6} 100 100)`);
+    q('.cd').textContent=recog()?'':dig();q('.ca').textContent=recog()?text(h,m):'';if(recog()&&!quiet)speak(sayTxt(h,m),null,lang);quiet=false};
+  q('.csay').onclick=()=>speak(sayTxt(h,m),null,lang);
+  q('.cshow').onclick=()=>{q('.cd').textContent=dig();q('.ca').textContent=text(h,m);speak(sayTxt(h,m),null,lang)};
+  q('.cnext').onclick=()=>{h=7+Math.floor(Math.random()*15);m=5*Math.floor(Math.random()*12);put()};put();
+}
+WIDGETS.clock=el=>clockWidget(el,'nl','Hoe laat is het?',(h,m)=>timeNl(h,m),(h,m)=>'Het is '+timeNl(h,m));
+WIDGETS.esclock=el=>clockWidget(el,'es','¿Qué hora es?',(h,m)=>timeEs(h,m),(h,m)=>timeEs(h,m));
+
+/* ---------- conjugador español ---------- */
+function esConjHtml(c){
+  return `<section><div class="facts">
+    <div class="fact"><span>Gerundio</span><b>${esc(c.ger)}</b></div><div class="fact"><span>Participio</span><b>${esc(c.part)}</b></div>
+    <div class="fact"><span>${L('Imperativo','Gebiedende wijs')} (tú)</span><b>${esc(c.imper.tu)}! · ${esc(c.imper.neg)}</b></div>
+    <div class="fact"><span>usted · vosotros · ustedes</span><b>${esc(c.imper.ud)} · ${esc(c.imper.vos)} · ${esc(c.imper.uds)}</b></div></div></section>
+  <section><h3>${L('Conjugación','Vervoeging')}</h3><div class="conj">${c.tenses.map(t=>`<div class="tense"><h4>${t.nm}<small>${sayBtn(t.f.map((f,k)=>['yo','tú','él','nosotros','vosotros','ellos'][k]+' '+f).join(', '),'sm','es')}</small></h4><dl>${t.f.map((f,k)=>`<dt>${ES_P[k]}</dt><dd>${esc(f)}</dd>`).join('')}</dl>${APP.learn==='es'?`<p class="tn">${t.nl}</p>`:''}</div>`).join('')}</div></section>`;
+}
+WIDGETS.esconj=function(el){
+  el.innerHTML=`<h5>${L('Conjugador de verbos españoles','Spaanse werkwoorden vervoegen')}</h5><form class="esform" id="ecf"><input id="eci" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="hablar, tener, levantarse…" aria-label="${L('Verbo en infinitivo','Werkwoord (infinitief)')}"><button class="btn-main" type="submit">${L('Conjugar','Vervoegen')}</button></form><div id="eco" style="width:100%;display:flex;flex-direction:column;gap:14px"></div>`;
+  const run=v=>{const c=esConj(v);el.querySelector('#eco').innerHTML=c?esConjHtml(c):`<p class="tip">${L('Escribe un infinitivo en -ar, -er o -ir.','Typ een infinitief op -ar, -er of -ir.')}</p>`};
+  el.querySelector('#ecf').onsubmit=e=>{e.preventDefault();run(el.querySelector('#eci').value)};
+  el.querySelector('#eci').value='tener';run('tener');
+};
+
+/* ---------- en el diccionario: ficha de conjugación española ---------- */
+const _search=search;
+search=async function(q,remember){
+  await _search(q,remember);
+  const qn=String(q||'').trim().toLowerCase();
+  if(!/^[a-záéíóúñü]+(ar|er|ir|ír)(se)?$/.test(qn))return;
+  const base=qn.replace(/se$/,'');
+  const hits=lookup(qn),rel=!hits.length||hits.some(h=>h.e&&h.e.es&&h.e.es.some(x=>norm(x).split(/[,;]/).map(s=>s.trim()).includes(norm(base))));
+  const c=esConj(qn);if(!c||!rel)return;
+  const slot=document.getElementById('ai');
+  const html=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${esConjHtml(c)}</article>`;
+  if(slot){if(!hits.length)slot.innerHTML='';slot.insertAdjacentHTML('beforebegin',html)}else $res.insertAdjacentHTML('beforeend',html);
+  const head=$res.querySelector('.res-head');if(head&&!hits.length)head.textContent=L('Verbo español: «','Spaans werkwoord: «')+qn+'»';
+};
+
 /* ================= APP: vocabulario, juegos y frases ================= */
-const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Básicos'];
+const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Básicos'];
+const GROUP_NL={Naturaleza:'Natuur',Comida:'Eten en drinken',Personas:'Mensen',Casa:'In huis',Ciudad:'De stad',Trabajo:'Werk en studie','Tiempo libre':'Vrije tijd',Sociedad:'Maatschappij','Básicos':'Basis'};
+const gName=g=>L(g,GROUP_NL[g]||g);
+const es1=w=>w.es.split(/[;,]/)[0].replace(/\(.*?\)/g,'').trim();
+const esFull=w=>(w.ea?w.ea+' ':'')+es1(w);
+const esHtml=w=>(w.ea?`<span class="art art-es">${w.ea}</span>`:'')+esc(w.es);
+const tSay=w=>APP.learn==='es'?[esFull(w),'es']:[nlFull(w),'nl'];
+const sayT=w=>speak(...tSay(w).slice(0,1),null,tSay(w)[1]);
+const sayBtnT=(w,cls)=>sayBtn(tSay(w)[0],cls,tSay(w)[1]);
 const isNoun=w=>w.t==='de'||w.t==='het';
 const nlFull=w=>isNoun(w)?w.t+' '+w.nl:w.nl;
 const artBadge=w=>isNoun(w)?`<span class="art art-${w.t}">${w.t}</span>`:'';
 const nlHtml=w=>artBadge(w)+esc(w.nl);
-const srcHtml=w=>NLES()?nlHtml(w):esc(w.es);
-const tgtHtml=w=>NLES()?esc(w.es):nlHtml(w);
-const posName={v:'verbo',a:'adjetivo',x:''};
+const srcHtml=w=>NLES()?nlHtml(w):esHtml(w);
+const tgtHtml=w=>NLES()?esHtml(w):nlHtml(w);
+const posName={get v(){return L('verbo','werkwoord')},get a(){return L('adjetivo','bijvoeglijk naamwoord')},x:''};
 let vMode='explorar';
 
 function tcard(t,f){const best=APP.prog.v[t.id];const [a,b]=NLES()?[t.nl,t.es]:[t.es,t.nl];
-  return `<button class="tcard" type="button" data-go="${f?t.id:'v-'+t.id}"><div class="pic">${t.icon}</div><b>${esc(a)}</b><span>${esc(b)}</span><div class="meta"><span class="lv ${t.level}">${t.level}</span>${f?t.items.length+' frases':t.n+' palabras'}${best!=null?` · <span class="done">✓ ${best}%</span>`:''}</div></button>`}
+  return `<button class="tcard" type="button" data-go="${f?t.id:'v-'+t.id}"><div class="pic">${t.icon}</div><b>${esc(a)}</b><span>${esc(b)}</span><div class="meta"><span class="lv ${t.level}">${t.level}</span>${f?t.items.length+L(' frases',' zinnen'):t.n+L(' palabras',' woorden')}${best!=null?` · <span class="done">✓ ${best}%</span>`:''}</div></button>`}
 function renderVocabHome(){
   const c=APP.content,el=VIEWS.vocab,nw=c.themes.reduce((s,t)=>s+t.n,0);
-  el.innerHTML=`<h2 class="h-sec">Vocabulario</h2>
-  <p class="lead">${c.themes.length} temas con ${nw} palabras dibujadas y ${c.frases.length} situaciones con frases útiles. Cada tema tiene tarjetas, test, ejercicio de escucha, escritura y juego de de/het.</p>
-  ${GROUPS.map(g=>{const ts=c.themes.filter(t=>t.group===g);return ts.length?`<p class="grp">${g}</p><div class="tgrid">${ts.map(t=>tcard(t)).join('')}</div>`:''}).join('')}
-  <p class="grp">Frases por situación</p><div class="tgrid">${c.frases.map(f=>tcard(f,true)).join('')}</div>`;
+  el.innerHTML=`<h2 class="h-sec">${L('Vocabulario','Woordenschat')}</h2>
+  <p class="lead">${L(c.themes.length+' temas con '+nw+' palabras dibujadas y '+c.frases.length+' situaciones con frases útiles. Cada tema tiene tarjetas, test, escucha, escritura y el juego de de/het.',c.themes.length+' thema\'s met '+nw+' geïllustreerde woorden en '+c.frases.length+' situaties met handige zinnen. Elk thema heeft kaartjes, een toets, luisteren, schrijven en het el/la-spel.')}</p>
+  ${GROUPS.map(g=>{const ts=c.themes.filter(t=>t.group===g);return ts.length?`<p class="grp">${gName(g)}</p><div class="tgrid">${ts.map(t=>tcard(t)).join('')}</div>`:''}).join('')}
+  <p class="grp">${L('Frases por situación','Zinnen per situatie')}</p><div class="tgrid">${c.frases.map(f=>tcard(f,true)).join('')}</div>`;
 }
 
 async function renderTheme(id){
   const el=VIEWS.vocab,meta=APP.content.themes.find(t=>t.id===id);
-  if(!meta){el.innerHTML='<p class="empty">No encuentro ese tema. <a href="#vocabulario">Ver todos</a></p>';return}
+  if(!meta){el.innerHTML=`<p class="empty">${L('No encuentro ese tema.','Dat thema bestaat niet.')} <a href="#vocabulario">${L('Ver todos','Alle thema\'s')}</a></p>`;return}
   loading(el);let T;try{T=await getTheme(id)}catch(_){failed(el);return}
   if(location.hash!=='#v-'+id)return;
-  const nouns=T.words.filter(isNoun);
-  const modes=[['explorar','Explorar'],['tarjetas','Tarjetas'],['test','Test'],['escucha','Escucha'],['escribe','Escribe']].concat(nouns.length>=4?[['dehet','¿De o het?']]:[]);
+  const nouns=T.words.filter(w=>APP.learn==='es'?(w.ea==='el'||w.ea==='la'):isNoun(w));
+  const modes=[['explorar',L('Explorar','Ontdekken')],['tarjetas',L('Tarjetas','Kaartjes')],['test',L('Test','Toets')],['escucha',L('Escucha','Luisteren')],['escribe',L('Escribe','Schrijven')]].concat(nouns.length>=4?[['dehet',L('¿De o het?','El of la?')]]:[]);
   if(!modes.some(m=>m[0]===vMode))vMode='explorar';
   const [a,b]=NLES()?[meta.nl,meta.es]:[meta.es,meta.nl];
-  el.innerHTML=`<nav class="crumbs"><a href="#vocabulario">Vocabulario</a><span>›</span><span>${esc(meta.group)}</span></nav>
-  <div class="thead"><div class="pic">${meta.icon}</div><div><span class="lv ${meta.level}">${meta.level}</span><h2 class="h-sec">${esc(a)}</h2><p class="lead" style="margin:2px 0 0">${esc(b)} · ${meta.n} palabras</p></div></div>
-  <div class="modes" role="group" aria-label="Modo">${modes.map(([k,l])=>`<button class="mode" type="button" data-mode="${k}" aria-pressed="${k===vMode}">${l}</button>`).join('')}</div>
+  el.innerHTML=`<nav class="crumbs"><a href="#vocabulario">${L('Vocabulario','Woordenschat')}</a><span>›</span><span>${esc(gName(meta.group))}</span></nav>
+  <div class="thead"><div class="pic">${meta.icon}</div><div><span class="lv ${meta.level}">${meta.level}</span><h2 class="h-sec">${esc(a)}</h2><p class="lead" style="margin:2px 0 0">${esc(b)} · ${meta.n} ${L('palabras','woorden')}</p></div></div>
+  <div class="modes" role="group" aria-label="${L('Modo','Modus')}">${modes.map(([k,l])=>`<button class="mode" type="button" data-mode="${k}" aria-pressed="${k===vMode}">${l}</button>`).join('')}</div>
   <div id="stage"></div>`;
   el.querySelectorAll('.mode').forEach(btn=>btn.onclick=()=>{vMode=btn.dataset.mode;el.querySelectorAll('.mode').forEach(x=>x.setAttribute('aria-pressed',x===btn));runMode(T,meta)});
   runMode(T,meta);
@@ -1082,30 +1347,30 @@ function runMode(T,meta){
 function score(meta,ok,tot){const p=Math.round(ok/tot*100);APP.prog.v[meta.id]=Math.max(p,APP.prog.v[meta.id]??0);saveProg();return p}
 
 function explorar(st,T){
-  st.innerHTML=`<div class="wgrid">${T.words.map((w,k)=>`<div class="wcard" data-k="${k}" data-say="${esc(nlFull(w))}" role="button" tabindex="0" aria-label="${esc(nlFull(w))}: ${esc(w.es)}">
-    ${sayBtn(nlFull(w),'sm')}${pic(T,w)}<div class="w1">${srcHtml(w)}</div><div class="w2">${tgtHtml(w)}</div>
+  st.innerHTML=`<div class="wgrid">${T.words.map((w,k)=>`<div class="wcard" data-k="${k}" data-say="${esc(tSay(w)[0])}" data-lang="${tSay(w)[1]}" role="button" tabindex="0" aria-label="${esc(nlFull(w))}: ${esc(w.es)}">
+    ${sayBtnT(w,'sm')}${pic(T,w)}<div class="w1">${srcHtml(w)}</div><div class="w2">${tgtHtml(w)}</div>
     ${isNoun(w)&&w.pl?`<div class="pl">mv. de ${esc(w.pl)}</div>`:''}${posName[w.t]?`<div class="pl">${posName[w.t]}</div>`:''}
-    ${w.n?`<div class="nt">${esc(w.n)}</div>`:''}${w.t==='v'?`<button class="btn-ghost" type="button" data-dict="${esc(w.nl)}" style="padding:4px 10px;font-size:.8rem;margin-top:4px">Conjugar</button>`:''}</div>`).join('')}</div>`;
-  const play=c=>{speak(c.dataset.say);const p=c.querySelector('.pic');p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')};
+    ${w.n?`<div class="nt">${esc(w.n)}</div>`:''}${w.t==='v'?`<button class="btn-ghost" type="button" data-dict="${esc(APP.learn==='es'?es1(w):w.nl)}" style="padding:4px 10px;font-size:.8rem;margin-top:4px">${L('Conjugar','Vervoegen')}</button>`:''}</div>`).join('')}</div>`;
+  const play=c=>{speak(c.dataset.say,null,c.dataset.lang);const p=c.querySelector('.pic');p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop')};
   st.querySelectorAll('.wcard').forEach(c=>{c.onclick=e=>{if(!e.target.closest('button'))play(c)};c.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();play(c)}}});
 }
 
 function tarjetas(st,T,meta,deck){
   deck=deck||shuffle(T.words.slice());let i=0,ok=0;const miss=[];
   const step=()=>{
-    if(i>=deck.length){endCard(st,ok,deck.length,()=>tarjetas(st,T,meta),miss.length?'<button class="btn-ghost" type="button" id="rep">Repasar las que fallé</button>':'');
+    if(i>=deck.length){endCard(st,ok,deck.length,()=>tarjetas(st,T,meta),miss.length?`<button class="btn-ghost" type="button" id="rep">${L('Repasar las que fallé','Herhaal de fouten')}</button>`:'');
       const r=$('rep');if(r)r.onclick=()=>tarjetas(st,T,meta,shuffle(miss.slice()));return}
     const w=deck[i];
-    st.innerHTML=`<div class="game"><div class="gstat"><span>Tarjeta <b>${i+1}</b> de ${deck.length}</span><span>Sabidas <b>${ok}</b></span></div>
-      <button class="flash" type="button" id="fc" aria-label="Dar la vuelta a la tarjeta"><div class="in">
-        <div class="face">${pic(T,w)}<div class="big">${srcHtml(w)}</div><span class="hint">Toca para dar la vuelta</span></div>
-        <div class="face back">${pic(T,w)}<div class="big">${tgtHtml(w)}</div><div class="sub">${NLES()?nlHtml(w):esc(w.es)}${isNoun(w)&&w.pl?' · mv. '+esc(w.pl):''}</div></div>
+    st.innerHTML=`<div class="game"><div class="gstat"><span>${L('Tarjeta','Kaartje')} <b>${i+1}</b> ${L('de','van')} ${deck.length}</span><span>${L('Sabidas','Gekend')} <b>${ok}</b></span></div>
+      <button class="flash" type="button" id="fc" aria-label="${L('Dar la vuelta a la tarjeta','Kaartje omdraaien')}"><div class="in">
+        <div class="face">${pic(T,w)}<div class="big">${srcHtml(w)}</div><span class="hint">${L('Toca para dar la vuelta','Tik om om te draaien')}</span></div>
+        <div class="face back">${pic(T,w)}<div class="big">${tgtHtml(w)}</div><div class="sub">${NLES()?nlHtml(w):esHtml(w)}${isNoun(w)&&w.pl?' · mv. '+esc(w.pl):''}</div></div>
       </div></button>
-      <div class="gbtns" id="fb2"><button class="btn-ghost" type="button" id="fsay">Escuchar</button></div></div>`;
-    if(NLES())speak(nlFull(w));
-    $('fsay').onclick=()=>speak(nlFull(w));
-    $('fc').onclick=()=>{const c=$('fc');if(c.classList.contains('flip'))return;c.classList.add('flip');if(!NLES())speak(nlFull(w));
-      $('fb2').innerHTML='<button class="btn-ghost" type="button" id="fno">No me la sabía</button><button class="btn-main" type="button" id="fyes" style="padding:10px 18px">Me la sabía</button>';
+      <div class="gbtns" id="fb2"><button class="btn-ghost" type="button" id="fsay">${L('Escuchar','Luisteren')}</button></div></div>`;
+    const srcT=(NLES()?'nl':'es')===APP.learn;if(srcT)sayT(w);
+    $('fsay').onclick=()=>sayT(w);
+    $('fc').onclick=()=>{const c=$('fc');if(c.classList.contains('flip'))return;c.classList.add('flip');if(!srcT)sayT(w);
+      $('fb2').innerHTML=`<button class="btn-ghost" type="button" id="fno">${L('No me la sabía','Wist ik niet')}</button><button class="btn-main" type="button" id="fyes" style="padding:10px 18px">${L('Me la sabía','Wist ik')}</button>`;
       $('fno').onclick=()=>{miss.push(w);i++;step()};$('fyes').onclick=()=>{ok++;i++;step()}};
   };step();
 }
@@ -1121,97 +1386,105 @@ function quizLoop(st,T,meta,{prompt,opts,label}){
   const step=()=>{
     if(i>=deck.length){const p=score(meta,ok,deck.length);endCard(st,ok,deck.length,()=>quizLoop(st,T,meta,{prompt,opts,label}));return}
     const w=deck[i],os=opts(w);
-    st.innerHTML=`<div class="game"><div class="gstat"><span>Pregunta <b>${i+1}</b> de ${deck.length}</span><span>Aciertos <b>${ok}</b></span></div>${prompt(w)}
+    st.innerHTML=`<div class="game"><div class="gstat"><span>${L('Pregunta','Vraag')} <b>${i+1}</b> ${L('de','van')} ${deck.length}</span><span>${L('Aciertos','Goed')} <b>${ok}</b></span></div>${prompt(w)}
       <div class="qopts">${os.map((o,k)=>`<button class="qopt" type="button" data-k="${k}">${label(o)}</button>`).join('')}</div><p class="fb" id="qfb"></p></div>`;
     st.querySelectorAll('.qopt').forEach(b=>b.onclick=()=>{
       const o=os[+b.dataset.k],good=o===w;st.querySelectorAll('.qopt').forEach(x=>{x.disabled=true;if(os[+x.dataset.k]===w)x.classList.add('right')});
       if(!good)b.classList.add('wrong');else ok++;
-      $('qfb').className='fb '+(good?'ok':'ko');$('qfb').innerHTML=(good?'¡Bien! ':'Era: ')+nlHtml(w)+' = '+esc(w.es);
-      speak(nlFull(w));setTimeout(()=>{i++;step()},good?1100:2200)});
+      $('qfb').className='fb '+(good?'ok':'ko');$('qfb').innerHTML=(good?L('¡Bien! ','Goed! '):L('Era: ','Het was: '))+nlHtml(w)+' = '+esHtml(w);
+      sayT(w);setTimeout(()=>{i++;step()},good?1100:2200)});
   };step();
 }
 function test(st,T,meta){
   quizLoop(st,T,meta,{
-    prompt:w=>{if(NLES())setTimeout(()=>speak(nlFull(w)),200);return `<div class="qpic pic">${T.svg[w.i]||''}</div><p class="qprompt">${srcHtml(w)}</p>${NLES()?sayBtn(nlFull(w),''):''}`},
+    prompt:w=>{const srcT=(NLES()?'nl':'es')===APP.learn;if(srcT)setTimeout(()=>sayT(w),200);return `<div class="qpic pic">${T.svg[w.i]||''}</div><p class="qprompt">${srcHtml(w)}</p>${srcT?sayBtnT(w,''):''}`},
     opts:w=>pickOpts(T,w,4,x=>NLES()?x.es:x.nl),
     label:o=>tgtHtml(o)});
 }
 function escucha(st,T,meta){
   quizLoop(st,T,meta,{
-    prompt:w=>{setTimeout(()=>speak(nlFull(w)),250);return `<p class="lead" style="margin:0">Escucha y elige el dibujo</p><button class="say" type="button" data-say="${esc(nlFull(w))}" style="width:72px;height:72px" aria-label="Repetir audio">${SPK}</button>`},
+    prompt:w=>{setTimeout(()=>sayT(w),250);return `<p class="lead" style="margin:0">${L('Escucha y elige el dibujo','Luister en kies de tekening')}</p><button class="say" type="button" data-say="${esc(tSay(w)[0])}" data-lang="${tSay(w)[1]}" style="width:72px;height:72px" aria-label="${L('Repetir audio','Opnieuw afspelen')}">${SPK}</button>`},
     opts:w=>pickOpts(T,w,4,x=>x.i),
     label:o=>`<div class="pic">${T.svg[o.i]||''}</div>`});
 }
 function escribe(st,T,meta){
   const deck=shuffle(T.words.slice()).slice(0,Math.min(10,T.words.length));let i=0,ok=0;
+  const ART=/^(el|la|los|las|un|una) /;
   const okAns=(w,a)=>{const n=norm(a);if(!n)return null;
-    if(NLES())return w.es.split(/[;,]/).map(s=>norm(s.replace(/\(.*?\)/g,''))).filter(Boolean).some(s=>s===n||s.replace(/^(el|la|los|las|un|una) /,'')===n.replace(/^(el|la|los|las|un|una) /,''))?'ok':'ko';
+    if(NLES()){const gl=w.es.split(/[;,]/).map(s=>norm(s.replace(/\(.*?\)/g,''))).filter(Boolean),bare=n.replace(ART,'');
+      if(!gl.some(s=>s===n||s===bare))return 'ko';
+      const m=n.match(/^(el|la|los|las) /);if(m&&w.ea&&m[1]!==w.ea&&norm(es1(w))===bare)return 'art';return 'ok'}
     const bare=norm(w.nl);if(n===bare||n===norm(nlFull(w)))return 'ok';
     if(isNoun(w)){const m=n.match(/^(de|het) (.+)$/);if(m&&m[2]===bare)return 'art'}
     return 'ko'};
+  const both=w=>nlHtml(w)+' = '+esHtml(w);
   const step=()=>{
     if(i>=deck.length){score(meta,ok,deck.length);endCard(st,ok,deck.length,()=>escribe(st,T,meta));return}
     const w=deck[i];
-    st.innerHTML=`<div class="game"><div class="gstat"><span>Palabra <b>${i+1}</b> de ${deck.length}</span><span>Aciertos <b>${ok}</b></span></div>
+    const ph=NLES()?L('Escribe en español','Schrijf in het Spaans')+(w.ea?L(' (con el o la)',' (met el of la)'):''):L('Escribe en neerlandés','Schrijf in het Nederlands')+(isNoun(w)?L(' (con de o het)',' (met de of het)'):'');
+    st.innerHTML=`<div class="game"><div class="gstat"><span>${L('Palabra','Woord')} <b>${i+1}</b> ${L('de','van')} ${deck.length}</span><span>${L('Aciertos','Goed')} <b>${ok}</b></span></div>
       <div class="qpic pic">${T.svg[w.i]||''}</div><p class="qprompt">${srcHtml(w)}</p>
-      <form class="wform" id="wf"><input id="wi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${NLES()?'Escribe en español':'Escribe en neerlandés'+(isNoun(w)?' (con de o het)':'')}" aria-label="Tu respuesta"><button class="btn-main" type="submit">Comprobar</button></form>
+      <form class="wform" id="wf"><input id="wi" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${esc(ph)}" aria-label="${L('Tu respuesta','Je antwoord')}"><button class="btn-main" type="submit">${L('Comprobar','Controleren')}</button></form>
       <p class="fb" id="wfb"></p><div class="gbtns" id="wnx"></div></div>`;
     const inp=$('wi');inp.focus();
     $('wf').onsubmit=e=>{e.preventDefault();if($('wnx').innerHTML)return;const r=okAns(w,inp.value);if(r===null)return;
       if(r==='ok')ok++;
       $('wfb').className='fb '+(r==='ok'?'ok':'ko');
-      $('wfb').innerHTML=r==='ok'?'¡Correcto! '+nlHtml(w)+' = '+esc(w.es):r==='art'?'Casi: el artículo es '+nlHtml(w):'Era: '+nlHtml(w)+' = '+esc(w.es);
-      speak(nlFull(w));$('wnx').innerHTML='<button class="btn-main" type="button" id="wgo" style="padding:10px 18px">Siguiente</button>';$('wgo').onclick=()=>{i++;step()};$('wgo').focus()};
+      $('wfb').innerHTML=r==='ok'?L('¡Correcto! ','Goed zo! ')+both(w):r==='art'?L('Casi: el artículo es ','Bijna: het lidwoord is ')+(NLES()?esHtml(w):nlHtml(w)):L('Era: ','Het was: ')+both(w);
+      sayT(w);$('wnx').innerHTML=`<button class="btn-main" type="button" id="wgo" style="padding:10px 18px">${L('Siguiente','Volgende')}</button>`;$('wgo').onclick=()=>{i++;step()};$('wgo').focus()};
   };step();
 }
 function dehet(st,T,meta){
-  const deck=shuffle(T.words.filter(isNoun)).slice(0,12);let i=0,ok=0;
+  const ES=APP.learn==='es';
+  const deck=shuffle(T.words.filter(w=>ES?(w.ea==='el'||w.ea==='la'):isNoun(w))).slice(0,12);let i=0,ok=0;
+  const A=ES?['el','la']:['de','het'];
   const step=()=>{
     if(i>=deck.length){score(meta,ok,deck.length);endCard(st,ok,deck.length,()=>dehet(st,T,meta));return}
-    const w=deck[i];
-    st.innerHTML=`<div class="game"><div class="gstat"><span>Palabra <b>${i+1}</b> de ${deck.length}</span><span>Aciertos <b>${ok}</b></span></div>
-      <div class="qpic pic">${T.svg[w.i]||''}</div><p class="qprompt">… ${esc(w.nl)}</p><p class="lead" style="margin:-8px 0 0">${esc(w.es)}</p>
-      <div class="dh"><button class="bde" type="button" data-a="de">de</button><button class="bhet" type="button" data-a="het">het</button></div><p class="fb" id="dfb"></p></div>`;
+    const w=deck[i],ans=ES?w.ea:w.t;
+    st.innerHTML=`<div class="game"><div class="gstat"><span>${L('Palabra','Woord')} <b>${i+1}</b> ${L('de','van')} ${deck.length}</span><span>${L('Aciertos','Goed')} <b>${ok}</b></span></div>
+      <div class="qpic pic">${T.svg[w.i]||''}</div><p class="qprompt">… ${esc(ES?es1(w):w.nl)}</p><p class="lead" style="margin:-8px 0 0">${ES?esc(nlFull(w)):esc(w.es)}</p>
+      <div class="dh"><button class="bde" type="button" data-a="${A[0]}">${A[0]}</button><button class="bhet" type="button" data-a="${A[1]}">${A[1]}</button></div><p class="fb" id="dfb"></p></div>`;
     st.querySelectorAll('.dh button').forEach(b=>b.onclick=()=>{
-      const good=b.dataset.a===w.t;if(good)ok++;st.querySelectorAll('.dh button').forEach(x=>x.disabled=true);
-      $('dfb').className='fb '+(good?'ok':'ko');$('dfb').innerHTML=(good?'¡Bien! ':'No: ')+nlHtml(w)+(w.pl?' · mv. de '+esc(w.pl):'');
-      speak(nlFull(w));setTimeout(()=>{i++;step()},good?1000:2000)});
+      const good=b.dataset.a===ans;if(good)ok++;st.querySelectorAll('.dh button').forEach(x=>x.disabled=true);
+      $('dfb').className='fb '+(good?'ok':'ko');$('dfb').innerHTML=(good?L('¡Bien! ','Goed! '):L('No: ','Nee: '))+(ES?esc(esFull(w)):nlHtml(w)+(w.pl?' · mv. de '+esc(w.pl):''));
+      sayT(w);setTimeout(()=>{i++;step()},good?1000:2000)});
   };step();
 }
 
 /* ---------- frases por situación ---------- */
 let fMode='lista',fHide=false;
+const fT=it=>APP.learn==='es'?[it.es,'es']:[it.nl,'nl'];
 function renderFrases(id){
   const el=VIEWS.vocab,F=APP.content.frases.find(f=>f.id===id);
-  if(!F){el.innerHTML='<p class="empty">No encuentro esa situación. <a href="#vocabulario">Ver todo</a></p>';return}
+  if(!F){el.innerHTML=`<p class="empty">${L('No encuentro esa situación.','Die situatie bestaat niet.')} <a href="#vocabulario">${L('Ver todo','Alles bekijken')}</a></p>`;return}
   const [a,b]=NLES()?[F.nl,F.es]:[F.es,F.nl];
-  el.innerHTML=`<nav class="crumbs"><a href="#vocabulario">Vocabulario</a><span>›</span><span>Frases por situación</span></nav>
-  <div class="thead"><div class="pic">${F.icon}</div><div><span class="lv ${F.level}">${F.level}</span><h2 class="h-sec">${esc(a)}</h2><p class="lead" style="margin:2px 0 0">${esc(b)} · ${F.items.length} frases</p></div></div>
-  <div class="modes" role="group" aria-label="Modo">${[['lista','Lista'],['practicar','Practicar'],['test','Test']].map(([k,l])=>`<button class="mode" type="button" data-mode="${k}" aria-pressed="${k===fMode}">${l}</button>`).join('')}</div><div id="stage"></div>`;
+  el.innerHTML=`<nav class="crumbs"><a href="#vocabulario">${L('Vocabulario','Woordenschat')}</a><span>›</span><span>${L('Frases por situación','Zinnen per situatie')}</span></nav>
+  <div class="thead"><div class="pic">${F.icon}</div><div><span class="lv ${F.level}">${F.level}</span><h2 class="h-sec">${esc(a)}</h2><p class="lead" style="margin:2px 0 0">${esc(b)} · ${F.items.length} ${L('frases','zinnen')}</p></div></div>
+  <div class="modes" role="group" aria-label="${L('Modo','Modus')}">${[['lista',L('Lista','Lijst')],['practicar',L('Practicar','Oefenen')],['test',L('Test','Toets')]].map(([k,l])=>`<button class="mode" type="button" data-mode="${k}" aria-pressed="${k===fMode}">${l}</button>`).join('')}</div><div id="stage"></div>`;
   el.querySelectorAll('.mode').forEach(btn=>btn.onclick=()=>{fMode=btn.dataset.mode;el.querySelectorAll('.mode').forEach(x=>x.setAttribute('aria-pressed',x===btn));runF(F)});
   runF(F);
 }
 function runF(F){
   const st=$('stage'),items=F.items.map(([nl,es])=>({nl,es}));
-  if(fMode==='practicar'){drill(st,items,(ok,tot)=>{APP.prog.v[F.id]=Math.max(Math.round(ok/tot*100),APP.prog.v[F.id]??0);saveProg()});return}
+  if(fMode==='practicar'){drill(st,items,(ok,tot)=>{APP.prog.v[F.id]=Math.max(Math.round(ok/tot*100),APP.prog.v[F.id]??0);saveProg()},APP.learn);return}
   if(fMode==='test'){
     const deck=shuffle(items.slice()).slice(0,8);let i=0,ok=0;
     const step=()=>{
       if(i>=deck.length){APP.prog.v[F.id]=Math.max(Math.round(ok/deck.length*100),APP.prog.v[F.id]??0);saveProg();endCard(st,ok,deck.length,()=>runF(F));return}
-      const it=deck[i],os=shuffle([it,...shuffle(items.filter(x=>x!==it)).slice(0,3)]);
-      st.innerHTML=`<div class="game"><div class="gstat"><span>Frase <b>${i+1}</b> de ${deck.length}</span><span>Aciertos <b>${ok}</b></span></div>
-        <p class="qprompt" style="font-size:1.35rem">${esc(NLES()?it.nl:it.es)}</p>${NLES()?sayBtn(it.nl,''):''}
+      const it=deck[i],os=shuffle([it,...shuffle(items.filter(x=>x!==it)).slice(0,3)]),srcT=(NLES()?'nl':'es')===APP.learn;
+      st.innerHTML=`<div class="game"><div class="gstat"><span>${L('Frase','Zin')} <b>${i+1}</b> ${L('de','van')} ${deck.length}</span><span>${L('Aciertos','Goed')} <b>${ok}</b></span></div>
+        <p class="qprompt" style="font-size:1.35rem">${esc(NLES()?it.nl:it.es)}</p>${srcT?sayBtn(...fT(it).slice(0,1),'',fT(it)[1]):''}
         <div class="qopts" style="grid-template-columns:1fr">${os.map((o,k)=>`<button class="qopt" type="button" data-k="${k}">${esc(NLES()?o.es:o.nl)}</button>`).join('')}</div><p class="fb" id="ffb"></p></div>`;
-      if(NLES())speak(it.nl);
+      if(srcT)speak(fT(it)[0],null,fT(it)[1]);
       st.querySelectorAll('.qopt').forEach(b=>b.onclick=()=>{const o=os[+b.dataset.k],good=o===it;if(good)ok++;
         st.querySelectorAll('.qopt').forEach(x=>{x.disabled=true;if(os[+x.dataset.k]===it)x.classList.add('right')});if(!good)b.classList.add('wrong');
-        speak(it.nl);setTimeout(()=>{i++;step()},good?1200:2400)});
+        speak(fT(it)[0],null,fT(it)[1]);setTimeout(()=>{i++;step()},good?1200:2400)});
     };step();return;
   }
-  st.innerHTML=`<label class="toggle"><input type="checkbox" id="fh" ${fHide?'checked':''}> Ocultar la traducción para practicar</label>
-  <div class="phr">${items.map(it=>`<div class="prow${fHide?' hide':''}" data-say="${esc(it.nl)}">${sayBtn(it.nl,'')}<span class="p1">${esc(NLES()?it.nl:it.es)}</span><span class="p2">${esc(NLES()?it.es:it.nl)}</span></div>`).join('')}</div>`;
+  st.innerHTML=`<label class="toggle"><input type="checkbox" id="fh" ${fHide?'checked':''}> ${L('Ocultar la traducción para practicar','Verberg de vertaling om te oefenen')}</label>
+  <div class="phr">${items.map(it=>`<div class="prow${fHide?' hide':''}" data-say="${esc(fT(it)[0])}" data-lang="${fT(it)[1]}">${sayBtn(fT(it)[0],'',fT(it)[1])}<span class="p1">${esc(NLES()?it.nl:it.es)}</span><span class="p2" data-hint="${L('Toca para ver','Tik om te zien')}">${esc(NLES()?it.es:it.nl)}</span></div>`).join('')}</div>`;
   $('fh').onchange=e=>{fHide=e.target.checked;st.querySelectorAll('.prow').forEach(r=>r.classList.toggle('hide',fHide))};
-  st.querySelectorAll('.prow').forEach(r=>r.onclick=e=>{if(e.target.closest('.say'))return;if(r.classList.contains('hide'))r.classList.remove('hide');speak(r.dataset.say)});
+  st.querySelectorAll('.prow').forEach(r=>r.onclick=e=>{if(e.target.closest('.say'))return;if(r.classList.contains('hide'))r.classList.remove('hide');speak(r.dataset.say,null,r.dataset.lang)});
 }
 
 route();
