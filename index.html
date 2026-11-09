@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.WB_V="?v=1794264263";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -607,7 +608,7 @@ function adjForms(a){
 
 /* ---------- base grande ---------- */
 let BIG_N=0;
-const loadP=fetch('dict.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(rows=>{
+const loadP=fetch('dict.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(rows=>{
   const have=new Set(ENTRIES.map(e=>e.nl+'|'+e.pos));
   for(const r of rows){
     const[nl,p,es,a,pl,dim]=r;const pos=p==='o'?'other':p==='n'?'noun':p==='v'?'verb':'adj';
@@ -1007,7 +1008,7 @@ function esConj(input){
 const APP={dir:'nl-es',learn:'nl',content:null,themes:{},prog:{g:{},v:{}}};
 try{const l=localStorage.getItem('wb.learn');if(l==='es'||l==='nl')APP.learn=l}catch(_){}
 const L=(es,nl)=>APP.learn==='es'?nl:es;
-const gramSet=()=>APP.learn==='es'?APP.content.grammar_es:APP.content.grammar;
+const gramSet=()=>APP.learn==='es'?(APP.content.grammar_es||[]):APP.content.grammar;
 const allLessons=()=>APP.content.grammar.concat(APP.content.grammar_es||[]);
 try{const d=localStorage.getItem('wb.dir');if(d==='es-nl'||d==='nl-es')APP.dir=d}catch(_){}
 try{const p=JSON.parse(localStorage.getItem('wb.prog')||'null');if(p&&p.g&&p.v)APP.prog=p}catch(_){}
@@ -1022,8 +1023,8 @@ $('dirbtn').onclick=()=>{setDir(NLES()?'es-nl':'nl-es');toast(L('Ahora: ','Nu: '
 setDir(APP.dir,true);
 
 let contentP=null;
-const getContent=()=>contentP||(contentP=fetch('content.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(c=>(APP.content=c)).catch(e=>{contentP=null;throw e}));
-const getTheme=id=>APP.themes[id]?Promise.resolve(APP.themes[id]):fetch('v/'+id+'.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(t=>(APP.themes[id]=t));
+const getContent=()=>contentP||(contentP=fetch('content.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(c=>(APP.content=c)).catch(e=>{contentP=null;throw e}));
+const getTheme=id=>APP.themes[id]?Promise.resolve(APP.themes[id]):fetch('v/'+id+'.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(t=>(APP.themes[id]=t));
 
 const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab')};
 function show(v){
@@ -1044,11 +1045,13 @@ async function route(){
   if(!isG&&!isV){show('dict');return}
   const el=isG?VIEWS.gram:VIEWS.vocab;show(isG?'gram':'vocab');
   if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
+  try{
   if(h==='gramatica')renderGramList();
   else if(h.startsWith('g-'))renderLesson(h.slice(2));
   else if(h==='vocabulario')renderVocabHome();
-  else if(h.startsWith('v-'))renderTheme(h.slice(2));
+  else if(h.startsWith('v-'))await renderTheme(h.slice(2));
   else renderFrases(h);
+  }catch(e){console.error(e);failed(el)}
 }
 window.addEventListener('hashchange',route);
 document.addEventListener('dirchange',()=>{if(VIEWS.dict.hidden)route()});
