@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794348994";</script>
+<script>window.WB_V="?v=1794353495";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -380,6 +380,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .wko{color:var(--bad);font-weight:700;text-decoration:underline wavy}
 .din{width:100%;font:inherit;font-size:1.15rem;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);resize:vertical;box-sizing:border-box}
 .din:focus{outline:none;border-color:var(--de)}
+
+.didyou{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--de-soft);font-size:1.02rem}
+.didyou .sug{all:unset;cursor:pointer;font-weight:700;color:var(--de);text-decoration:underline;text-underline-offset:3px}
+.didyou .sug:hover,.didyou .sug:focus-visible{color:var(--het)}
 </style>
 
 <div class="topbar">
@@ -747,6 +751,34 @@ function lookup(q){
   }}
   return[];
 }
+
+/* ---------- ¿quisiste decir…? ---------- */
+let SUG=null;
+function sugKeys(){if(!SUG||SUG.n!==idx.size){const B=new Map();let i=0;for(const k of idx.keys()){i++;if(k.length>1&&k.length<30&&!/[\d/]/.test(k)){if(!B.has(k.length))B.set(k.length,[]);B.get(k.length).push([k,i])}}SUG={n:idx.size,B}}return SUG.B}
+function editDist(a,b,max){
+  const n=a.length,m=b.length;if(Math.abs(n-m)>max)return max+1;
+  let p2=null,p=new Array(m+1);for(let j=0;j<=m;j++)p[j]=j;
+  for(let i=1;i<=n;i++){const c=new Array(m+1);c[0]=i;let best=i;
+    for(let j=1;j<=m;j++){let v=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));
+      if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])v=Math.min(v,p2[j-2]+1);c[j]=v;if(v<best)best=v}
+    if(best>max)return max+1;p2=p;p=c}
+  return p[m];
+}
+function sugLabel(k){const r=idx.get(k)||[];for(const x of r){if(norm(x.e.nl)===k)return x.e.nl;for(const g of (x.e.es||[]))for(const w of String(g).split(/[,;/()]/)){const t=w.trim();if(norm(t)===k||norm(stripArt(t))===k)return norm(t)===k?t:stripArt(t)}}return k}
+function suggest(q,n=3,filter){
+  const s=norm(stripArt(q));if(s.length<3||s.length>30)return[];
+  const max=s.length<=4?1:s.length<=8?2:3,B=sugKeys(),out=[],srt=w=>[...w].sort().join(''),ss=srt(s);
+  const subseq=(a,b)=>{let j=0;for(const ch of b)if(ch===a[j])j++;return j===a.length};
+  for(let L=s.length-max;L<=s.length+max;L++){const arr=B.get(L);if(!arr)continue;
+    for(const [k,i] of arr){if(k===s)continue;const dd=editDist(s,k,max);if(dd>max||(filter&&!filter(k)))continue;
+      const r=idx.get(k),pr=r.some(x=>x.e.src==='base'||x.e.pos==='grammar')?0:1;
+      const typo=srt(k)===ss?0:(subseq(s,k)||subseq(k,s))?1:2;
+      out.push({k,d:dd,typo,pr,i})}}
+  out.sort((a,b)=>a.d-b.d||a.typo-b.typo||a.pr-b.pr||a.i-b.i);
+  const seen=new Set(),res=[];for(const o of out){const l=sugLabel(o.k);if(!seen.has(norm(l))){seen.add(norm(l));res.push(l)}if(res.length>=n)break}
+  return res;
+}
+const isVerbKey=k=>(idx.get(k)||[]).some(x=>x.e.pos==='verb');
 
 /* ---------- render ---------- */
 const d=s=>`<span class="d">${esc(s)}</span>`;
@@ -1434,14 +1466,21 @@ search=async function(q,remember=true){
       const e=r[0].e,nlMatch=r[0].via||norm(e.nl)===norm(w);return `<span class="wbw"><b>${esc(w)}</b><span>${esc(nlMatch?(e.es||[])[0]||'':e.nl)}</span></span>`});
     html+=`<p class="grp">${Lx('Palabra por palabra','Woord voor woord')}</p><div class="wbwrow">${parts.join('')}</div><p class="tip">${Lx('Para frases completas, usa «Consultar a Claude» (solo dentro de Claude) o busca palabra a palabra.','Voor hele zinnen: gebruik «Vraag het Claude» (alleen binnen Claude) of zoek per woord.')}</p>`;
   }
-  $res.innerHTML=(rows.length||gram.length?'':`<p class="res-head">«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}</p>`)+html+'<div id="ai"></div>';
+  let dym='';
+  if(!rows.length&&!gram.length){
+    if(words.length===1){const sg=suggest(q,3);if(sg.length)dym=`<p class="didyou">${Lx('¿Quisiste decir','Bedoelde je')} ${sg.map((w,i)=>`${i?(i===sg.length-1?' '+Lx('o','of')+' ':', '):''}<button type="button" class="sug" data-sug="${esc(w)}">${esc(w)}</button>`).join('')}?</p>`}
+    else{let ch=false;const fixed=words.map(w=>{if(lookup(w).length||w.length<3)return w;const sg=suggest(w,1);if(sg.length){ch=true;return sg[0]}return w}).join(' ');
+      if(ch)dym=`<p class="didyou">${Lx('¿Quisiste decir','Bedoelde je')} <button type="button" class="sug" data-sug="${esc(fixed)}">${esc(fixed)}</button>?</p>`}
+  }
+  $res.innerHTML=dym+(rows.length||gram.length?'':`<p class="res-head">«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}</p>`)+html+'<div id="ai"></div>';
+  $res.querySelectorAll('[data-sug]').forEach(b=>b.onclick=()=>{$q.value=b.dataset.sug;search(b.dataset.sug)});
   $res.querySelectorAll('[data-more]').forEach(b=>b.onclick=()=>{const row=b.closest('.trrow'),d=row.querySelector('.trdet'),x=all[+b.dataset.more];
     if(d.hidden&&!d.innerHTML)d.innerHTML=card(x.e,x.via,q);d.hidden=!d.hidden;b.setAttribute('aria-expanded',String(!d.hidden));b.textContent=d.hidden?Lx('Ficha','Details'):Lx('Cerrar','Sluiten')});
   $res.querySelectorAll('[data-conj]').forEach(b=>b.onclick=()=>openConj(b.dataset.conj));
   $res.querySelectorAll('[data-showmore]').forEach(b=>b.onclick=()=>{$(b.dataset.showmore).hidden=false;b.remove()});
   const slot=$('ai');
-  if(!rows.length&&!gram.length&&words.length===1)askClaude(q,slot);
-  else if(!cached.length){slot.innerHTML=`<div class="status"><p>${Lx(words.length>1?'¿Traducir la frase completa?':'¿Buscas otra acepción o más ejemplos?',words.length>1?'De hele zin vertalen?':'Meer betekenissen of voorbeelden?')}</p><button class="btn-ghost" type="button" id="more">${Lx('Consultar a Claude','Vraag het Claude')}</button></div>`;
+  if(!rows.length&&!gram.length&&words.length===1&&!dym)askClaude(q,slot);
+  else if(!cached.length||dym){slot.innerHTML=`<div class="status"><p>${Lx(words.length>1?'¿Traducir la frase completa?':'¿Buscas otra acepción o más ejemplos?',words.length>1?'De hele zin vertalen?':'Meer betekenissen of voorbeelden?')}</p><button class="btn-ghost" type="button" id="more">${Lx('Consultar a Claude','Vraag het Claude')}</button></div>`;
     slot.querySelector('#more').onclick=()=>askClaude(q,slot)}
 };
 
@@ -1473,13 +1512,14 @@ function renderConj(){
   <div class="chips"><span class="lbl">${L('Prueba','Probeer')}</span>${ex.map(w=>`<button type="button" class="chip" data-cj="${w}">${w}</button>`).join('')}</div>
   <div id="cjo" style="display:flex;flex-direction:column;gap:16px"></div>`;
   const run=async v=>{conjQ=v;const out=$('cjo');await loadP.catch(()=>{});const d=conjDetect(v);
-    if(!d){out.innerHTML=`<p class="tip">${L('No reconozco ese verbo. Escribe el infinitivo: en neerlandés acaba en -en o -n (werken, gaan); en español, en -ar, -er o -ir (hablar, comer, vivir).','Dat werkwoord herken ik niet. Typ de infinitief: Nederlands eindigt op -en of -n (werken, gaan), Spaans op -ar, -er of -ir (hablar, comer, vivir).')}</p>`;return}
-    const tr=conjTrans(d),other=d.lang==='nl'?L('En español','In het Spaans'):L('En neerlandés','In het Nederlands');
+    const cjSug=()=>{const sg=suggest(v,3,isVerbKey);return sg.length?`<p class="didyou">${L('¿Quisiste decir','Bedoelde je')} ${sg.map((w,i)=>`${i?(i===sg.length-1?' '+L('o','of')+' ':', '):''}<button type="button" class="sug" data-cj="${esc(w)}">${esc(w)}</button>`).join('')}?</p>`:''};
+    if(!d){out.innerHTML=cjSug()+`<p class="tip">${L('No reconozco ese verbo. Escribe el infinitivo: en neerlandés acaba en -en o -n (werken, gaan); en español, en -ar, -er o -ir (hablar, comer, vivir).','Dat werkwoord herken ik niet. Typ de infinitief: Nederlands eindigt op -en of -n (werken, gaan), Spaans op -ar, -er of -ir (hablar, comer, vivir).')}</p>`;out.querySelectorAll('[data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});return}
+    const tr=conjTrans(d),pre=(!tr.length&&!isVerbKey(norm(d.inf)))?cjSug():'',other=d.lang==='nl'?L('En español','In het Spaans'):L('En neerlandés','In het Nederlands');
     const trHtml=tr.length?`<p class="via">${other}: ${tr.map(t=>`<button type="button" class="chip" data-cj="${esc(t)}">${esc(t)} →</button>`).join(' ')}</p>`:'';
     if(d.lang==='es'){const c=esConj(d.inf);
-      out.innerHTML=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${trHtml}${esConjHtml(c)}</article>`}
+      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${trHtml}${esConjHtml(c)}</article>`}
     else{const v2=conjugate(d.inf);const e={nl:d.inf,verb:v2};
-      out.innerHTML=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(d.inf)}</h2>${sayBtn(d.inf,'')}<span class="pill">${L('verbo neerlandés','Nederlands werkwoord')}</span></div>${d.via?`<p class="via">«${esc(v)}» ${L('es','is')} ${esc(d.via)} ${L('de','van')} <b>${esc(d.inf)}</b>.</p>`:''}${trHtml}${verbBlock(e)}</article>`}
+      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(d.inf)}</h2>${sayBtn(d.inf,'')}<span class="pill">${L('verbo neerlandés','Nederlands werkwoord')}</span></div>${d.via?`<p class="via">«${esc(v)}» ${L('es','is')} ${esc(d.via)} ${L('de','van')} <b>${esc(d.inf)}</b>.</p>`:''}${trHtml}${verbBlock(e)}</article>`}
     out.querySelectorAll('[data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
   };
   $('cjf').onsubmit=e=>{e.preventDefault();run($('cjq').value)};
