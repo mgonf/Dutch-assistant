@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794264414";</script>
+<script>window.WB_V="?v=1794299017";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -291,6 +291,31 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .topbar-in{gap:10px 12px}
 @media (max-width:1240px){.logo i{display:none}}
 .learn{max-width:190px}
+
+.trlist{display:flex;flex-direction:column;gap:8px}
+.trrow{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center;min-width:0}
+.trrow .say{width:38px;height:38px}
+.trtxt{min-width:0;display:flex;flex-direction:column;gap:2px}
+.tr1{font-family:var(--f-display);font-weight:600;font-size:1.25rem;line-height:1.25;overflow-wrap:anywhere}
+.tr2{font-size:1.02rem;overflow-wrap:anywhere}
+.tr2 .arrow{color:var(--muted)}
+.trvia{font-size:.8rem;color:var(--muted)}
+.tract{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.trb{padding:6px 12px;font-size:.85rem}
+.trdet{grid-column:1/-1;margin-top:8px}
+.trdet .entry{border:0;padding:6px 0 0}
+.tr-main{border-color:var(--de);border-width:1.5px}
+.tr-main .tr1{font-size:1.7rem}
+.tr-main .tr2{font-size:1.25rem}
+.wbwrow{display:flex;flex-wrap:wrap;gap:8px}
+.wbw{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.wbw span{color:var(--muted);font-size:.9rem}
+@media (max-width:560px){.trrow{grid-template-columns:auto 1fr}.tract{grid-column:1/-1;justify-content:flex-start}}
+.tabs{min-width:0}
+@media (max-width:640px){.tab{min-width:0;flex:1 1 0}.tab .tl{overflow:hidden;text-overflow:ellipsis}}
+@media (max-width:420px){.tab{padding:8px 2px}.tab .tl{font-size:.78rem}}
+.view .wrap{min-width:0;max-width:100%}
+.view .wrap>*,#results,#results>*,.trlist,.trrow,.trdet{min-width:0;max-width:100%}
 </style>
 
 <div class="topbar">
@@ -1285,20 +1310,63 @@ WIDGETS.esconj=function(el){
   el.querySelector('#eci').value='tener';run('tener');
 };
 
-/* ---------- en el diccionario: ficha de conjugación española ---------- */
-const _search=search;
-search=async function(q,remember){
-  await _search(q,remember);
-  const qn=String(q||'').trim().toLowerCase();
-  if(!/^[a-záéíóúñü]+(ar|er|ir|ír)(se)?$/.test(qn))return;
-  const base=qn.replace(/se$/,'');
-  const hits=lookup(qn),rel=!hits.length||hits.some(h=>h.e&&h.e.es&&h.e.es.some(x=>norm(x).split(/[,;]/).map(s=>s.trim()).includes(norm(base))));
-  const c=esConj(qn);if(!c||!rel)return;
-  const slot=document.getElementById('ai');
-  const html=`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${esConjHtml(c)}</article>`;
-  if(slot){if(!hits.length)slot.innerHTML='';slot.insertAdjacentHTML('beforebegin',html)}else $res.insertAdjacentHTML('beforeend',html);
-  const head=$res.querySelector('.res-head');if(head&&!hits.length)head.textContent=L('Verbo español: «','Spaans werkwoord: «')+qn+'»';
+/* ---------- traductor rápido (primera pestaña) ---------- */
+let qsId=0;
+const glossKeys=s=>s.split(/[,;]/).map(t=>norm(t.replace(/\(.*?\)/g,''))).filter(Boolean);
+function openConj(v){conjQ=v;go('conjugador')}
+function trRow(e,via,q,fromNl,k,main){
+  const A=e.pos==='noun'&&e.noun?e.noun.article:'';
+  const nlSay=(A&&A!=='de/het'?A+' ':'')+e.nl;
+  const nlH=(A?`<span class="art art-${A==='de/het'?'dh':A}">${A}</span>`:'')+esc(e.nl);
+  const es=(e.es||[]).filter(Boolean);
+  const esH=es.length?esc(es.join(', ')):`<span class="notr">${Lx('sin traducción en la base','geen vertaling in de database')}</span>`;
+  const viaH=via?`<span class="trvia">«${esc(q)}» ${Lx('es','is')} ${esc(via)}</span>`:'';
+  const left=fromNl?nlH:esH,right=fromNl?esH:nlH;
+  const conjBtn=e.pos==='verb'?`<button class="btn-ghost trb" type="button" data-conj="${esc(fromNl?e.nl:norm(q))}">${Lx('Conjugar','Vervoegen')}</button>`:'';
+  return `<div class="trrow${main?' tr-main':''}" data-k="${k}">${sayBtn(nlSay,'')}<div class="trtxt"><div class="tr1">${left}</div><div class="tr2"><span class="arrow">→</span> ${right}</div>${viaH}</div>
+    <div class="tract">${conjBtn}<button class="btn-ghost trb" type="button" data-more="${k}" aria-expanded="false">${Lx('Ficha','Details')}</button></div><div class="trdet" hidden></div></div>`;
+}
+search=async function(q,remember=true){
+  q=String(q||'').trim();if(!q)return;
+  if(remember){store.hist=[q,...store.hist.filter(h=>norm(h)!==norm(q))].slice(0,12);save();renderChips()}
+  const my=++qsId,qn=norm(q),qb=norm(stripArt(q));
+  let hits=lookup(q);
+  if(!hits.length){$res.innerHTML=`<p class="res-head">${Lx('Buscando…','Zoeken…')}</p>`;await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==qsId)return;hits=lookup(q)}
+  const cached=store.cache[qb]||store.cache[qn]||[];
+  const seen=new Set(hits.map(h=>h.e.nl+'|'+h.e.pos));
+  cached.forEach(e=>{if(!seen.has(e.nl+'|'+e.pos))hits.push({e,via:null})});
+  const gram=hits.filter(h=>h.e.pos==='grammar'),rows=hits.filter(h=>h.e.pos!=='grammar');
+  const NL=[],ES=[];
+  for(const h of rows){const e=h.e,isNl=h.via||norm(e.nl)===qn||norm(e.nl)===qb;
+    if(isNl)NL.push(h);else ES.push(h)}
+  // dentro de ES, primero los que tienen la palabra como traducción exacta y los revisados
+  const rank=h=>(glossKeys((h.e.es||[]).join(';')).includes(qb)?0:1)+(h.e.src==='base'?0:.5);
+  ES.sort((a,b)=>rank(a)-rank(b));
+  const all=[];const sec=(list,fromNl,title)=>{if(!list.length)return '';const shown=list.slice(0,8),more=list.slice(8);
+    let h=`<p class="grp">${title}</p><div class="trlist">${shown.map(x=>{all.push(x);return trRow(x.e,x.via,q,fromNl,all.length-1,all.length===1)}).join('')}</div>`;
+    if(more.length){const id='mb'+all.length;h+=`<button class="btn-ghost" type="button" data-showmore="${id}">${Lx('Ver','Toon')} ${more.length} ${Lx('más','meer')}</button><div class="trlist" id="${id}" hidden>${more.map(x=>{all.push(x);return trRow(x.e,x.via,q,fromNl,all.length-1,false)}).join('')}</div>`}
+    return h};
+  const sNL=sec(NL,true,Lx('Neerlandés → español','Nederlands → Spaans')),sES=sec(ES,false,Lx('Español → neerlandés','Spaans → Nederlands'));
+  let html=APP.learn==='es'?sES+sNL:sNL+sES;
+  if(gram.length)html+=card(gram[0].e,null,q);
+  const words=q.split(/\s+/).filter(Boolean);
+  if(!rows.length&&words.length>1){
+    const parts=words.map(w=>{const r=lookup(w).filter(h=>h.e.pos!=='grammar');if(!r.length)return `<span class="wbw"><b>${esc(w)}</b><span>?</span></span>`;
+      const e=r[0].e,nlMatch=r[0].via||norm(e.nl)===norm(w);return `<span class="wbw"><b>${esc(w)}</b><span>${esc(nlMatch?(e.es||[])[0]||'':e.nl)}</span></span>`});
+    html+=`<p class="grp">${Lx('Palabra por palabra','Woord voor woord')}</p><div class="wbwrow">${parts.join('')}</div><p class="tip">${Lx('Para frases completas, usa «Consultar a Claude» (solo dentro de Claude) o busca palabra a palabra.','Voor hele zinnen: gebruik «Vraag het Claude» (alleen binnen Claude) of zoek per woord.')}</p>`;
+  }
+  $res.innerHTML=(rows.length||gram.length?'':`<p class="res-head">«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}</p>`)+html+'<div id="ai"></div>';
+  $res.querySelectorAll('[data-more]').forEach(b=>b.onclick=()=>{const row=b.closest('.trrow'),d=row.querySelector('.trdet'),x=all[+b.dataset.more];
+    if(d.hidden&&!d.innerHTML)d.innerHTML=card(x.e,x.via,q);d.hidden=!d.hidden;b.setAttribute('aria-expanded',String(!d.hidden));b.textContent=d.hidden?Lx('Ficha','Details'):Lx('Cerrar','Sluiten')});
+  $res.querySelectorAll('[data-conj]').forEach(b=>b.onclick=()=>openConj(b.dataset.conj));
+  $res.querySelectorAll('[data-showmore]').forEach(b=>b.onclick=()=>{$(b.dataset.showmore).hidden=false;b.remove()});
+  const slot=$('ai');
+  if(!rows.length&&!gram.length&&words.length===1)askClaude(q,slot);
+  else if(!cached.length){slot.innerHTML=`<div class="status"><p>${Lx(words.length>1?'¿Traducir la frase completa?':'¿Buscas otra acepción o más ejemplos?',words.length>1?'De hele zin vertalen?':'Meer betekenissen of voorbeelden?')}</p><button class="btn-ghost" type="button" id="more">${Lx('Consultar a Claude','Vraag het Claude')}</button></div>`;
+    slot.querySelector('#more').onclick=()=>askClaude(q,slot)}
 };
+
+search($q.value||'huis',false);
 
 /* ---------- pestaña Conjugador ---------- */
 let conjQ='';
