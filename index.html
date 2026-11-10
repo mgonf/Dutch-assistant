@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794329057";</script>
+<script>window.WB_V="?v=1794330567";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -921,7 +921,7 @@ function speak(text,btn,lang){
   synth.speak(u);
   if(!V&&!speak['w'+lang]&&(speak['w'+lang]=true))toast(lang==='es'?(Lx(false,true)?'Er is geen Spaanse stem geïnstalleerd; installeer «Español» in de spraakinstellingen.':'No hay voz española instalada en este dispositivo.'):(Lx(false,true)?'Er is geen Nederlandse stem geïnstalleerd.':'No hay voz neerlandesa instalada en este dispositivo; puede sonar con acento. Instala «Nederlands» en los ajustes de voz del sistema.'));
 }
-
+document.getElementById('results').addEventListener('click',ev=>{const b=ev.target.closest('.say');if(b){ev.preventDefault();ev.stopPropagation();speak(b.dataset.say,b,b.dataset.lang)}});
 
 renderChips();search('huis',false);
 
@@ -1368,7 +1368,9 @@ function trRow(e,via,q,fromNl,k,main){
   const viaH=via?`<span class="trvia">«${esc(q)}» ${Lx('es','is')} ${esc(via)}</span>`:'';
   const left=fromNl?nlH:esH,right=fromNl?esH:nlH;
   const conjBtn=e.pos==='verb'?`<button class="btn-ghost trb" type="button" data-conj="${esc(fromNl?e.nl:norm(q))}">${Lx('Conjugar','Vervoegen')}</button>`:'';
-  return `<div class="trrow${main?' tr-main':''}" data-k="${k}">${sayBtn(nlSay,'')}<div class="trtxt"><div class="tr1">${left}</div><div class="tr2"><span class="arrow">→</span> ${right}</div>${viaH}</div>
+  const esSay=(fromNl?(es[0]||''):q).replace(/\(.*?\)/g,'').trim();
+  const btn=APP.learn==='es'&&esSay?sayBtn(esSay,'','es'):sayBtn(nlSay,'');
+  return `<div class="trrow${main?' tr-main':''}" data-k="${k}">${btn}<div class="trtxt"><div class="tr1">${left}</div><div class="tr2"><span class="arrow">→</span> ${right}</div>${viaH}</div>
     <div class="tract">${conjBtn}<button class="btn-ghost trb" type="button" data-more="${k}" aria-expanded="false">${Lx('Ficha','Details')}</button></div><div class="trdet" hidden></div></div>`;
 }
 search=async function(q,remember=true){
