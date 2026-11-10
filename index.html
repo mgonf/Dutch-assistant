@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794299017";</script>
+<script>window.WB_V="?v=1794312260";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -132,6 +132,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lvl[aria-pressed="true"]{background:var(--de);border-color:var(--de);color:var(--surface)}
 .lv{font-size:.7rem;font-weight:800;letter-spacing:.05em;padding:2px 7px;border-radius:6px;background:var(--de-soft);color:var(--de)}
 .lv.B1{background:var(--het-soft);color:var(--het)}
+.lv.B2{background:#f3e8ff;color:#7e22ce}
 .lv.A2{background:var(--ok-soft);color:var(--ok)}
 
 /* cards */
@@ -316,6 +317,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (max-width:420px){.tab{padding:8px 2px}.tab .tl{font-size:.78rem}}
 .view .wrap{min-width:0;max-width:100%}
 .view .wrap>*,#results,#results>*,.trlist,.trrow,.trdet{min-width:0;max-width:100%}
+
+.pnum{display:flex;align-items:center;justify-content:center;font:700 1.6rem var(--f-display);color:var(--de);background:var(--de-soft);border-radius:12px}
+.mixcard{border-color:var(--de);border-width:1.5px}
+.pstats{display:flex;gap:18px;flex-wrap:wrap;font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pstats b{color:var(--ink);font-size:1.1rem}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:720px;width:100%;align-self:center}
+.pq{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.qbig{font-family:var(--f-display);font-weight:600;font-size:1.6rem;line-height:1.25;overflow-wrap:anywhere}
+.qbig i{font-size:.75em;color:var(--muted);font-weight:500}
+.qsub{color:var(--muted);font-size:.92rem}
+.qopts.one{grid-template-columns:1fr}
+.qopt .key{font-size:.7rem;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:0 5px;margin-bottom:2px}
+.qopts.one .qopt{flex-direction:row;gap:10px;justify-content:flex-start;text-align:left}
 </style>
 
 <div class="topbar">
@@ -359,7 +373,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <main class="view" id="v-vocab" hidden></main>
 <main class="view" id="v-conj" hidden></main>
 
-<footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B1) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
+<footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B2) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
 
 <script>const Lx=(es,nl)=>{try{return APP.learn==='es'?nl:es}catch(_){return es}};
 
@@ -531,9 +545,9 @@ const NO_SPLIT=new Set(['ontmoeten','vermoeden','bedoelen','gebeuren','geloven',
 const SEP=['terecht','voorbij','achter','binnen','buiten','samen','tegen','terug','thuis','kapot','schoon','dicht','langs','klaar','open','door','onder','over','voor','vast','weg','mee','neer','rond','aan','bij','toe','uit','los','af','in','na','om','op'];
 const INSEP_WORDS=new Set('onderzoeken ondernemen onderhouden ondersteunen onderscheiden onderbreken onderwijzen onderhandelen ondertekenen onderstrepen ondervinden ondergaan overleggen overwegen overtuigen overleven overnachten overschrijden overtreden overdrijven overhandigen overheersen overwinnen overlijden overvallen overkomen overzien voorspellen voorzien voorkomen doorzien omringen omvatten omschrijven omarmen achterhalen achtervolgen aanvaarden aanbidden'.split(' '));
 const AUX_OVR={vertrekken:'z',opstaan:'z',ontstaan:'z',gebeuren:'z',overlijden:'z',verhuizen:'hz',ontsnappen:'z',slagen:'z',lukken:'z',mislukken:'z',groeien:'z',dalen:'z',veranderen:'hz',toenemen:'z',afnemen:'hz',inslapen:'z',terugkeren:'z',verdwijnen:'z',landen:'hz',vertrekken_:'z'};
-const LATIN_NO=new Set(['luisteren','slenteren','verbeteren']);
+const LATIN_NO=new Set(['luisteren','slenteren','verbeteren','weigeren','zweren','ploeteren','vergaderen','afleveren']);
 const isV=c=>'aeiouyëïéè'.includes(c||'');
-const latin=inf=>inf.length>=7&&!LATIN_NO.has(inf)&&/(iëren|ieren|(is|ys|in|orm|at|ul|il|ol|al|id|ud|ec|oc|tr|st|pt|nt|ct|ag|on|ar|rv|ot|it|ig|ur|er|ab|ep|ob)eren)$/.test(inf);
+const latin=inf=>inf.length>=7&&!LATIN_NO.has(inf)&&/(iëren|ieren|(is|ys|in|orm|at|ul|il|ol|al|id|ud|ec|oc|tr|st|pt|nt|ct|ag|on|ar|rv|ot|it|ig|ur|er|ab|ep|ob|af|of|ef|uv|ev|iv|ur)eren)$/.test(inf);
 const knownBase=b=>!!(STRONG[b]||IRRPRES[b]||CUR_VERB[b]);
 function splitVerb(inf){
   if(knownBase(inf)||latin(inf))return null;
@@ -552,11 +566,11 @@ function splitVerb(inf){
 }
 function regStem(inf){
   if(STEM_OVR[inf])return{stem:STEM_OVR[inf],orig:STEM_OVR[inf]};
-  if(latin(inf)){const st=inf.slice(0,-3)+'er';return{stem:st,orig:st}}
+  if(latin(inf)){const st=inf.slice(0,-3).replace(/ë$/,'e')+'er';return{stem:st,orig:st}}
   let r=inf.endsWith('en')?inf.slice(0,-2):inf.slice(0,-1);
   if(/(bb|dd|ff|gg|kk|ll|mm|nn|pp|rr|ss|tt)$/.test(r)){r=r.slice(0,-1);return{stem:r,orig:r}}
   const orig=r,L=r.length,c=r[L-1],v=r[L-2],b=r[L-3];
-  if(L>=2&&!isV(c)&&'aeou'.includes(v)&&!isV(b)){
+  if(L>=2&&!isV(c)&&c!=='w'&&c!=='j'&&'aeou'.includes(v)&&!isV(b)){
     const schwa=v==='e'&&/[aeiouy]/.test(r.slice(0,L-2));
     if(!schwa)r=r.slice(0,L-1)+v+c;
   }
@@ -1069,12 +1083,14 @@ async function route(){
   window.scrollTo(0,0);
   if(!h||h==='diccionario'){show('dict');return}
   if(h==='conjugador'){show('conj');renderConj();return}
-  const isG=h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-');
+  const isP=h==='practica'||h.startsWith('p-'),isG=isP||h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-');
   if(!isG&&!isV){show('dict');return}
   const el=isG?VIEWS.gram:VIEWS.vocab;show(isG?'gram':'vocab');
   if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
   try{
-  if(h==='gramatica')renderGramList();
+  if(h==='practica')renderPracticeHub();
+  else if(h.startsWith('p-'))await renderPractice(h.slice(2));
+  else if(h==='gramatica')renderGramList();
   else if(h.startsWith('g-'))renderLesson(h.slice(2));
   else if(h==='vocabulario')renderVocabHome();
   else if(h.startsWith('v-'))await renderTheme(h.slice(2));
@@ -1093,16 +1109,17 @@ document.addEventListener('click',ev=>{
 });
 
 /* ---------- gramática ---------- */
-const LVLN={A1:['Principiante','Beginner'],A2:['Básico','Basis'],B1:['Intermedio','Halfgevorderd']},LVLNAME=new Proxy({},{get:(_,k)=>LVLN[k]?L(...LVLN[k]):k});
+const LVLN={A1:['Principiante','Beginner'],A2:['Básico','Basis'],B1:['Intermedio','Halfgevorderd'],B2:['Intermedio alto','Gevorderd']},LVLNAME=new Proxy({},{get:(_,k)=>LVLN[k]?L(...LVLN[k]):k});
 let gLevel='all';
 function lcard(g){const s=APP.prog.g[g.id];
   return `<button class="lcard" type="button" data-go="g-${g.id}"><div class="pic">${g.icon}</div><b>${esc(g.title)}</b><small>${esc(g.sum)}</small><div class="meta"><span class="lv ${g.level}">${g.level}</span>${s!=null?`<span class="done">✓ ${s}/${g.quiz.length}</span>`:`<span>${g.quiz.length} ${L('ejercicios','oefeningen')}</span>`}</div></button>`}
 function renderGramList(){
   const G=gramSet(),el=VIEWS.gram;
-  const levels=['A1','A2','B1'].filter(l=>gLevel==='all'||gLevel===l);
+  const levels=['A1','A2','B1','B2'].filter(l=>gLevel==='all'||gLevel===l);
   el.innerHTML=`<h2 class="h-sec">${L('Gramática neerlandesa','Spaanse grammatica')}</h2>
   <p class="lead">${L(G.length+' lecciones de A1 a B1, con ejemplos que puedes escuchar y ejercicios al final. Toca cualquier palabra en azul para oírla.',G.length+' lessen van A1 tot B1, met voorbeelden om te beluisteren en oefeningen. Klik op een blauw woord om het te horen.')}</p>
-  <div class="lvls" role="group" aria-label="Nivel">${['all','A1','A2','B1'].map(l=>`<button class="lvl" type="button" data-lvl="${l}" aria-pressed="${gLevel===l}">${l==='all'?L('Todos','Alle'):l+' · '+LVLNAME[l]}</button>`).join('')}</div>
+  <button class="lcard mixcard" type="button" data-go="practica" style="max-width:560px"><div class="pic pnum">∞</div><b>${L('Práctica infinita','Eindeloos oefenen')}</b><small>${L('Ejercicios que generan preguntas nuevas sin fin: artículos, plurales, conjugación, orden de palabras, números, hora…','Oefeningen met eindeloos nieuwe vragen: lidwoorden, meervoud, vervoegingen, getallen, klok…')}</small><div class="meta"><span class="lv">${myGens().length} ${L('ejercicios','oefeningen')}</span></div></button>
+  <div class="lvls" role="group" aria-label="Nivel">${['all','A1','A2','B1','B2'].map(l=>`<button class="lvl" type="button" data-lvl="${l}" aria-pressed="${gLevel===l}">${l==='all'?L('Todos','Alle'):l+' · '+LVLNAME[l]}</button>`).join('')}</div>
   ${levels.map(l=>{const ls=G.filter(g=>g.level===l),dn=ls.filter(g=>APP.prog.g[g.id]!=null).length;
     return `<p class="grp">${l} · ${LVLNAME[l]} · ${dn} ${L('de','van')} ${ls.length} ${L('hechas','gedaan')}</p><div class="lgrid">${ls.map(lcard).join('')}</div>`}).join('')}`;
   el.querySelectorAll('.lvl').forEach(b=>b.onclick=()=>{gLevel=b.dataset.lvl;renderGramList()});
@@ -1121,6 +1138,7 @@ function renderLesson(id){
     <div class="lhead"><div class="pic">${g.icon}</div><div><span class="lv ${g.level}">${g.level}</span><h2>${esc(g.title)}</h2><p>${esc(g.nl)}</p></div></div>
     <div class="lbody">${g.html}</div>
     ${g.ex.length?`<section class="quiz"><h3>${L('Practica la traducción','Oefen de vertaling')}</h3><p class="lead" style="margin:0">${L('Los '+g.ex.length+' ejemplos de la lección, en dirección '+dirTxt()+'. Cambia la dirección arriba.','De '+g.ex.length+' voorbeelden uit de les, in de richting '+dirTxt()+'. Wissel de richting bovenaan.')}</p><div id="drill"><button class="btn-ghost" type="button" id="drillgo" style="align-self:flex-start">${L('Empezar','Beginnen')}</button></div></section>`:''}
+    ${lessonPracticeHtml(g.id)}
     ${g.quiz.length?`<section class="quiz"><h3>${L('Comprueba lo aprendido','Test jezelf')}</h3><div id="qz" style="display:flex;flex-direction:column;gap:12px"></div><p class="fb" id="qres"></p></section>`:''}
     <nav class="lnav">${pv?`<button class="btn-ghost" type="button" data-go="g-${pv.id}">← ${esc(pv.title)}</button>`:''}${nx?`<button class="btn-ghost nx" type="button" data-go="g-${nx.id}">${esc(nx.title)} →</button>`:''}</nav>
   </article>`;
@@ -1128,19 +1146,27 @@ function renderLesson(id){
   if(g.ex.length)$('drillgo').onclick=()=>drill($('drill'),g.ex.map(([nl,es])=>({nl,es})),()=>{},g.lang);
   if(g.quiz.length)renderQuiz(g);
 }
-function renderQuiz(g){
-  const box=$('qz');let answered=0,right=0;
-  box.innerHTML=g.quiz.map((q,qi)=>{const idx=shuffle(q.o.map((_,k)=>k));
-    return `<div class="qq" data-q="${qi}"><div class="qt">${qi+1}. ${q.q}</div><div class="qo">${idx.map(k=>`<button type="button" data-k="${k}">${esc(q.o[k])}</button>`).join('')}</div><div class="why" hidden></div></div>`}).join('');
-  box.querySelectorAll('.qq').forEach(div=>{const q=g.quiz[+div.dataset.q];
+async function renderQuiz(g){
+  const box=$('qz');if(!box)return;let answered=0,right=0;
+  let Q=g.quiz.map(q=>({...q,html:true}));
+  const ks=(typeof LESSON_GENS!=='undefined'&&LESSON_GENS[g.id]||[]).filter(k=>GENS[k]);
+  if(ks.length){try{await Promise.all([loadP.catch(()=>{}),getContent().catch(()=>{})]);pools();
+    const want=Math.max(12,Q.length+8);let t=0;while(Q.length<want&&t++<60){try{const q=GENS[pick(ks)].make();if(q&&q.o.length>1&&!Q.some(x=>x.q===q.q))Q.push(q)}catch(e){}}}catch(e){}}
+  if(!document.body.contains(box))return;
+  box.innerHTML=Q.map((q,qi)=>{const idx=shuffle(q.o.map((_,k)=>k));
+    return `<div class="qq" data-q="${qi}"><div class="qt"><span class="qn">${qi+1}.</span> ${q.q}</div><div class="qo">${idx.map(k=>`<button type="button" data-k="${k}">${esc(q.o[k])}</button>`).join('')}</div><div class="why" hidden></div></div>`}).join('')+
+    (ks.length?`<div class="gbtns" style="justify-content:flex-start"><button class="btn-ghost" type="button" id="qmore">↻ ${L('Otra tanda de preguntas','Nieuwe vragen')}</button></div>`:'');
+  if($('qmore'))$('qmore').onclick=()=>{$('qres').textContent='';renderQuiz(g)};
+  box.querySelectorAll('.qq').forEach(div=>{const q=Q[+div.dataset.q];
     div.querySelectorAll('.qo button').forEach(b=>b.onclick=()=>{
       const k=+b.dataset.k,ok=k===q.a;
       div.querySelectorAll('.qo button').forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('right')});
       if(!ok)b.classList.add('wrong');
       const w=div.querySelector('.why');w.innerHTML=(ok?`<b style="color:var(--ok)">${L('¡Correcto!','Goed zo!')}</b> `:`<b style="color:var(--bad)">${L('No es esa.','Helaas.')}</b> `)+(q.why||'');w.hidden=false;
+      if(q.say)try{speak(q.say[0],null,q.say[1])}catch(e){}
       answered++;if(ok)right++;
-      if(answered===g.quiz.length){const r=$('qres');r.textContent=`${L('Resultado','Resultaat')}: ${right} ${L('de','van')} ${g.quiz.length}`;r.className='fb '+(right/g.quiz.length>=.6?'ok':'ko');
-        APP.prog.g[g.id]=Math.max(right,APP.prog.g[g.id]??0);saveProg()}
+      if(answered===Q.length){const r=$('qres');r.textContent=`${L('Resultado','Resultaat')}: ${right} ${L('de','van')} ${Q.length}`;r.className='fb '+(right/Q.length>=.6?'ok':'ko');
+        APP.prog.g[g.id]=Math.max(Math.round(right/Q.length*g.quiz.length),APP.prog.g[g.id]??0);saveProg()}
     });
   });
 }
@@ -1240,7 +1266,7 @@ function applyI18n(){
   document.querySelectorAll('[data-nl]').forEach(el=>{if(el.dataset.es==null)el.dataset.es=el.textContent;el.textContent=APP.learn==='es'?el.dataset.nl:el.dataset.es});
   $q.placeholder=L('casa, lopen, el mismo, liep…','huis, hablar, tengo, fui…');
   $('learn').value=APP.learn;
-  $('credits').textContent=L('Dibujos: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles MCER A1–B1. La pronunciación usa las voces de tu dispositivo.','Tekeningen: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) en flag-icons (MIT); molen, klomp, apparaten, dijk en grachtenpand speciaal getekend. Lesstof volgens de ERK-niveaus A1–B1. De uitspraak gebruikt de stemmen van je apparaat.');
+  $('credits').textContent=L('Dibujos: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles MCER A1–B2. La pronunciación usa las voces de tu dispositivo.','Tekeningen: Fluent Emoji (Microsoft, MIT), Noto Emoji (Google, Apache 2.0) en flag-icons (MIT); molen, klomp, apparaten, dijk en grachtenpand speciaal getekend. Lesstof volgens de ERK-niveaus A1–B2. De uitspraak gebruikt de stemmen van je apparaat.');
 }
 $('learn').onchange=e=>{APP.learn=e.target.value;try{localStorage.setItem('wb.learn',APP.learn)}catch(_){}
   setDir(APP.learn==='es'?'es-nl':'nl-es',true);applyI18n();route();
@@ -1407,6 +1433,387 @@ function renderConj(){
   el.querySelectorAll('.chips [data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
   const start=conjQ||ex[0];$('cjq').value=start;run(start);
 }
+/* listas curadas para la práctica (palabras frecuentes) */
+const _pl=s=>s.trim().split(/\s+/).map(x=>{const [a,b]=x.split(':');return[a,(b||'').replace(/_/g,' ')]});
+const NL_VERBS=_pl(`zijn:ser/estar hebben:tener worden:llegar_a_ser kunnen:poder moeten:deber willen:querer mogen:poder_(permiso) gaan:ir komen:venir doen:hacer maken:hacer/fabricar zeggen:decir zien:ver
+weten:saber krijgen:recibir geven:dar nemen:tomar staan:estar_de_pie liggen:estar_tumbado zitten:estar_sentado vinden:encontrar/opinar denken:pensar laten:dejar houden:mantener/querer brengen:traer
+werken:trabajar wonen:vivir_(residir) leven:vivir spelen:jugar/tocar leren:aprender/enseñar maken:hacer praten:hablar spreken:hablar vertellen:contar vragen:preguntar/pedir antwoorden:responder
+eten:comer drinken:beber koken:cocinar slapen:dormir lopen:andar rennen:correr fietsen:ir_en_bici rijden:conducir reizen:viajar vliegen:volar zwemmen:nadar dansen:bailar zingen:cantar
+lezen:leer schrijven:escribir luisteren:escuchar kijken:mirar horen:oír voelen:sentir ruiken:oler proeven:probar_(sabor) kopen:comprar verkopen:vender betalen:pagar kosten:costar
+beginnen:empezar stoppen:parar eindigen:terminar openen:abrir sluiten:cerrar wachten:esperar zoeken:buscar helpen:ayudar gebruiken:usar proberen:intentar hopen:esperar_(desear) geloven:creer
+begrijpen:entender vergeten:olvidar onthouden:recordar kennen:conocer bedoelen:querer_decir betekenen:significar veranderen:cambiar groeien:crecer sterven:morir trouwen:casarse
+wassen:lavar poetsen:limpiar_(cepillar) bellen:llamar sturen:enviar ontvangen:recibir bezoeken:visitar ontmoeten:conocer_(a_alguien) volgen:seguir verliezen:perder winnen:ganar
+studeren:estudiar huren:alquilar bouwen:construir dragen:llevar_puesto tonen:mostrar zetten:poner leggen:poner_(tumbado) hangen:colgar vallen:caer springen:saltar lachen:reír huilen:llorar
+lijken:parecer blijven:quedarse gebeuren:pasar/ocurrir bestaan:existir durven:atreverse vergelijken:comparar beslissen:decidir kiezen:elegir besluiten:decidir
+verdienen:ganar_(dinero) sparen:ahorrar lenen:prestar/pedir_prestado delen:compartir tellen:contar_(números) rekenen:calcular meten:medir wegen:pesar
+herhalen:repetir oefenen:practicar vertalen:traducir uitleggen:explicar beloven:prometer verbieden:prohibir toestaan:permitir weigeren:negar(se) bieden:ofrecer
+vechten:luchar schieten:disparar trekken:tirar_de duwen:empujar gooien:lanzar breken:romper repareren:reparar schilderen:pintar tekenen:dibujar fotograferen:fotografiar
+plannen:planear organiseren:organizar regelen:arreglar reserveren:reservar bestellen:pedir_(encargar) annuleren:cancelar verhuizen:mudarse
+missen:echar_de_menos/perder vertrouwen:confiar twijfelen:dudar klagen:quejarse discussiëren:discutir overtuigen:convencer beweren:afirmar ontkennen:negar
+ontdekken:descubrir onderzoeken:investigar ontwikkelen:desarrollar verbeteren:mejorar verminderen:reducir vermijden:evitar veroorzaken:causar
+opbellen:llamar_por_teléfono aankomen:llegar uitgaan:salir meenemen:llevarse opstaan:levantarse ophalen:recoger terugkomen:volver schoonmaken:limpiar afmaken:terminar
+aanbieden:ofrecer opruimen:ordenar meedoen:participar uitnodigen:invitar aankijken:mirar_a opzoeken:buscar_(info) invullen:rellenar opschrijven:apuntar nadenken:reflexionar
+voorstellen:proponer/presentar uitgeven:gastar inschrijven:inscribir aantrekken:ponerse_(ropa) uittrekken:quitarse_(ropa) instappen:subir_(vehículo) uitstappen:bajar_(vehículo)
+overstappen:hacer_transbordo afspreken:quedar_(cita) aanzetten:encender uitzetten:apagar opgeven:rendirse/indicar doorgaan:continuar teruggeven:devolver weggaan:irse
+binnenkomen:entrar thuiskomen:llegar_a_casa klaarmaken:preparar fietsen:ir_en_bici aankleden:vestir meegaan:acompañar ophouden:dejar_de toenemen:aumentar afnemen:disminuir`);
+const NL_ADJS=_pl(`groot:grande klein:pequeño mooi:bonito lelijk:feo goed:bueno slecht:malo nieuw:nuevo oud:viejo jong:joven lang:largo kort:corto hoog:alto laag:bajo breed:ancho smal:estrecho
+dik:gordo dun:delgado zwaar:pesado licht:ligero/claro donker:oscuro warm:cálido koud:frío heet:caliente nat:mojado droog:seco schoon:limpio vies:sucio snel:rápido langzaam:lento
+duur:caro goedkoop:barato rijk:rico arm:pobre blij:alegre verdrietig:triste boos:enfadado moe:cansado ziek:enfermo gezond:sano sterk:fuerte zwak:débil druk:ocupado/concurrido rustig:tranquilo
+leuk:divertido saai:aburrido makkelijk:fácil moeilijk:difícil belangrijk:importante interessant:interesante vriendelijk:amable aardig:simpático lief:cariñoso slim:listo dom:tonto
+eerlijk:honesto gek:loco vreemd:extraño bekend:conocido beroemd:famoso modern:moderno ouderwets:anticuado lekker:rico_(sabor) zoet:dulce zout:salado zuur:ácido bitter:amargo
+vol:lleno leeg:vacío open:abierto dicht:cerrado veilig:seguro gevaarlijk:peligroso rond:redondo vierkant:cuadrado zacht:suave hard:duro diep:profundo
+vroeg:temprano laat:tarde ver:lejano mogelijk:posible onmogelijk:imposible nuttig:útil duidelijk:claro raar:raro normaal:normal speciaal:especial
+gelukkig:feliz bang:asustado trots:orgulloso jaloers:celoso nerveus:nervioso zeker:seguro_(de_algo) bezorgd:preocupado tevreden:satisfecho beleefd:educado brutaal:descarado
+rood:rojo blauw:azul groen:verde geel:amarillo zwart:negro wit:blanco grijs:gris bruin:marrón paars:morado roze:rosa
+schattig:mono gezellig:acogedor ernstig:grave eenvoudig:sencillo ingewikkeld:complicado nauwkeurig:preciso efficiënt:eficiente betrouwbaar:fiable duurzaam:sostenible`);
+
+/* ================= Generadores de ejercicios: neerlandés ================= */
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const pickF=a=>a[Math.floor(a.length*Math.pow(Math.random(),1.5))];
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function mc(correct,ds,n=4){const o=[correct];for(const d of shuffle(ds.filter(Boolean)))if(o.length<n&&!o.includes(d))o.push(d);const s=shuffle(o);return{o:s,a:s.indexOf(correct)}}
+const POOL={};
+function pools(){
+  if(POOL.ready)return POOL;
+  const seen=new Set(),all=[];
+  for(const list of idx.values())for(const {e} of list)if(!seen.has(e)){seen.add(e);all.push(e)}
+  const ok=w=>/^[a-zà-ÿ]+$/.test(w);
+  const LS=new Set(((APP.content&&APP.content.lex)||[]).map(x=>x[0]));const rk=e=>LS.has(e.nl)?0:1;all.sort((a,b)=>rk(a)-rk(b));
+  POOL.nouns=all.filter(e=>e.pos==='noun'&&e.noun&&(e.noun.article==='de'||e.noun.article==='het')&&e.es&&e.es.length&&ok(e.nl)&&e.nl.length>2).slice(0,2200);
+  POOL.plur=POOL.nouns.filter(e=>e.noun.plural&&ok(e.noun.plural.split(' / ')[0]));
+  POOL.dim=POOL.nouns.filter(e=>e.noun.diminutive);
+  const seenV=new Set(),cur=(L,pos)=>L.filter(([w])=>!seenV.has(pos+w)&&seenV.add(pos+w)).map(([w,es])=>{const x=(idx.get(w)||[]).find(y=>y.e.pos===pos);const e0=x&&x.e;let f=null;try{f=pos==='verb'?(e0?e0.verb:conjugate(w)):(e0?e0.adj:adjForms(w))}catch(err){}return f?{nl:w,pos,es:es.split('/'),[pos]:f}:null}).filter(Boolean);
+  const vs=cur(NL_VERBS,'verb');
+  POOL.verbs=vs.map(e=>({e,v:e.verb})).filter(x=>x.v&&x.v.present&&x.v.participle&&/^[a-zà-ÿ]+$/.test(x.v.participle));
+  POOL.simple=POOL.verbs.filter(x=>!x.v.prefix&&!x.v.present[0].includes(' '));
+  POOL.sep=POOL.verbs.filter(x=>x.v.prefix&&!/ \/ /.test(x.v.present[0]));
+  POOL.adjs=cur(NL_ADJS,'adj').filter(e=>{const a=e.adj;return a&&a.comparative});
+  POOL.ready=POOL.nouns.length>100;return POOL;
+}
+const nlArt=e=>e.noun.article+' '+e.nl;
+const gl=e=>esc((e.es||[]).slice(0,2).join(', '));
+const PRON2=['ik','jij','hij','wij','jullie','zij (ellos)'];
+const PRONS=['Ik','Jij','Hij','Wij','Jullie','Zij'];
+
+
+const VZ=[['Ik wacht ___ de bus.','op','esperar a'],['Ik denk vaak ___ jou.','aan','pensar en'],['Ik houd ___ chocola.','van','gustar, querer'],['Zij zorgt ___ haar moeder.','voor','cuidar de'],['We luisteren ___ muziek.','naar','escuchar'],
+['Kijk ___ de lucht!','naar','mirar'],['Hij zoekt ___ zijn sleutels.','naar','buscar'],['We praten ___ het weer.','over','hablar de'],['Ik doe mee ___ de wedstrijd.','aan','participar en'],['Het hangt ___ het weer af.','van','depender de'],
+['Ik interesseer me ___ kunst.','voor','interesarse por'],['Hij ergert zich ___ het lawaai.','aan','irritarse por'],['We genieten ___ de zon.','van','disfrutar de'],['Ik ben trots ___ je.','op','orgulloso de'],['Ze is bang ___ spinnen.','voor','miedo de'],
+['Hij is verliefd ___ haar.','op','enamorado de'],['Ben je boos ___ me?','op','enfadado con'],['Ik ben gewend ___ de kou.','aan','acostumbrado a'],['Ze is geïnteresseerd ___ geschiedenis.','in','interesado en'],['Ik heb zin ___ een ijsje.','in','tener ganas de'],
+['Ik geloof niet ___ spoken.','in','creer en'],['Hij droomt ___ een eigen huis.','van','soñar con'],['Ik ben het eens ___ je.','met','estar de acuerdo con'],['Ze lijkt ___ haar vader.','op','parecerse a'],['Ik ben klaar ___ mijn werk.','met','haber terminado'],
+['Hij vraagt ___ de weg.','naar','preguntar por'],['Bedankt ___ je hulp!','voor','gracias por'],['Ik heb last ___ mijn rug.','van','tener molestias en'],['Ze kijkt uit ___ de vakantie.','naar','esperar con ganas'],['Ik reken ___ jou.','op','contar con'],
+['Hij twijfelt ___ alles.','aan','dudar de'],['Ik schrik ___ het geluid.','van','asustarse por'],['We beginnen ___ het project.','aan','empezar con'],['Ze stopt ___ roken.','met','dejar de'],['Ik verlang ___ huis.','naar','añorar'],
+['Ik ben jaloers ___ hem.','op','celoso de'],['Dat is goed ___ je gezondheid.','voor','bueno para'],['Hij houdt rekening ___ anderen.','met','tener en cuenta'],['Ik ben dol ___ katten.','op','loco por'],['Ze nodigt ons uit ___ haar feest.','voor','invitar a']];
+const HH=[['___ komen morgen.','Zij','sujeto'],['Ik geef ___ een cadeau.','hun','objeto indirecto'],['Ik geef een cadeau aan ___.','hen','tras preposición'],['Ik heb ___ gisteren gezien.','hen','objeto directo (personas)'],
+['Dat is ___ huis.','hun','posesivo'],['Ik woon bij ___.','hen','tras preposición'],['___ hebben dat gezegd.','Zij','sujeto'],['Ik heb ___ mijn adres gestuurd.','hun','objeto indirecto'],['Ik wacht op ___.','hen','tras preposición'],
+['Waar zijn ___ kinderen?','hun','posesivo'],['Wij hebben ___ geholpen.','hen','objeto directo'],['Ik heb het ___ verteld.','hun','objeto indirecto'],['Zonder ___ lukt het niet.','hen','tras preposición'],['___ wonen al jaren in Delft.','Zij','sujeto']];
+const GEN_NL={
+ dehet:{t:'¿De o het?',lv:'A1',make(){const e=pickF(pools().nouns);const r=mc(e.noun.article,[e.noun.article==='de'?'het':'de'],2);
+   return{q:`<span class="qbig">… ${esc(e.nl)}</span><span class="qsub">${gl(e)}</span>`,...r,why:`<b>${esc(nlArt(e))}</b>`,say:[nlArt(e),'nl']}}},
+ plural:{t:'El plural',lv:'A1',make(){const e=pickF(pools().plur),n=e.nl,c=e.noun.plural.split(' / ')[0];
+   const r=mc(c,[n+'en',n+'s',n+'n',n+"'s",n+n.slice(-1)+'en',n.replace(/([aeou])\1([^aeiou])$/,'$1$2')+'en',n+'eren']);
+   return{q:`<span class="qsub">${L('Plural de','Meervoud van')}</span><span class="qbig">${esc(nlArt(e))}</span><span class="qsub">${gl(e)}</span>`,...r,why:`de <b>${esc(c)}</b>`,say:['de '+c,'nl']}}},
+ diminutivo:{t:'El diminutivo',lv:'A1',make(){const e=pickF(pools().dim),n=e.nl,c=e.noun.diminutive;
+   const r=mc(c,[n+'je',n+'tje',n+'pje',n+'etje',n+n.slice(-1)+'etje'].filter(x=>x!==c));
+   return{q:`<span class="qsub">Diminutivo de</span><span class="qbig">${esc(nlArt(e))}</span>`,...r,why:`het <b>${esc(c)}</b> (siempre het)`,say:['het '+c,'nl']}}},
+ presente:{t:'El presente',lv:'A1',make(){const {e,v}=pickF(pools().verbs),k=rint(0,5);
+   const inv=k===1&&v.regularStem&&Math.random()<.4;
+   if(inv){const c=v.present[0];const r=mc(c,[v.present[1],v.present[3],c+'t',v.present[2]].filter(x=>x!==c));
+     return{q:`<span class="qbig">___ jij morgen? <i>(${esc(v.inf)})</i></span><span class="qsub">${gl(e)}</span>`,...r,why:`<b>${esc(c)} jij</b>: con inversión, jij pierde la -t.`,say:[c+' jij morgen?','nl']}}
+   const c=v.present[k].split(' / ')[0];const r=mc(c,[...new Set(v.present.map(x=>x.split(' / ')[0]))].filter(x=>x!==c).concat([v.inf.replace(/en$/,'t')]));
+   return{q:`<span class="qbig">${PRONS[k]} ___ <i>(${esc(v.inf)})</i></span><span class="qsub">${gl(e)}</span>`,...r,why:`${PRON2[k]} <b>${esc(c)}</b>`,say:[PRONS[k].toLowerCase().replace(' (ellos)','')+' '+c,'nl']}}},
+ pasado:{t:'El pasado (imperfectum)',lv:'A2',make(){const {e,v}=pickF(pools().verbs.filter(x=>!x.v.prefix)),pl=Math.random()<.4;
+   const c=v.past[pl?1:0].split(' / ')[0],st=v.present[0];
+   const r=mc(c,[v.past[pl?0:1].split(' / ')[0],v.present[pl?3:2],st+'te'+(pl?'n':''),st+'de'+(pl?'n':''),'ge'+st+'d']);
+   const p=pl?pick(['Wij','Jullie','Zij']):pick(['Ik','Hij','Zij (ella)']);
+   return{q:`<span class="qbig">Gisteren ___ ${p.toLowerCase().replace(' (ella)','')}… <i>(${esc(v.inf)})</i></span><span class="qsub">${gl(e)}</span>`,...r,why:`${esc(v.inf)}: <b>${esc(v.past[0])}</b> / <b>${esc(v.past[1])}</b>`,say:[v.inf+', '+v.past[0]+', '+v.past[1],'nl']}}},
+ participio:{t:'El participio',lv:'A2',make(){const {e,v}=pickF(pools().verbs),c=v.participle,st=v.present[0];
+   const alt=c.endsWith('t')?c.slice(0,-1)+'d':c.endsWith('d')?c.slice(0,-1)+'t':'ge'+st+'d';
+   const r=mc(c,[alt,'ge'+v.inf,'ge'+st+'en',c.replace(/^ge/,''),'ge'+st+'t'].filter(x=>x!==c));
+   return{q:`<span class="qsub">Participio de</span><span class="qbig">${esc(v.inf)}</span><span class="qsub">${gl(e)}</span>`,...r,why:`<b>${esc(c)}</b> · ${/z/.test(v.aux)&&v.aux!=='hz'?'ik ben':'ik heb'} ${esc(c)}`,say:[c,'nl']}}},
+ perfecto:{t:'Perfecto: hebben o zijn',lv:'A2',make(){const {e,v}=pickF(pools().verbs.filter(x=>x.v.aux!=='hz'&&!x.v.prefix)),z=/z/.test(v.aux),p=v.participle;
+   const alt=p.endsWith('t')?p.slice(0,-1)+'d':p.endsWith('d')?p.slice(0,-1)+'t':'ge'+v.present[0]+'d';
+   const c=(z?'ben ':'heb ')+p;const r=mc(c,['ben '+p,'heb '+p,'heb '+alt,'ben '+alt,'heb ge'+v.inf].filter(x=>x!==c));
+   return{q:`<span class="qbig">Ik ___ <i>(${esc(v.inf)})</i></span><span class="qsub">${gl(e)}</span>`,...r,why:`Ik <b>${esc(c)}</b>.`,say:['Ik '+c,'nl']}}},
+ adjetivo:{t:'Adjetivo: ¿con -e?',lv:'A1',make(){const P=pools(),e=pickF(P.nouns),a=pickF(P.adjs.filter(x=>x.adj.inflected!==x.nl)),f=a.adj,het=e.noun.article==='het',plur=e.noun.plural&&Math.random()<.25;
+   let det,noE;
+   if(plur){det=pick(['de','deze','mijn','']);noE=false}
+   else if(het){det=pick(['het','dit','dat','mijn','een','geen','elk']);noE=['een','geen','elk'].includes(det)}
+   else{det=pick(['de','deze','die','een','geen','mijn','onze']);noE=false}
+   const noun=plur?e.noun.plural.split(' / ')[0]:e.nl,c=noE?a.nl:f.inflected;
+   const r=mc(c,[noE?f.inflected:a.nl],2);
+   return{q:`<span class="qbig">${det?esc(det)+' ':''}___ ${esc(noun)} <i>(${esc(a.nl)})</i></span><span class="qsub">${gl(a)} · ${gl(e)}</span>`,...r,
+     why:noE?`Het-woord en singular con «${det}»: sin -e.`:`${plur?'Plural':het?'Het-woord con «'+det+'»':'De-woord'}: con -e.`,say:[(det?det+' ':'')+c+' '+noun,'nl']}}},
+ demostrativo:{t:'Deze, dit, die, dat, dezelfde…',lv:'A1',make(){const e=pickF(pools().nouns),het=e.noun.article==='het';
+   const C=[['este, esta','deze','dit'],['ese, aquel','die','dat'],['el mismo, la misma','dezelfde','hetzelfde'],['¿qué? / ¿cuál?','welke','welk'],['cada','elke','elk'],['nuestro, nuestra','onze','ons']];
+   const k=rint(0,C.length-1),c=het?C[k][2]:C[k][1],others=C.filter((_,j)=>j!==k).flatMap(x=>[x[1],x[2]]);
+   const r=mc(c,[het?C[k][1]:C[k][2],...shuffle(others)]);
+   return{q:`<span class="qbig">___ ${esc(e.nl)}</span><span class="qsub">«${C[k][0]}» + ${gl(e)} · ${esc(e.noun.article)}-woord</span>`,...r,why:`<b>${esc(c)} ${esc(e.nl)}</b>`,say:[c+' '+e.nl,'nl']}}},
+ comparativo:{t:'Comparativo y superlativo',lv:'A2',make(){const e=pickF(pools().adjs),f=e.adj,sup=Math.random()<.4;
+   const c=sup?f.superlative:f.comparative;const r=mc(c,[e.nl+'er','meer '+e.nl,sup?f.comparative:f.superlative,e.nl+'st',f.inflected+'r'].filter(x=>x!==c));
+   return{q:`<span class="qsub">${sup?'Superlativo («el más…»)':'Comparativo («más…»)'} de</span><span class="qbig">${esc(e.nl)}</span><span class="qsub">${gl(e)}</span>`,...r,why:`${esc(e.nl)} → <b>${esc(f.comparative)}</b> → <b>${esc(f.superlative)}</b>`,say:[e.nl+', '+f.comparative+', '+f.superlative,'nl']}}},
+ nietgeen:{t:'Niet o geen',lv:'A1',make(){const P=pools(),e=pickF(P.nouns),a=pickF(P.adjs),k=rint(0,3);
+   const T=[[`Ik heb ___ ${e.nl}.`,'geen','Sustantivo sin artículo definido → geen.'],[`Ik zie ${nlArt(e)} ___.`,'niet','Sustantivo con de/het → niet.'],[`Het is ___ ${a.nl}.`,'niet','Delante de un adjetivo → niet.'],[`Er is ___ ${e.nl}.`,'geen','Er is + sustantivo indefinido → geen.']][k];
+   const r=mc(T[1],[T[1]==='niet'?'geen':'niet'],2);
+   return{q:`<span class="qbig">${esc(T[0])}</span>`,...r,why:T[2],say:[T[0].replace('___',T[1]),'nl']}}},
+ separable:{t:'Verbos separables',lv:'A1',make(){const {e,v}=pickF(pools().sep.length?pools().sep:pools().verbs),pre=v.prefix||'';
+   const stem=v.present[0].replace(' '+pre,''),adv=pick(['morgen','vandaag','vanavond','elke dag']);
+   const c=`Ik ${stem} ${adv} ${pre}.`;const r=mc(c,[`Ik ${pre}${stem} ${adv}.`,`Ik ${stem} ${pre} ${adv}.`,`Ik ${adv} ${stem} ${pre}.`],4);
+   return{q:`<span class="qsub">${esc(v.inf)} · ${gl(e)}</span><span class="qbig">${L('¿Cuál es correcta?','Welke is goed?')}</span>`,...r,why:`El prefijo «${esc(pre)}» va al final: <b>${esc(c)}</b>`,say:[c,'nl']}}},
+ inversion:{t:'Orden: verbo en 2.ª posición',lv:'A1',make(){const {v}=pickF(pools().verbs.filter(x=>!x.v.prefix)),k=pick([0,2,3,5]),f=v.present[k].split(' / ')[0],s=['ik','jij','hij','we','jullie','ze'][k];
+   const adv=pick(['Morgen','Vandaag','In de zomer','Om acht uur','Elke dag','Daarom']),rest=pick(['thuis','in Utrecht','met plezier','samen','veel']);
+   const c=`${adv} ${f} ${s} ${rest}.`;const r=mc(c,[`${adv} ${s} ${f} ${rest}.`,`${adv} ${s} ${rest} ${f}.`,`${adv} ${rest} ${s} ${f}.`]);
+   return{q:`<span class="qbig">${L('¿Qué orden es correcto?','Welke volgorde is goed?')}</span><span class="qsub">${esc(v.inf)}</span>`,...r,why:'Tras un elemento en 1.ª posición: verbo + sujeto.',say:[c,'nl']}}},
+ subordinada:{t:'Subordinada: verbo al final',lv:'A2',make(){const {v}=pickF(pools().verbs.filter(x=>!x.v.prefix)),f=v.present[2].split(' / ')[0];
+   const [cj,start]=pick([['dat',pick(['Ik denk','Ik weet','Ze zegt'])],['omdat',pick(['Ik ben blij','Ze is moe'])],['als',pick(['Ik bel je','We gaan weg'])],['terwijl',pick(['Ik lees','Ze kookt'])],['of','Ik vraag me af'],['hoewel','Ze lacht']]),adv=pick(['vandaag','morgen','vaak','niet']),pl=pick(['thuis','hier','in Leiden']);
+   const c=`${start} ${cj} hij ${adv} ${pl} ${f}.`;const r=mc(c,[`${start} ${cj} hij ${f} ${adv} ${pl}.`,`${start} ${cj} ${f} hij ${adv} ${pl}.`,`${start} ${cj} hij ${adv} ${f} ${pl}.`]);
+   return{q:`<span class="qbig">${L('¿Qué orden es correcto?','Welke volgorde is goed?')}</span><span class="qsub">${esc(cj)} + ${esc(v.inf)}</span>`,...r,why:`Tras «${cj}» el verbo conjugado va al final.`,say:[c,'nl']}}},
+ relativo:{t:'Relativos: die o dat',lv:'A2',make(){const e=pickF(pools().nouns),pl=e.noun.plural&&Math.random()<.3;
+   const np=pl?'de '+e.noun.plural.split(' / ')[0]:nlArt(e),c=(!pl&&e.noun.article==='het')?'dat':'die';
+   const r=mc(c,[c==='dat'?'die':'dat','wat'],3);
+   return{q:`<span class="qbig">${esc(np.charAt(0).toUpperCase()+np.slice(1))} ___ ik gisteren zag…</span><span class="qsub">${gl(e)}</span>`,...r,why:c==='dat'?'Het-woord en singular → dat.':'De-woord o plural → die.',say:[np+' '+c+' ik gisteren zag','nl']}}},
+ numeros:{t:'Los números',lv:'A1',make(){const n=pick([rint(0,20),rint(21,99),rint(21,99),rint(100,999),rint(1000,9999)]),rev=Math.random()<.5;
+   const near=[n+1,n>0?n-1:n+2,n+10,Number(String(n).split('').reverse().join(''))].filter(x=>x!==n&&x>=0);
+   if(rev){const r=mc(String(n),near.map(String));return{q:`<span class="qbig">${esc(numNl(n))}</span>`,...r,why:`${numNl(n)} = <b>${n}</b>`,say:[numNl(n),'nl']}}
+   const r=mc(numNl(n),near.map(numNl));return{q:`<span class="qbig">${n.toLocaleString('es-ES')}</span>`,...r,why:`<b>${esc(numNl(n))}</b>`,say:[numNl(n),'nl']}}},
+ hora:{t:'La hora',lv:'A1',make(){const h=rint(1,12),m=5*rint(0,11),c=timeNl(h,m);
+   const r=mc(c,[timeNl(h+1,m),timeNl(h-1,m),timeNl(h,(m+30)%60),timeNl(h+1,(m+30)%60)].filter(x=>x!==c));
+   return{q:`<span class="qbig">${h}:${String(m).padStart(2,'0')}</span>`,...r,why:`<b>${esc(c)}</b>`,say:['Het is '+c,'nl']}}},
+ voorzetsel:{t:'Verbos con preposición fija',lv:'B1',make(){const [s,c,es]=pick(VZ);const r=mc(c,['op','aan','van','voor','naar','over','in','met','om'].filter(x=>x!==c));
+   return{q:`<span class="qbig">${esc(s)}</span><span class="qsub">${esc(es)}</span>`,...r,why:esc(s.replace('___',c)),say:[s.replace('___',c),'nl']}}},
+ hunhen:{t:'Hun, hen o zij',lv:'B2',make(){const [s,c,es]=pick(HH);const r=mc(c,['zij','hun','hen'].filter(x=>x!==c),3);
+   return{q:`<span class="qbig">${esc(s)}</span><span class="qsub">${esc(es)}</span>`,...r,why:esc(s.replace('___',c)),say:[s.replace('___',c),'nl']}}},
+ pasiva:{t:'La voz pasiva',lv:'B1',make(){const {e,v}=pickF(pools().simple.filter(x=>!/z/.test(x.v.aux||'')&&!/^(zijn|hebben|kunnen|moeten|willen|mogen|weten|liggen|zitten|staan|blijven|lijken|bestaan|durven|hopen|wonen|leven|slapen|lopen|rennen|reizen|huilen|lachen|fietsen|vliegen|zwemmen|dansen)$/.test(x.e.nl))),pt=v.participle;
+   const t=rint(0,2),S=[`Het wordt vandaag ${pt}.`,`Het werd gisteren ${pt}.`,`Het is al ${pt}.`],cor=S[t];
+   const ds=[`Het is al ${pt} geworden.`,`Het heeft al ${pt}.`,`Het wordt gisteren ${pt}.`,`Het werd vandaag ${pt} geworden.`,`Het heeft gisteren ${pt} geworden.`];
+   const r=mc(cor,ds);const lab=[L('presente (proceso)','tegenwoordige tijd'),L('pasado','verleden tijd'),L('perfecto','voltooide tijd')][t];
+   return{q:`<span class="qsub">${L('Pasiva','Lijdende vorm')} · ${lab}</span><span class="qbig">${esc(e.nl)}</span><span class="qsub">${gl(e)}</span>`,...r,why:esc(cor),say:[cor,'nl']}}},
+};
+
+/* ================= Generadores de ejercicios: español ================= */
+const ES_VERBS=('hablar:spreken trabajar:werken estudiar:studeren comprar:kopen llegar:aankomen buscar:zoeken pagar:betalen empezar:beginnen pensar:denken cerrar:sluiten despertar:wekken jugar:spelen '+
+ 'comer:eten beber:drinken leer:lezen aprender:leren vender:verkopen correr:rennen entender:begrijpen perder:verliezen volver:terugkomen poder:kunnen querer:willen tener:hebben hacer:doen/maken '+
+ 'poner:zetten salir:uitgaan venir:komen decir:zeggen traer:brengen conocer:kennen saber:weten ver:zien dar:geven ir:gaan ser:zijn estar:zijn vivir:wonen escribir:schrijven abrir:openen '+
+ 'subir:naar boven gaan decidir:beslissen recibir:ontvangen dormir:slapen pedir:vragen servir:serveren repetir:herhalen seguir:volgen sentir:voelen preferir:verkiezen elegir:kiezen construir:bouwen '+
+ 'oír:horen conducir:rijden traducir:vertalen caer:vallen reír:lachen enviar:sturen continuar:doorgaan llamar:bellen mirar:kijken escuchar:luisteren esperar:wachten viajar:reizen cocinar:koken '+
+ 'cantar:zingen bailar:dansen nadar:zwemmen caminar:lopen tomar:nemen llevar:dragen dejar:laten ayudar:helpen usar:gebruiken necesitar:nodig hebben encontrar:vinden contar:vertellen costar:kosten '+
+ 'recordar:herinneren mostrar:tonen volar:vliegen olvidar:vergeten terminar:afmaken cambiar:veranderen limpiar:schoonmaken ganar:winnen creer:geloven responder:antwoorden romper:breken '+
+ 'prometer:beloven ofrecer:aanbieden parecer:lijken crecer:groeien mentir:liegen morir:sterven describir:beschrijven descubrir:ontdekken resolver:oplossen devolver:teruggeven coger:pakken '+
+ 'proteger:beschermen almorzar:lunchen colgar:ophangen probar:proeven soñar:dromen acostarse:naar bed gaan levantarse:opstaan ducharse:douchen sentarse:gaan zitten vestirse:zich aankleden '+
+ 'llamarse:heten quedarse:blijven irse:weggaan divertirse:zich vermaken casarse:trouwen preocuparse:zich zorgen maken acordarse:zich herinneren mantener:behouden obtener:verkrijgen '+
+ 'proponer:voorstellen suponer:veronderstellen producir:produceren invitar:uitnodigen visitar:bezoeken preparar:voorbereiden explicar:uitleggen practicar:oefenen alquilar:huren').split(/ (?=[a-zñáéíóú]+:)/)
+ .map(s=>s.split(':')).filter((x,i,a)=>a.findIndex(y=>y[0]===x[0])===i);
+const esV=()=>{const [v,nl]=pick(ES_VERBS);return{v,nl:nl.replace('/',' / '),c:esConj(v)}};
+const ESP=['yo','tú','él / ella','nosotros','vosotros','ellos / ellas'];
+function esConjQ(ti,label){
+  const {v,nl,c}=esV(),k=rint(0,5),f=c.tenses[ti].f[k];
+  const ds=[...c.tenses[ti].f.filter((_,j)=>j!==k),...c.tenses.filter((_,j)=>j!==ti&&j!==3&&j!==6).map(t=>t.f[k])];
+  const r=mc(f,ds);
+  return{q:`<span class="qsub">${label||c.tenses[ti].nm} · ${esc(c.tenses[ti].nl)}</span><span class="qbig">${ESP[k]} ___ <i>(${esc(c.inf)})</i></span><span class="qsub">${esc(nl)}</span>`,...r,
+    why:`${ESP[k]} <b>${esc(f)}</b>`,say:[ESP[k].split(' / ')[0]+' '+f,'es']};
+}
+function esPlural(w){
+  const EX={examen:'exámenes',joven:'jóvenes',imagen:'imágenes',orden:'órdenes',origen:'orígenes',lunes:'lunes',martes:'martes',miércoles:'miércoles',jueves:'jueves',viernes:'viernes',crisis:'crisis',paraguas:'paraguas',virus:'virus',cactus:'cactus',análisis:'análisis',tenis:'tenis',sofá:'sofás',café:'cafés',mamá:'mamás',papá:'papás',menú:'menús'};
+  if(EX[w])return EX[w];
+  if(/[aeiouáéó]$/.test(w))return w+'s';
+  if(/z$/.test(w))return w.slice(0,-1)+'ces';
+  if(/[íú]$/.test(w))return w+'es';
+  const un={'á':'a','é':'e','í':'i','ó':'o','ú':'u'};
+  if(/[áéíóú][ns]$/.test(w))return w.replace(/[áéíóú]([ns])$/,(m,c)=>un[m[0]]+c)+'es';
+  return w+'es';
+}
+const lexN=()=>(APP.content.lex||[]).filter(w=>(w[4]==='el'||w[4]==='la')&&/^[a-záéíóúñü]+$/.test(es1Raw(w[3])));
+const es1Raw=s=>s.split(/[;,]/)[0].replace(/\(.*?\)/g,'').trim();
+let LEXN=null;const lexNouns=()=>LEXN||(LEXN=lexN());
+const ADJ_ES=('rojo:rood bonito:mooi alto:groot nuevo:nieuw viejo:oud caro:duur barato:goedkoop limpio:schoon sucio:vies pequeño:klein blanco:wit negro:zwart amarillo:geel cansado:moe '+
+ 'contento:blij grande:groot verde:groen interesante:interessant inteligente:slim alegre:vrolijk fácil:makkelijk difícil:moeilijk azul:blauw gris:grijs feliz:gelukkig joven:jong '+
+ 'español:Spaans alemán:Duits inglés:Engels francés:Frans trabajador:hardwerkend moderno:modern famoso:beroemd rápido:snel lento:langzaam importante:belangrijk').split(' ').map(s=>s.split(':'));
+function adjEs(a,f,pl){
+  const un=s=>s.replace(/á(?=n$)|é(?=s$)/,m=>({á:'a',é:'e'}[m]));
+  if(/o$/.test(a))return a.slice(0,-1)+(f?'a':'o')+(pl?'s':'');
+  if(/e$/.test(a))return a+(pl?'s':'');
+  if(a==='joven')return pl?'jóvenes':a;
+  if(/z$/.test(a))return pl?a.slice(0,-1)+'ces':a;
+  if(/(ol|án|és|or)$/.test(a)){if(f)return un(a)+'a'+(pl?'s':'');return pl?un(a)+'es':a}
+  return pl?a+'es':a;
+}
+const SERESTAR=[['{P} ___ en casa.','estar'],['{P} ___ cansado{s}.','estar'],['{P} ___ enfermo{s}.','estar'],['{P} ___ contento{s}.','estar'],['{P} ___ de vacaciones.','estar'],
+ ['{P} ___ listo{s} para salir.','estar'],['{P} ___ en la oficina.','estar'],['{P} ___ nervioso{s}.','estar'],['{P} ___ trabajando.','estar'],['{P} ___ sentado{s} en el sofá.','estar'],['{P} ___ de mal humor.','estar'],
+ ['{P} ___ de Madrid.','ser'],['{P} ___ español{es}.','ser'],['{P} ___ profesor{es}.','ser'],['{P} ___ alto{s}.','ser'],['{P} ___ inteligente{s}.','ser'],['{P} ___ médico{s}.','ser'],['{P} ___ simpático{s}.','ser'],['{P} ___ de los Países Bajos.','ser'],['{P} ___ estudiante{s}.','ser'],
+ ['La fiesta ___ en mi casa.','ser',2],['Madrid ___ en España.','estar',2],['Hoy ___ lunes.','ser',2],['___ las tres de la tarde.','ser',5],['La sopa ___ fría.','estar',2],['La mesa ___ de madera.','ser',2],
+ ['El concierto ___ a las ocho.','ser',2],['Las llaves ___ en la mesa.','estar',5],['El café ___ muy caliente.','estar',2],['Esta película ___ aburrida.','ser',2],['Mis padres ___ jubilados.','estar',5],['¿Dónde ___ el baño?','estar',2],['¿Qué hora ___?','ser',2],['La puerta ___ abierta.','estar',2]];
+const PORPARA=[['Gracias ___ tu ayuda.','por'],['Este regalo es ___ ti.','para'],['Estudio español ___ trabajar en Madrid.','para'],['Paseamos ___ el parque.','por'],['Lo compré ___ diez euros.','por'],
+ ['Necesito el informe ___ el lunes.','para'],['Trabajo ___ la mañana.','por'],['Salgo ___ Barcelona mañana.','para'],['Te llamo ___ teléfono.','por'],['___ mí, es la mejor ciudad.','para'],['Viajamos ___ Francia y Bélgica.','por'],
+ ['La carta es ___ mi madre.','para'],['Llegó tarde ___ el tráfico.','por'],['¿___ qué estudias español?','para'],['¿___ qué no viniste?','por'],['Lo hago ___ ti (en tu lugar).','por'],['Es demasiado difícil ___ un niño.','para'],
+ ['Dos veces ___ semana.','por'],['___ fin es viernes.','por'],['Hay que terminarlo ___ mañana.','para'],['Fue escrito ___ Cervantes.','por'],['Voy ___ pan a la tienda.','por'],['Una taza ___ café.','para'],['Gana 3.000 euros ___ mes.','por']];
+const GPRON=[['A mí','me'],['A ti','te'],['A él','le'],['A nosotros','nos'],['A vosotros','os'],['A ellos','les']];
+const POSES=[['yo','mi','mis'],['tú','tu','tus'],['él / ella','su','sus'],['nosotros','nuestro','nuestros','nuestra','nuestras'],['vosotros','vuestro','vuestros','vuestra','vuestras'],['ellos','su','sus']];
+
+
+const CONECT=[['No es rojo, ___ azul.','sino',['pero','aunque','sin embargo']],['Es caro, ___ es muy bueno.','pero',['sino','por lo tanto','como']],['___ llovía, nos quedamos en casa.','Como',['Porque','Sino','Aunque']],
+['Es tarde; ___, nos vamos.','por lo tanto',['sin embargo','sino','es decir']],['Estudió mucho; ___, suspendió.','sin embargo',['por eso','así que','o sea']],['Es bilingüe, ___, habla dos idiomas.','es decir',['sin embargo','sino','aunque']],
+['No lo compró, ___ lo alquiló.','sino que',['pero','sino','aunque']],['Llegó tarde y, ___, sin disculparse.','encima',['sino','es decir','como']],['Ella es alta; su hermano, ___, es bajo.','en cambio',['por lo tanto','es decir','encima']],
+['___ estaba cansado, siguió trabajando.','Aunque',['Porque','Como','Por lo tanto']],['No vino ___ estaba enfermo.','porque',['como','aunque','sino']],['___ lugar, quiero daros las gracias.','En primer',['Por último','Sin embargo','O sea']],
+['___ del frío, salimos a pasear.','A pesar',['Aunque','Sino','Como']],['Hablas muy bien; ___, deberías practicar más.','no obstante',['por eso','es decir','sino']],['No tenía dinero, ___ no fui.','así que',['sino','aunque','como']],
+['___, fue un año muy positivo.','En resumen',['Sin embargo','Sino','Aunque']]];
+const MODO=[['Aunque ___ (llover) mañana, iremos.','llueva',['llueve','lloverá','llovería'],'posibilidad futura → subjuntivo'],['Aunque ___ (estar) cansado, sigo trabajando. (es un hecho)','estoy',['esté','estuviera','estaré'],'hecho → indicativo'],
+['Busco un piso que ___ (tener) terraza.','tenga',['tiene','tendrá','tuvo'],'antecedente desconocido → subjuntivo'],['Tengo un piso que ___ (tener) terraza.','tiene',['tenga','tuviera','tendría'],'antecedente conocido → indicativo'],
+['No hay nadie que me ___ (entender).','entienda',['entiende','entendía','entenderá'],'antecedente negado → subjuntivo'],['Cuando ___ (llegar), llámame.','llegues',['llegas','llegarás','llegaste'],'cuando + futuro → subjuntivo'],
+['Cuando ___ (llegar) a casa, siempre ceno.','llego',['llegue','llegaré','llegara'],'hábito → indicativo'],['Quiero que ___ (venir) conmigo.','vengas',['vienes','vendrás','venir'],'deseo con otro sujeto → subjuntivo'],
+['Quería que ___ (venir) conmigo.','vinieras',['vengas','vienes','venías'],'pasado → imperfecto de subjuntivo'],['No creo que ___ (ser) verdad.','sea',['es','será','era'],'duda → subjuntivo'],
+['Creo que ___ (ser) verdad.','es',['sea','fuera','sería'],'opinión afirmativa → indicativo'],['Es importante que ___ (estudiar, tú).','estudies',['estudias','estudiar','estudiarás'],'valoración → subjuntivo'],
+['Es evidente que ___ (tener, él) razón.','tiene',['tenga','tuviera','tendría'],'certeza → indicativo'],['Ojalá ___ (poder, yo) ir.','pueda',['puedo','podré','podía'],'deseo → subjuntivo'],
+['Habla como si lo ___ (saber) todo.','supiera',['sabe','sepa','sabría'],'como si → imperfecto de subjuntivo'],['Por mucho que ___ (insistir, tú), no iré.','insistas',['insistes','insistirás','insististe'],'por mucho que → subjuntivo'],
+['Me alegro de que ___ (estar, tú) aquí.','estés',['estás','estarás','estabas'],'sentimiento → subjuntivo'],['Te llamo para que me ___ (ayudar).','ayudes',['ayudas','ayudarás','ayudar'],'finalidad → subjuntivo'],
+['Antes de que ___ (irse, tú), cierra la ventana.','te vayas',['te vas','te irás','irte'],'antes de que → siempre subjuntivo'],['Sé que ___ (venir, él) mañana.','viene',['venga','viniera','venir'],'saber → indicativo'],
+['Si ___ (tener, yo) tiempo, te ayudaría.','tuviera',['tendría','tengo','tenga'],'si irreal → imperfecto de subjuntivo'],['Si ___ (tener, yo) tiempo mañana, te ayudaré.','tengo',['tenga','tuviera','tendré'],'si real → presente de indicativo'],
+['Haz lo que ___ (querer, tú).','quieras',['quieres','querrás','querías'],'lo que + subjuntivo = lo que sea'],['Me pidió que no ___ (decir, yo) nada.','dijera',['diga','digo','diría'],'pedir en pasado → imperfecto de subjuntivo']];
+const GEN_ES={
+ es_pres:{t:'Presente',lv:'A1',make:()=>esConjQ(0)},
+ es_ind:{t:'Pretérito indefinido',lv:'A2',make:()=>esConjQ(1)},
+ es_imp:{t:'Pretérito imperfecto',lv:'A2',make:()=>esConjQ(2)},
+ es_perf:{t:'Pretérito perfecto',lv:'A2',make:()=>esConjQ(3)},
+ es_fut:{t:'Futuro',lv:'A2',make:()=>esConjQ(4)},
+ es_cond:{t:'Condicional',lv:'A2',make:()=>esConjQ(5)},
+ es_subj:{t:'Subjuntivo presente',lv:'B1',make:()=>esConjQ(7)},
+ es_subji:{t:'Subjuntivo imperfecto',lv:'B2',make:()=>esConjQ(8)},
+ es_plus:{t:'Pluscuamperfecto',lv:'B1',make:()=>esConjQ(6)},
+ es_mix:{t:'Todos los tiempos',lv:'B1',make:()=>esConjQ(pick([0,0,1,2,3,4,5,7,8]))},
+ es_imper:{t:'Imperativo',lv:'A2',make(){const {v,nl,c}=esV(),k=pick(['tu','ud','neg','vos']),f=c.imper[k],lab={tu:'tú (+)',ud:'usted',neg:'tú (−)',vos:'vosotros'}[k];
+   const r=mc(f,['tu','ud','neg','vos','uds'].filter(x=>x!==k).map(x=>c.imper[x]).concat([c.tenses[0].f[1]]));
+   return{q:`<span class="qsub">${L('Imperativo','Gebiedende wijs')} · ${lab}</span><span class="qbig">${esc(c.inf)}</span><span class="qsub">${esc(nl)}</span>`,...r,why:`${lab}: <b>${esc(f)}</b>`,say:[f,'es']}}},
+ es_ger:{t:'Gerundio y participio',lv:'A2',make(){const {v,nl,c}=esV(),g=Math.random()<.5,f=g?c.ger:c.part;
+   const st=c.inf.replace(/se$/,'').slice(0,-2);const r=mc(f,[g?c.part:c.ger,st+(g?'ando':'ado'),st+(g?'iendo':'ido'),st+'endo'].filter(x=>x!==f));
+   return{q:`<span class="qsub">${g?'Gerundio':'Participio'} ${L('de','van')}</span><span class="qbig">${esc(c.inf)}</span><span class="qsub">${esc(nl)}</span>`,...r,why:`<b>${esc(f)}</b>`,say:[f,'es']}}},
+ es_genero:{t:'El o la',lv:'A1',make(){const w=pick(lexNouns()),n=es1Raw(w[3]);const r=mc(w[4],[w[4]==='el'?'la':'el'],2);
+   return{q:`<span class="qbig">… ${esc(n)}</span><span class="qsub">${esc((w[1]==='de'||w[1]==='het'?w[1]+' ':'')+w[0])}</span>`,...r,why:`<b>${w[4]} ${esc(n)}</b>`,say:[w[4]+' '+n,'es']}}},
+ es_plural:{t:'El plural en español',lv:'A1',make(){const w=pick(lexNouns()),n=es1Raw(w[3]),p=esPlural(n);
+   const r=mc(p,[n+'s',n+'es',n.replace(/z$/,'')+'zes',n.replace(/[aeo]$/,'')+'es',n+'ses'].filter(x=>x!==p));
+   return{q:`<span class="qsub">${L('Plural de','Meervoud van')}</span><span class="qbig">${w[4]} ${esc(n)}</span>`,...r,why:`<b>${w[4]==='el'?'los':'las'} ${esc(p)}</b>`,say:[(w[4]==='el'?'los ':'las ')+p,'es']}}},
+ es_concord:{t:'Concordancia del adjetivo',lv:'A1',make(){const w=pick(lexNouns()),n=es1Raw(w[3]),[a,anl]=pick(ADJ_ES),f=w[4]==='la',pl=Math.random()<.4;
+   const noun=pl?esPlural(n):n,art=pl?(f?'las':'los'):w[4],c=adjEs(a,f,pl);
+   const r=mc(c,[adjEs(a,!f,pl),adjEs(a,f,!pl),adjEs(a,!f,!pl)].filter(x=>x!==c));
+   return{q:`<span class="qbig">${art} ${esc(noun)} ___</span><span class="qsub">${esc(a)} (${esc(anl)})</span>`,...r,why:`<b>${art} ${esc(noun)} ${esc(c)}</b>`,say:[art+' '+noun+' '+c,'es']}}},
+ es_serestar:{t:'Ser o estar',lv:'A1',make(){const T=pick(SERESTAR),k=T[2]??rint(0,5),pl=k>=3;
+   const sen=T[0].replace('{P}',T[2]!=null?'':ESP[k].split(' / ')[0].replace(/^./,m=>m.toUpperCase())).replace('{s}',pl?'s':'').replace('{es}',pl?'es':'').trim();
+   const S=esConj('ser').tenses[0].f[k],E=esConj('estar').tenses[0].f[k],c=T[1]==='ser'?S:E;
+   const r=mc(c,[T[1]==='ser'?E:S,T[1]==='ser'?esConj('estar').tenses[0].f[(k+1)%6]:esConj('ser').tenses[0].f[(k+1)%6]],3);
+   return{q:`<span class="qbig">${esc(sen)}</span>`,...r,why:`<b>${T[1]}</b>: ${esc(sen.replace('___',c))}`,say:[sen.replace('___',c),'es']}}},
+ es_porpara:{t:'Por o para',lv:'A2',make(){const T=pick(PORPARA),c=T[1];const r=mc(c,[c==='por'?'para':'por'],2);
+   return{q:`<span class="qbig">${esc(T[0])}</span>`,...r,why:esc(T[0].replace('___',c)),say:[T[0].replace('___',c),'es']}}},
+ es_gustar:{t:'Gustar',lv:'A1',make(){const [a,p]=pick(GPRON),inf=Math.random()<.3;let obj,pl=false;
+   if(inf)obj=pick(ES_VERBS.filter(x=>!x[0].endsWith('se')))[0];else{const w=pick(lexNouns()),n=es1Raw(w[3]);pl=Math.random()<.5;obj=pl?(w[4]==='el'?'los ':'las ')+esPlural(n):w[4]+' '+n}
+   const c=pl?'gustan':'gusta',sen=`${a} ${p} ___ ${obj}.`;const r=mc(c,[pl?'gusta':'gustan','gusto','gustas']);
+   return{q:`<span class="qbig">${esc(sen)}</span>`,...r,why:pl?'Lo que gusta es plural → gustan.':'Singular o infinitivo → gusta.',say:[sen.replace('___',c),'es']}}},
+ es_posesivo:{t:'Posesivos',lv:'A1',make(){const w=pick(lexNouns()),n0=es1Raw(w[3]),pl=Math.random()<.4,n=pl?esPlural(n0):n0,f=w[4]==='la',P=pick(POSES);
+   const c=P.length>3?(f?(pl?P[4]:P[3]):(pl?P[2]:P[1])):(pl?P[2]:P[1]);const all=[...new Set(POSES.flatMap(x=>x.slice(1)))];
+   const r=mc(c,shuffle(all.filter(x=>x!==c)));
+   return{q:`<span class="qbig">(${P[0]}) ___ ${esc(n)}</span><span class="qsub">${esc(w[0])}</span>`,...r,why:`<b>${esc(c)} ${esc(n)}</b>`,say:[c+' '+n,'es']}}},
+ es_demostr:{t:'Este, ese, aquel',lv:'A1',make(){const w=pick(lexNouns()),n0=es1Raw(w[3]),pl=Math.random()<.4,n=pl?esPlural(n0):n0,f=w[4]==='la';
+   const D=[['cerca (dit/deze)','este','esta','estos','estas'],['un poco lejos (die)','ese','esa','esos','esas'],['lejos (die daar)','aquel','aquella','aquellos','aquellas']],d=pick(D);
+   const c=d[1+(f?1:0)+(pl?2:0)];const r=mc(c,shuffle(D.flatMap(x=>x.slice(1))).filter(x=>x!==c));
+   return{q:`<span class="qbig">___ ${esc(n)}</span><span class="qsub">${d[0]}</span>`,...r,why:`<b>${esc(c)} ${esc(n)}</b>`,say:[c+' '+n,'es']}}},
+ es_numeros:{t:'Números en español',lv:'A1',make(){const n=pick([rint(0,29),rint(30,99),rint(30,99),rint(100,999),rint(1000,9999)]),rev=Math.random()<.5;
+   const near=[n+1,n>0?n-1:n+2,n+10,Number(String(n).split('').reverse().join(''))].filter(x=>x!==n&&x>=0);
+   if(rev){const r=mc(String(n),near.map(String));return{q:`<span class="qbig">${esc(numEs(n))}</span>`,...r,why:`${esc(numEs(n))} = <b>${n}</b>`,say:[numEs(n),'es']}}
+   const r=mc(numEs(n),near.map(numEs));return{q:`<span class="qbig">${n.toLocaleString('es-ES')}</span>`,...r,why:`<b>${esc(numEs(n))}</b>`,say:[numEs(n),'es']}}},
+ es_hora:{t:'La hora en español',lv:'A1',make(){const h=rint(1,12),m=5*rint(0,11),c=timeEs(h,m);
+   const r=mc(c,[timeEs(h+1,m),timeEs(h-1,m),timeEs(h,(m+30)%60)].filter(x=>x!==c));
+   return{q:`<span class="qbig">${h}:${String(m).padStart(2,'0')}</span>`,...r,why:`<b>${esc(c)}</b>`,say:[c,'es']}}},
+ es_si:{t:'Si + imperfecto de subjuntivo',lv:'B2',make(){const {v,nl,c}=esV(),k=rint(0,5),f=c.tenses[8].f[k];
+   const r=mc(f,[c.tenses[5].f[k],c.tenses[0].f[k],c.tenses[2].f[k],c.tenses[7].f[k]]);
+   const end=pick(['todo sería más fácil','estaría contento','no habría problema','me lo dirías','sería genial']);
+   return{q:`<span class="qsub">${L('Condición irreal','Onwerkelijke voorwaarde')}</span><span class="qbig">Si ${ESP[k].split(' / ')[0]} ___ <i>(${esc(c.inf)})</i>, ${end}.</span><span class="qsub">${esc(nl)}</span>`,...r,why:`Si + <b>${esc(f)}</b> (imperfecto de subjuntivo)`,say:[`Si ${ESP[k].split(' / ')[0]} ${f}, ${end}`,'es']}}},
+ es_accidental:{t:'El «se» accidental',lv:'B2',make(){const V=pick([['caer','vallen'],['olvidar','vergeten'],['romper','breken'],['perder','kwijtraken'],['acabar','opraken'],['quedar','laten liggen'],['estropear','kapotgaan']]);
+   const c=esConj(V[0]),pl=Math.random()<.45,sg=c.tenses[1].f[2],pp=c.tenses[1].f[5],P=pick([['a mí','me'],['a ti','te'],['a él','le'],['a nosotros','nos'],['a vosotros','os'],['a ellos','les']]);
+   const w=pick(lexNouns()),n0=es1Raw(w[3]),n=pl?esPlural(n0):n0,art=(w[4]==='la'?'la':'el'),ar=pl?(art==='la'?'las':'los'):art,vf=pl?pp:sg,cor=`se ${P[1]} ${vf}`;
+   const r=mc(cor,[`se ${P[1]} ${pl?sg:pp}`,`${P[1]} se ${vf}`,`se ${P[1]==='le'?'lo':'le'} ${vf}`]);
+   return{q:`<span class="qbig">${P[0].replace(/^./,m=>m.toUpperCase())} ___ ${ar} ${esc(n)}.</span><span class="qsub">${V[1]} · ${esc((w[1]==="het"?"het ":w[1]==="de"?"de ":"")+w[0])}</span>`,...r,why:`<b>${esc(cor)}</b> ${ar} ${esc(n)}: ${L('el verbo concuerda con la cosa','het werkwoord past bij het ding')}.`,say:[`${P[0]} ${cor} ${ar} ${n}`,'es']}}},
+ es_conector:{t:'Conectores',lv:'B2',make(){const [s,c,o]=pick(CONECT);const r=mc(c,o);
+   return{q:`<span class="qbig">${esc(s)}</span>`,...r,why:esc(s.replace('___',c)),say:[s.replace('___',c),'es']}}},
+ es_aunque:{t:'Indicativo o subjuntivo',lv:'B2',make(){const [s,c,o,why]=pick(MODO);const r=mc(c,o);
+   return{q:`<span class="qbig">${esc(s)}</span>`,...r,why:`<b>${esc(c)}</b> — ${esc(why)}`,say:[s.replace('___',c),'es']}}}
+};
+/* ---------- vocabulario mezclado (todos los temas) ---------- */
+const lexAll=()=>APP.content.lex||[];
+const lexNl=w=>(w[1]==='de'||w[1]==='het'?w[1]+' ':'')+w[0];
+const lexEs=w=>(w[4]?w[4]+' ':'')+es1Raw(w[3]);
+const GEN_VOC={
+ voc_nl_es:{t:'Vocabulario: neerlandés → español',lv:'A1–B2',make(){const L0=lexAll(),w=pick(L0),pool=L0.filter(x=>x[5]===w[5]&&x!==w);
+   const r=mc(lexEs(w),shuffle(pool.length>=3?pool:L0).slice(0,8).map(lexEs).filter(x=>x!==lexEs(w)));
+   return{q:`<span class="qbig">${esc(lexNl(w))}</span>`,...r,why:`${esc(lexNl(w))} = <b>${esc(lexEs(w))}</b>`,say:APP.learn==='es'?[lexEs(w),'es']:[lexNl(w),'nl'],pre:APP.learn==='es'?null:[lexNl(w),'nl']}}},
+ voc_es_nl:{t:'Vocabulario: español → neerlandés',lv:'A1–B2',make(){const L0=lexAll(),w=pick(L0),pool=L0.filter(x=>x[5]===w[5]&&x!==w);
+   const r=mc(lexNl(w),shuffle(pool.length>=3?pool:L0).slice(0,8).map(lexNl).filter(x=>x!==lexNl(w)));
+   return{q:`<span class="qbig">${esc(lexEs(w))}</span>`,...r,why:`${esc(lexEs(w))} = <b>${esc(lexNl(w))}</b>`,say:APP.learn==='es'?[lexEs(w),'es']:[lexNl(w),'nl'],pre:APP.learn==='es'?[lexEs(w),'es']:null}}},
+};
+
+/* ================= Práctica infinita ================= */
+const GENS={};
+for(const [k,g] of Object.entries(GEN_NL))GENS[k]={...g,lang:'nl'};
+for(const [k,g] of Object.entries(GEN_ES))GENS[k]={...g,lang:'es'};
+for(const [k,g] of Object.entries(GEN_VOC))GENS[k]={...g,lang:'*'};
+const T_NL={es_si:'Si + subjuntivo',es_accidental:'Het «se» van ongelukjes',es_conector:'Verbindingswoorden',es_aunque:'Indicativo of subjuntivo?',es_pres:'Tegenwoordige tijd',es_ind:'Verleden tijd (indefinido)',es_imp:'Imperfecto',es_perf:'Voltooide tijd',es_fut:'Toekomende tijd',es_cond:'Voorwaardelijke wijs',es_subj:'Subjuntivo (tegenwoordig)',es_subji:'Subjuntivo (verleden)',es_plus:'Voltooid verleden tijd',es_mix:'Alle tijden door elkaar',es_imper:'Gebiedende wijs',es_ger:'Gerundio en deelwoord',es_genero:'El of la?',es_plural:'Spaans meervoud',es_concord:'Bijvoeglijk naamwoord: overeenkomst',es_serestar:'Ser of estar?',es_porpara:'Por of para?',es_gustar:'Gustar',es_posesivo:'Bezittelijke voornaamwoorden',es_demostr:'Este, ese, aquel',es_numeros:'Spaanse getallen',es_hora:'Hoe laat is het? (Spaans)',voc_nl_es:'Woordenschat: Nederlands → Spaans',voc_es_nl:'Woordenschat: Spaans → Nederlands'};
+const gTitle=k=>APP.learn==='es'&&T_NL[k]?T_NL[k]:GENS[k].t;
+const myGens=()=>Object.keys(GENS).filter(k=>GENS[k].lang==='*'||GENS[k].lang===APP.learn);
+const LESSON_GENS={articulos:['dehet'],plural:['plural'],v2:['inversion'],preguntas:['presente'],negacion:['nietgeen'],posesivos:['demostrativo'],demostrativos:['demostrativo'],adjetivos:['adjetivo'],
+ numeros:['numeros'],hora:['hora'],presente:['presente'],'zijn-hebben':['presente'],modales:['inversion'],separables:['separable'],diminutivo:['diminutivo'],perfecto:['participio','perfecto'],
+ 'hebben-zijn':['perfecto'],irregulares:['pasado','participio'],imperfecto:['pasado'],comparativo:['comparativo'],subordinadas:['subordinada'],coordinantes:['subordinada','inversion'],tmp:['inversion'],
+ relativos:['relativo'],dt:['presente','participio'],'conjunciones-b1':['subordinada'],pluscuamperfecto:['participio'],'doble-infinitivo':['participio'],
+ 'es-lidwoorden':['es_genero'],'es-meervoud':['es_plural'],'es-ser-estar':['es_serestar'],'es-presente':['es_pres'],'es-stamwisseling':['es_pres'],'es-bijvoeglijk':['es_concord'],'es-bezittelijk':['es_posesivo'],
+ 'es-aanwijzend':['es_demostr'],'es-getallen':['es_numeros'],'es-klok':['es_hora'],'es-gustar':['es_gustar'],'es-reflexief':['es_pres'],'es-perfecto':['es_perf','es_ger'],'es-indefinido':['es_ind'],'es-imperfecto':['es_imp'],
+ 'es-indef-imperf':['es_ind','es_imp'],'es-gerundio':['es_ger'],'es-futuro':['es_fut'],'es-condicional':['es_cond'],'es-imperativo':['es_imper'],'es-por-para':['es_porpara'],'es-subjuntivo':['es_subj'],
+ 'es-subjuntivo-gebruik':['es_subj'],'es-si-zinnen':['es_subji','es_cond'],'es-perifrasis':['es_mix'],'es-indirect':['es_imp','es_cond'],
+ passief:['pasiva','participio'],signaalwoorden:['subordinada','inversion'],'zinsbouw-b2':['inversion','subordinada'],'participio-adj':['participio','adjetivo'],'voorzetsel-vast':['voorzetsel'],'hun-hen':['hunhen'],'er-b2':['voorzetsel'],klemtoon:['separable'],conjunctief:['pasado'],nominalisatie:['dehet'],
+ 'es-subj-imperf':['es_subji','es_si','es_aunque'],'es-irreal':['es_si','es_plus'],'es-concesivas':['es_aunque'],'es-relativas-subj':['es_aunque','es_subj'],'es-conectores':['es_conector'],'es-se-accidental':['es_accidental'],'es-pasiva':['es_ind'],'es-estilo-indirecto':['es_imp','es_cond','es_subji'],'es-se':['es_accidental'],'es-subjuntivo-gebruik':['es_aunque','es_subj'],'es-si-zinnen':['es_si','es_cond']};
+APP.prog.p=APP.prog.p||{};
+function genCard(k){const g=GENS[k],b=APP.prog.p[k];
+  return `<button class="lcard" type="button" data-go="p-${k.replace(/_/g,'-')}"><div class="pic pnum">∞</div><b>${esc(gTitle(k))}</b><small>${b?L('Mejor racha: ','Beste reeks: ')+b:L('Preguntas sin fin','Eindeloos oefenen')}</small><div class="meta"><span class="lv ${String(g.lv).slice(0,2)}">${g.lv}</span></div></button>`}
+function renderPracticeHub(){
+  const el=VIEWS.gram,ks=myGens();
+  el.innerHTML=`<nav class="crumbs"><a href="#gramatica">${L('Gramática','Grammatica')}</a><span>›</span><span>${L('Práctica infinita','Eindeloos oefenen')}</span></nav>
+  <h2 class="h-sec">${L('Práctica infinita','Eindeloos oefenen')}</h2>
+  <p class="lead">${L('Cada ejercicio genera preguntas nuevas sin fin a partir de miles de palabras y verbos. Responde con el ratón o con las teclas 1–4; Intro pasa a la siguiente.','Elke oefening maakt eindeloos nieuwe vragen uit duizenden woorden en werkwoorden. Antwoord met de muis of de toetsen 1–4; Enter gaat door.')}</p>
+  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="p-mix"><div class="pic pnum">🎲</div><b>${L('Todo mezclado','Alles door elkaar')}</b><small>${L('Preguntas aleatorias de todos los ejercicios','Willekeurige vragen uit alle oefeningen')}</small><div class="meta"><span class="lv">A1–B2</span></div></button>${ks.map(genCard).join('')}</div>`;
+}
+async function renderPractice(id){
+  const el=VIEWS.gram,keys=id==='mix'?myGens():(id.split('--').map(k=>k.replace(/-/g,'_')).filter(k=>GENS[k]));
+  if(!keys.length){renderPracticeHub();return}
+  el.innerHTML=`<p class="empty">${L('Preparando preguntas…','Vragen voorbereiden…')}</p>`;await Promise.all([loadP.catch(()=>{}),getContent().catch(()=>{})]);pools();
+  if(location.hash!=='#p-'+id)return;
+  const title=id==='mix'?L('Todo mezclado','Alles door elkaar'):keys.map(gTitle).join(' + ');
+  let n=0,ok=0,streak=0,best=APP.prog.p[id]||0,cur=null,answered=false;
+  el.innerHTML=`<nav class="crumbs"><a href="#practica">${L('Práctica infinita','Eindeloos oefenen')}</a><span>›</span><span>${esc(title)}</span></nav>
+   <h2 class="h-sec">${esc(title)}</h2>
+   <div class="pstats"><span>${L('Preguntas','Vragen')} <b id="pn">0</b></span><span>${L('Aciertos','Goed')} <b id="pok">0</b></span><span>${L('Racha','Reeks')} <b id="pst">0</b></span><span>${L('Mejor','Beste')} <b id="pbest">${best}</b></span></div>
+   <div class="pcard" id="pcard"></div>`;
+  const next=()=>{
+    let q=null;for(let t=0;t<12&&!q;t++){try{q=GENS[pick(keys)].make()}catch(e){q=null}if(q&&(q.o.length<2||q.a<0))q=null}
+    if(!q){$('pcard').innerHTML=`<p class="empty">${L('No hay datos suficientes para este ejercicio.','Niet genoeg gegevens voor deze oefening.')}</p>`;return}
+    cur=q;answered=false;
+    const long=q.o.some(o=>o.length>26);
+    $('pcard').innerHTML=`<div class="pq">${q.q}</div>${q.pre?sayBtn(q.pre[0],'',q.pre[1]):''}<div class="qopts${long?' one':''}">${q.o.map((o,i)=>`<button class="qopt" type="button" data-i="${i}"><span class="key">${i+1}</span>${esc(o)}</button>`).join('')}</div><p class="fb" id="pfb"></p><div class="gbtns" id="pnx"></div>`;
+    if(q.pre)speak(q.pre[0],null,q.pre[1]);
+    $('pcard').querySelectorAll('.qopt').forEach(b=>b.onclick=()=>answer(+b.dataset.i));
+  };
+  const answer=i=>{if(answered||!cur)return;answered=true;n++;const good=i===cur.a;
+    if(good){ok++;streak++;if(streak>best){best=streak;APP.prog.p[id]=best;saveProg()}}else streak=0;
+    $('pcard').querySelectorAll('.qopt').forEach(b=>{b.disabled=true;const j=+b.dataset.i;if(j===cur.a)b.classList.add('right');else if(j===i)b.classList.add('wrong')});
+    $('pfb').className='fb '+(good?'ok':'ko');$('pfb').innerHTML=(good?L('¡Bien! ','Goed! '):L('No. ','Nee. '))+cur.why;
+    $('pn').textContent=n;$('pok').textContent=ok;$('pst').textContent=streak;$('pbest').textContent=best;
+    if(cur.say)speak(cur.say[0],null,cur.say[1]);
+    $('pnx').innerHTML=`<button class="btn-main" type="button" id="pgo" style="padding:10px 22px">${L('Siguiente','Volgende')} →</button>`;$('pgo').onclick=next;$('pgo').focus();
+    if(good)setTimeout(()=>{if(answered&&cur&&$('pgo'))next()},1300);
+  };
+  const onKey=e=>{if(!document.body.contains($('pcard'))){document.removeEventListener('keydown',onKey);return}
+    if(e.target.tagName==='INPUT')return;
+    if(/^[1-4]$/.test(e.key)&&!answered){const b=$('pcard').querySelector(`[data-i="${+e.key-1}"]`);if(b){e.preventDefault();answer(+e.key-1)}}
+    else if(e.key==='Enter'&&answered){e.preventDefault();next()}};
+  document.addEventListener('keydown',onKey);
+  next();
+}
+function lessonPracticeHtml(id){const ks=(LESSON_GENS[id]||[]).filter(k=>GENS[k]);if(!ks.length)return '';
+  return `<section class="quiz"><h3>${L('Práctica sin fin','Eindeloos oefenen')}</h3><p class="lead" style="margin:0">${L('Preguntas nuevas cada vez, generadas a partir de miles de palabras.','Steeds nieuwe vragen, gemaakt uit duizenden woorden.')}</p>
+  <div class="gbtns" style="justify-content:flex-start">${ks.map(k=>`<button class="btn-main" type="button" data-go="p-${k.replace(/_/g,'-')}" style="padding:10px 16px">∞ ${esc(gTitle(k))}</button>`).join('')}${ks.length>1?`<button class="btn-ghost" type="button" data-go="p-${ks.map(k=>k.replace(/_/g,'-')).join('--')}">${L('Todo junto','Alles samen')}</button>`:''}</div></section>`}
 
 /* ================= APP: vocabulario, juegos y frases ================= */
 const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Básicos'];
@@ -1433,6 +1840,7 @@ function renderVocabHome(){
   const c=APP.content,el=VIEWS.vocab,nw=c.themes.reduce((s,t)=>s+t.n,0);
   el.innerHTML=`<h2 class="h-sec">${L('Vocabulario','Woordenschat')}</h2>
   <p class="lead">${L(c.themes.length+' temas con '+nw+' palabras dibujadas y '+c.frases.length+' situaciones con frases útiles. Cada tema tiene tarjetas, test, escucha, escritura y el juego de de/het.',c.themes.length+' thema\'s met '+nw+' geïllustreerde woorden en '+c.frases.length+' situaties met handige zinnen. Elk thema heeft kaartjes, een toets, luisteren, schrijven en het el/la-spel.')}</p>
+  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="p-voc-nl-es"><div class="pic pnum">∞</div><b>${L('Repaso infinito: neerlandés → español','Eindeloos: Nederlands → Spaans')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button><button class="lcard mixcard" type="button" data-go="p-voc-es-nl"><div class="pic pnum">∞</div><b>${L('Repaso infinito: español → neerlandés','Eindeloos: Spaans → Nederlands')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button></div>
   ${GROUPS.map(g=>{const ts=c.themes.filter(t=>t.group===g);return ts.length?`<p class="grp">${gName(g)}</p><div class="tgrid">${ts.map(t=>tcard(t)).join('')}</div>`:''}).join('')}
   <p class="grp">${L('Frases por situación','Zinnen per situatie')}</p><div class="tgrid">${c.frases.map(f=>tcard(f,true)).join('')}</div>`;
 }
