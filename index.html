@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794330567";</script>
+<script>window.WB_V="?v=1794347405";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -345,6 +345,41 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (max-width:640px){.idlist{grid-template-columns:1fr}}
 
 @media (max-width:640px){.tabs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.tabs::-webkit-scrollbar{display:none}.tab{flex:0 0 auto;min-width:auto;padding:8px 10px}.tab .tl{overflow:visible;text-overflow:clip}}
+
+.h-sub{font-family:var(--f-display);font-size:1.3rem;margin:28px 0 10px}
+.lead.small{font-size:.9rem}
+.done{color:var(--ok);font-weight:700}
+.podbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:16px 0 6px}
+.podbar .rate select{margin-left:4px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.podbar .tg{display:flex;gap:6px;align-items:center;font-weight:600;font-size:.92rem;cursor:pointer}
+.podlines{display:flex;flex-direction:column;gap:8px;margin:12px 0 8px;position:relative}
+.pline{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line);transition:background .2s,border-color .2s}
+.pline.cur{border-color:var(--de);background:var(--de-soft)}
+.pline .pt{font-size:1.05rem;line-height:1.45}
+.pline .ptr{display:block;color:var(--muted);margin-top:3px}
+.pline .say{margin-left:6px;vertical-align:middle}
+.spk{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:.85rem;color:#fff;background:var(--de)}
+.spk.s1{background:var(--het)}.spk.s2{background:#7e22ce}
+.podlines.notext .pt,.podlines.notext .say{filter:blur(6px);user-select:none;pointer-events:none}
+.podlines.notr .ptr{display:none}
+.podlines .hidden-note{display:none;margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.podlines.notext .hidden-note{display:block}
+.pcard.pron{display:flex;flex-direction:column;gap:14px;align-items:stretch;text-align:center}
+.prtarget{font-family:var(--f-display);font-size:clamp(1.3rem,4.5vw,2rem);line-height:1.3;font-weight:600;overflow-wrap:anywhere}
+.prtr{color:var(--muted)}
+.prbtns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.mic.on{background:var(--bad);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(220,38,38,.15)}}
+.prheard{min-height:1.4em;color:var(--muted);font-style:italic}
+.prres{display:flex;flex-direction:column;gap:6px;align-items:center}
+.prres p{margin:0}
+.prscore{font-size:2rem;font-weight:800}
+.prscore.ok{color:var(--ok)}.prscore.ko{color:var(--bad)}
+.prdiff{font-size:1.15rem;line-height:1.6}
+.wok{color:var(--ok);font-weight:700}
+.wko{color:var(--bad);font-weight:700;text-decoration:underline wavy}
+.din{width:100%;font:inherit;font-size:1.15rem;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);resize:vertical;box-sizing:border-box}
+.din:focus{outline:none;border-color:var(--de)}
 </style>
 
 <div class="topbar">
@@ -356,12 +391,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <button class="tab" type="button" data-go="vocabulario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg><span class="tl" data-nl="Woordenschat">Vocabulario</span></button>
       <button class="tab" type="button" data-go="conjugador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg><span class="tl" data-nl="Vervoegen">Conjugador</span></button>
       <button class="tab" type="button" data-go="expresiones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><span class="tl" data-nl="Uitdrukkingen">Expresiones</span></button>
+      <button class="tab" type="button" data-go="escuchar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg><span class="tl" data-nl="Luisteren">Escuchar</span></button>
     </nav>
     <select class="learn" id="learn" aria-label="Idioma que aprendes / Taal die je leert"><option value="nl">🇪🇸 Aprendo neerlandés</option><option value="es">🇳🇱 Ik leer Spaans</option></select>
-    <div class="dir" title="Dirección de las tarjetas, los tests y las frases">
-      <span class="lang" id="dirlabel">NL → ES</span>
-      <button type="button" id="dirbtn" aria-label="Cambiar la dirección de traducción">⇄<span class="cw" data-nl=" wisselen"> cambiar</span></button>
-    </div>
   </div>
 </div>
 
@@ -389,6 +421,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <main class="view" id="v-vocab" hidden></main>
 <main class="view" id="v-conj" hidden></main>
 <main class="view" id="v-idi" hidden></main>
+<main class="view" id="v-oir" hidden></main>
 
 <footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B2) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
 
@@ -908,14 +941,14 @@ function pickVoice(){
 if(synth){pickVoice();try{synth.addEventListener('voiceschanged',pickVoice)}catch(_){}}
 let toastT;
 function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},4000)}
-function speak(text,btn,lang){
+function speak(text,btn,lang,rate){
   lang=lang==='es'?'es':'nl';
   if(!synth){toast('Tu navegador no permite reproducir voz.');return}
   if(!nlVoice||!esVoice)pickVoice();
   const V=lang==='es'?esVoice:nlVoice;
   synth.cancel();
   const u=new SpeechSynthesisUtterance(text.replace(/\s*\/\s*/g,', ').replace(/\(.*?\)/g,''));
-  u.lang=V?V.lang:(lang==='es'?'es-ES':'nl-NL');if(V)u.voice=V;u.rate=lang==='es'?0.95:0.85;
+  u.lang=V?V.lang:(lang==='es'?'es-ES':'nl-NL');if(V)u.voice=V;u.rate=rate||(lang==='es'?0.95:0.85);
   document.querySelectorAll('.say.on').forEach(b=>b.classList.remove('on'));
   if(btn){btn.classList.add('on');u.onend=u.onerror=()=>btn.classList.remove('on')}
   synth.speak(u);
@@ -1068,27 +1101,23 @@ try{const l=localStorage.getItem('wb.learn');if(l==='es'||l==='nl')APP.learn=l}c
 const L=(es,nl)=>APP.learn==='es'?nl:es;
 const gramSet=()=>APP.learn==='es'?(APP.content.grammar_es||[]):APP.content.grammar;
 const allLessons=()=>APP.content.grammar.concat(APP.content.grammar_es||[]);
-try{const d=localStorage.getItem('wb.dir');if(d==='es-nl'||d==='nl-es')APP.dir=d}catch(_){}
 try{const p=JSON.parse(localStorage.getItem('wb.prog')||'null');if(p&&p.g&&p.v)APP.prog=p}catch(_){}
 const saveProg=()=>{try{localStorage.setItem('wb.prog',JSON.stringify(APP.prog))}catch(_){}};
 const $=id=>document.getElementById(id);
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const NLES=()=>APP.dir==='nl-es';
+const NLES=()=>APP.learn!=='es';
 const dirTxt=()=>NLES()?L('neerlandés → español','Nederlands → Spaans'):L('español → neerlandés','Spaans → Nederlands');
-function setDir(d,silent){APP.dir=d;try{localStorage.setItem('wb.dir',d)}catch(_){}
-  $('dirlabel').textContent=d==='nl-es'?'NL → ES':'ES → NL';if(!silent)document.dispatchEvent(new Event('dirchange'))}
-$('dirbtn').onclick=()=>{setDir(NLES()?'es-nl':'nl-es');toast(L('Ahora: ','Nu: ')+dirTxt())};
-setDir(APP.dir,true);
+function setDir(){}
 
 let contentP=null;
 const getContent=()=>contentP||(contentP=fetch('content.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(c=>(APP.content=c)).catch(e=>{contentP=null;throw e}));
 const getTheme=id=>APP.themes[id]?Promise.resolve(APP.themes[id]):fetch('v/'+id+'.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(t=>(APP.themes[id]=t));
 
-const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab'),conj:$('v-conj'),idi:$('v-idi')};
+const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab'),conj:$('v-conj'),idi:$('v-idi'),oir:$('v-oir')};
 function show(v){
   for(const k in VIEWS)VIEWS[k].hidden=k!==v;
   $('credits').hidden=v==='dict';
-  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab',conjugador:'conj',expresiones:'idi'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false');if(m===v&&t.parentNode.scrollWidth>t.parentNode.clientWidth)t.parentNode.scrollLeft=t.offsetLeft-t.parentNode.offsetLeft-20});
+  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab',conjugador:'conj',expresiones:'idi',escuchar:'oir'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false');if(m===v&&t.parentNode.scrollWidth>t.parentNode.clientWidth)t.parentNode.scrollLeft=t.offsetLeft-t.parentNode.offsetLeft-20});
 }
 function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 function openDict(w){go('diccionario');$q.value=w;search(w)}
@@ -1100,6 +1129,9 @@ async function route(){
   window.scrollTo(0,0);
   if(!h||h==='diccionario'){show('dict');return}
   if(h==='conjugador'){show('conj');renderConj();return}
+  if(h==='escuchar'||/^(pod-|pronuncia|dictado|oido)/.test(h)){show('oir');const el=VIEWS.oir;stopAll();if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
+    try{if(h==='escuchar')renderListenHome();else if(h.startsWith('pod-'))renderPod(h.slice(4));else if(h.startsWith('pronuncia'))renderPron();else if(h.startsWith('dictado'))renderDict();else renderOido()}catch(e){console.error(e);failed(el)}return}
+  try{stopAll()}catch(_){}
   if(h==='expresiones'||/^xt?-/.test(h)){show('idi');const el=VIEWS.idi;if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
     try{if(h==='expresiones')renderIdiomHome();else if(h.startsWith('xt-'))renderIdiomTest(h.slice(3));else renderIdiomCat(h.slice(2))}catch(e){console.error(e);failed(el)}return}
   const isP=h==='practica'||h.startsWith('p-'),isG=isP||h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-');
@@ -1904,6 +1936,219 @@ GENS.idi_nl={t:'Expresiones neerlandesas',lv:'B1',lang:'nl',make(){return idMake
 GENS.idi_es={t:'Expresiones españolas',lv:'B1',lang:'es',make(){return idMaker(idItems(null,'es'))()}};
 T_NL.idi_es='Spaanse uitdrukkingen';
 try{$('learn').addEventListener('change',()=>{IDL=null})}catch(e){}
+/* ================= Escuchar y hablar / Luisteren en spreken ================= */
+let CTTS=null,CDICT=null;
+try{if(window.claude&&window.claude.use){window.claude.use('tts').then(t=>{CTTS=t}).catch(()=>{});window.claude.use('dictation').then(d=>{CDICT=d}).catch(()=>{})}}catch(_){}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+const canListen=()=>!!(CDICT||SR);
+const tLang=()=>APP.learn==='es'?'es':'nl';                    // idioma que se aprende
+const langTag=l=>l==='es'?'es-ES':'nl-NL';
+let PODL=null;const podLang=()=>PODL||tLang();
+try{$('learn').addEventListener('change',()=>{PODL=null})}catch(_){}
+
+/* ---------- reproducción de varias líneas (podcast) ---------- */
+const PLAYER={stop(){}};
+function stopAll(){try{PLAYER.stop()}catch(_){};try{speechSynthesis.cancel()}catch(_){};try{CTTS&&CTTS.stop()}catch(_){}}
+function browserVoices(lang){try{return speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith(lang))}catch(_){return[]}}
+async function playLines(lines,lang,rate,onLine,onEnd){
+  stopAll();let stopped=false;
+  const spk=[...new Set(lines.map(l=>l[0]))];
+  if(CTTS){
+    const V=['buttery','airy','rounded','glassy'];
+    PLAYER.stop=()=>{stopped=true;try{CTTS.stop()}catch(_){}};
+    let off=null;try{off=CTTS.onLine(({id})=>{if(id!=null)onLine(+String(id).slice(1))})}catch(_){}
+    try{await CTTS.speak(lines.map((l,i)=>({text:l[1],voice:V[spk.indexOf(l[0])%V.length],language:langTag(lang),id:'L'+i})),{rate});if(off)off();onEnd(true);return}
+    catch(e){if(off)off();if(stopped||(e&&/stopped|viewer_stopped|replaced/.test(e.code||''))){onEnd(false);return}}
+  }
+  if(!window.speechSynthesis){toast(L('Tu navegador no permite reproducir voz.','Je browser kan geen spraak afspelen.'));onEnd(false);return}
+  const vs=browserVoices(lang);let i=0;
+  PLAYER.stop=()=>{stopped=true;speechSynthesis.cancel()};
+  const next=()=>{if(stopped)return;if(i>=lines.length){onEnd(true);return}
+    const l=lines[i],k=spk.indexOf(l[0]),u=new SpeechSynthesisUtterance(l[1]);
+    u.lang=langTag(lang);if(vs.length){u.voice=vs[k%vs.length];u.lang=u.voice.lang}
+    u.pitch=vs.length>1?1:[1,.8,1.25][k%3];u.rate=rate*(lang==='es'?.95:.9);
+    onLine(i);u.onend=()=>{i++;setTimeout(next,250)};u.onerror=()=>{i++;next()};speechSynthesis.speak(u)};
+  next();
+}
+
+/* ---------- reconocimiento de voz ---------- */
+let REC=null;
+function listenOnce(lang,onPartial,onDone,onFail){
+  if(CDICT){
+    let txt='',offs=[];const end=()=>{offs.forEach(f=>{try{f()}catch(_){}});};
+    offs.push(CDICT.onPartial(({text})=>onPartial((txt+' '+text).trim())));
+    offs.push(CDICT.onFinal(({text})=>{txt=(txt+' '+text).trim();onPartial(txt)}));
+    offs.push(CDICT.onState(({state,reason})=>{if(state==='idle'){end();REC=null;if(reason&&!/stopped|viewer_stopped/.test(reason)&&!txt)onFail(reason);else onDone(txt)}}));
+    REC={stop:()=>CDICT.stop().catch(()=>{})};
+    CDICT.start({language:langTag(lang)}).catch(e=>{end();REC=null;onFail(e&&e.code||'error')});
+    return;
+  }
+  if(!SR){onFail('unsupported');return}
+  const r=new SR();r.lang=langTag(lang);r.interimResults=true;r.maxAlternatives=3;r.continuous=false;
+  let best='';
+  r.onresult=e=>{let s='';for(const res of e.results)s+=res[0].transcript;best=s;onPartial(s)};
+  r.onerror=e=>{REC=null;onFail(e.error||'error')};
+  r.onend=()=>{if(REC){REC=null;onDone(best)}};
+  REC={stop:()=>r.stop()};
+  try{r.start()}catch(e){REC=null;onFail('error')}
+}
+
+/* ---------- comparar texto ---------- */
+const wnorm=s=>norm(s).replace(/['’\-–—:;()]/g,' ').replace(/\s+/g,' ').trim();
+function numWords(tok,lang){if(!/^\d+$/.test(tok))return[tok];try{return wnorm(lang==='es'?numEs(+tok):numNl(+tok)).split(' ')}catch(_){return[tok]}}
+function compareWords(target,said,lang){
+  const T=target.split(/\s+/).filter(Boolean),tn=T.map(w=>{const x=wnorm(w);return /^\d+$/.test(x)?numWords(x,lang)[0]:x}),S=wnorm(said).split(' ').filter(Boolean).flatMap(w=>numWords(w,lang));
+  // alineación LCS
+  const n=tn.length,m=S.length,d=Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  const eq=(a,b)=>a===b||(a.length>3&&b.length>3&&(a.startsWith(b)||b.startsWith(a)));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)d[i][j]=eq(tn[i],S[j])||!tn[i]?d[i+1][j+1]+1:Math.max(d[i+1][j],d[i][j+1]);
+  const ok=new Array(n).fill(false);let i=0,j=0;
+  while(i<n&&j<m){if(!tn[i]){ok[i]=true;i++;continue}if(eq(tn[i],S[j])){ok[i]=true;i++;j++}else if(d[i+1][j]>=d[i][j+1])i++;else j++}
+  tn.forEach((w,k)=>{if(!w)ok[k]=true});
+  const real=tn.filter(Boolean).length||1,score=Math.round(ok.filter((v,k)=>v&&tn[k]).length/real*100);
+  return{T,ok,score};
+}
+const diffHtml=r=>r.T.map((w,k)=>`<span class="${r.ok[k]?'wok':'wko'}">${esc(w)}</span>`).join(' ');
+
+/* ---------- material para pronunciar y dictar ---------- */
+function sentencePool(lang){
+  const C=APP.content,P=[];const add=(t,tr,lv)=>{t=(t||'').trim();if(t&&t.length<=140&&!/[{}…]/.test(t))P.push({t,tr,lv})};
+  (C.frases||[]).forEach(f=>f.items.forEach(([nl,es])=>lang==='nl'?add(nl,es,f.level):add(es,nl,f.level)));
+  (lang==='nl'?C.grammar:(C.grammar_es||[])).forEach(g=>g.ex.forEach(([nl,es])=>lang==='nl'?add(nl,es,g.level):add(es,nl,g.level)));
+  (C.idioms||[]).forEach(c=>c.items.forEach(i=>{if(i.l===lang&&i.ex&&i.ex[0])add(i.ex[0],i.ex[1],c.level)}));
+  (C.pods||[]).forEach(p=>{if(p.lang===lang)p.lines.forEach(l=>add(l[1],l[2],p.level))});
+  const seen=new Set();return P.filter(x=>!seen.has(x.t)&&seen.add(x.t));
+}
+function wordPool(lang){
+  return(APP.content.lex||[]).filter(w=>w[1]!=='x'||!/[?.!]/.test(w[0])).map(w=>{
+    const es=String(w[3]).split(/[,;(]/)[0].trim();
+    if(lang==='nl')return{t:(w[1]==='de'||w[1]==='het'?w[1]+' ':'')+w[0],tr:es,lv:'A1'};
+    return{t:(w[4]?w[4]+' ':'')+es,tr:(w[1]==='de'||w[1]==='het'?w[1]+' ':'')+w[0],lv:'A1'}});
+}
+const LEN={w:L('Palabras','Woorden'),s:L('Frases cortas','Korte zinnen'),l:L('Frases largas','Lange zinnen')};
+function poolFor(kind,lang){
+  if(kind==='w')return wordPool(lang);
+  const P=sentencePool(lang),n=x=>x.t.split(/\s+/).length;
+  return kind==='s'?P.filter(x=>n(x)<=7):P.filter(x=>n(x)>7);
+}
+
+/* ---------- portada ---------- */
+function renderListenHome(){
+  const el=VIEWS.oir,lang=podLang(),P=(APP.content.pods||[]).filter(p=>p.lang===lang),done=APP.prog.pod||{};
+  const nm=tLang()==='es'?L('español','Spaans'):L('neerlandés','Nederlands');
+  el.innerHTML=`<h2 class="h-sec">${L('Escuchar y hablar','Luisteren en spreken')}</h2>
+  <p class="lead">${L('Entrena el oído y la pronunciación en '+nm+': mini pódcasts con preguntas, dictados y ejercicios de pronunciación con el micrófono.','Train je oor en je uitspraak in het '+nm+': minipodcasts met vragen, dictees en uitspraakoefeningen met de microfoon.')}</p>
+  <div class="lgrid">
+   <button class="lcard mixcard" type="button" data-go="pronuncia"><div class="pic pnum">🎙️</div><b>${L('Pronunciación','Uitspraak')}</b><small>${L('Escucha, repite y la app te corrige palabra por palabra.','Luister, herhaal en de app verbetert je per woord.')}</small><div class="meta"><span class="lv">∞</span></div></button>
+   <button class="lcard mixcard" type="button" data-go="dictado"><div class="pic pnum">✍️</div><b>${L('Dictado','Dictee')}</b><small>${L('Escucha una frase y escríbela.','Luister naar een zin en schrijf hem op.')}</small><div class="meta"><span class="lv">∞</span></div></button>
+   <button class="lcard mixcard" type="button" data-go="oido"><div class="pic pnum">👂</div><b>${L('¿Qué has oído?','Wat hoorde je?')}</b><small>${L('Escucha sin leer y elige la traducción.','Luister zonder te lezen en kies de vertaling.')}</small><div class="meta"><span class="lv">∞</span></div></button>
+  </div>
+  <h3 class="h-sub">🎧 ${L('Mini pódcasts','Minipodcasts')}</h3>
+  <div class="lvls" role="group">${['nl','es'].map(l=>`<button class="lvl" type="button" data-pl="${l}" aria-pressed="${lang===l}">${l==='nl'?L('🇳🇱 En neerlandés','🇳🇱 In het Nederlands'):L('🇪🇸 En español','🇪🇸 In het Spaans')}</button>`).join('')}</div>
+  <div class="lgrid">${P.map(p=>`<button class="lcard" type="button" data-go="pod-${p.id}"><div class="pic">${p.icon}</div><b>${esc(p.t)}</b><small>${esc(p.tt)}</small><div class="meta"><span class="lv ${p.level}">${p.level}</span><span>${p.lines.length} ${L('frases','zinnen')} · ${p.quiz.length} ${L('preguntas','vragen')}</span>${done[p.id]!=null?`<span class="done">✓ ${done[p.id]}/${p.quiz.length}</span>`:''}</div></button>`).join('')}</div>`;
+  el.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{PODL=b.dataset.pl;renderListenHome()});
+}
+
+/* ---------- un pódcast ---------- */
+function renderPod(id){
+  const el=VIEWS.oir,p=(APP.content.pods||[]).find(x=>x.id===id);if(!p){renderListenHome();return}
+  const spk=[...new Set(p.lines.map(l=>l[0]))];let rate=1,playing=false;
+  el.innerHTML=`<nav class="crumbs"><a href="#escuchar">${L('Escuchar y hablar','Luisteren en spreken')}</a><span>›</span><span>${esc(p.t)}</span></nav>
+  <div class="lhead"><div class="pic">${p.icon}</div><div><span class="lv ${p.level}">${p.level}</span><h2>${esc(p.t)}</h2><i>${esc(p.tt)}</i></div></div>
+  <div class="podbar"><button class="btn-main" type="button" id="pplay">▶ ${L('Escuchar','Luisteren')}</button>
+   <label class="rate">${L('Velocidad','Snelheid')} <select id="prate"><option value="0.75">0,75×</option><option value="0.9">0,9×</option><option value="1" selected>1×</option><option value="1.15">1,15×</option></select></label>
+   <label class="tg"><input type="checkbox" id="ptx"> ${L('Ver texto','Tekst tonen')}</label>
+   <label class="tg"><input type="checkbox" id="ptr"> ${L('Ver traducción','Vertaling tonen')}</label></div>
+  <p class="lead small">${L('Consejo: escucha primero sin leer, responde las preguntas y después mira el texto.','Tip: luister eerst zonder te lezen, beantwoord de vragen en kijk daarna naar de tekst.')}</p>
+  <div class="podlines notext notr" id="plines">${p.lines.map((l,i)=>`<div class="pline" data-i="${i}"><span class="spk s${spk.indexOf(l[0])}">${esc(l[0])}</span><div><span class="pt" lang="${p.lang}">${esc(l[1])}</span>${sayBtn(l[1],'sm',p.lang)}<small class="ptr">${esc(l[2])}</small></div></div>`).join('')}<p class="hidden-note">🙈 ${L('Texto oculto. Actívalo arriba cuando quieras.','Tekst verborgen. Zet hem hierboven aan wanneer je wilt.')}</p></div>
+  <section class="quiz"><h3>${L('Preguntas','Vragen')}</h3><div id="pq">${p.quiz.map((q,qi)=>`<div class="qq" data-q="${qi}"><div class="qt"><span class="qn">${qi+1}.</span> ${esc(q.q)}</div><div class="qo">${shuffle(q.o.map((_,k)=>k)).map(k=>`<button type="button" data-k="${k}">${esc(q.o[k])}</button>`).join('')}</div><div class="why" hidden></div></div>`).join('')}</div><p class="fb" id="pres"></p></section>`;
+  const box=$('plines'),hl=i=>{box.querySelectorAll('.pline').forEach(x=>x.classList.toggle('cur',+x.dataset.i===i))};
+  $('ptx').onchange=e=>box.classList.toggle('notext',!e.target.checked);
+  $('ptr').onchange=e=>box.classList.toggle('notr',!e.target.checked);
+  $('prate').onchange=e=>{rate=+e.target.value;try{CTTS&&CTTS.setRate&&CTTS.setRate(rate)}catch(_){}};
+  const btn=$('pplay'),reset=()=>{playing=false;btn.textContent='▶ '+L('Escuchar otra vez','Opnieuw luisteren');hl(-1)};
+  btn.onclick=()=>{if(playing){stopAll();reset();return}playing=true;btn.textContent='⏹ '+L('Parar','Stoppen');playLines(p.lines,p.lang,rate,hl,reset)};
+  let ans=0,right=0;
+  $('pq').querySelectorAll('.qq').forEach(div=>{const q=p.quiz[+div.dataset.q];div.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.k===q.a;div.querySelectorAll('button').forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+    const w=div.querySelector('.why');w.innerHTML=(ok?`<b style="color:var(--ok)">${L('¡Correcto!','Goed zo!')}</b> `:`<b style="color:var(--bad)">${L('No es esa.','Helaas.')}</b> `)+`<i lang="${p.lang}">${esc(q.why)}</i>`;w.hidden=false;
+    ans++;if(ok)right++;if(ans===p.quiz.length){const r=$('pres');r.textContent=`${L('Resultado','Resultaat')}: ${right} ${L('de','van')} ${p.quiz.length}`;r.className='fb '+(right/p.quiz.length>=.6?'ok':'ko');
+      APP.prog.pod=APP.prog.pod||{};APP.prog.pod[p.id]=Math.max(right,APP.prog.pod[p.id]??0);saveProg();$('ptx').checked=true;box.classList.remove('notext')}})});
+}
+
+/* ---------- pronunciación ---------- */
+function renderPron(kind){
+  kind=kind||'s';const el=VIEWS.oir,lang=tLang(),pool=poolFor(kind,lang);
+  let cur=null,tries=0,good=0,n=0;
+  el.innerHTML=`<nav class="crumbs"><a href="#escuchar">${L('Escuchar y hablar','Luisteren en spreken')}</a><span>›</span><span>${L('Pronunciación','Uitspraak')}</span></nav>
+  <h2 class="h-sec">🎙️ ${L('Pronunciación','Uitspraak')} · ${lang==='es'?L('español','Spaans'):L('neerlandés','Nederlands')}</h2>
+  <div class="lvls" role="group">${Object.entries(LEN).map(([k,v])=>`<button class="lvl" type="button" data-k="${k}" aria-pressed="${k===kind}">${v}</button>`).join('')}</div>
+  ${canListen()?'':`<p class="tip">${L('Tu navegador no permite reconocer la voz aquí. Funciona en Chrome o Edge (en el ordenador o en Android). Mientras tanto puedes escuchar y repetir en voz alta.','Je browser kan hier geen spraak herkennen. Het werkt in Chrome of Edge (op de computer of Android). Je kunt intussen wel luisteren en hardop nazeggen.')}</p>`}
+  <div class="pstats"><span>${L('Frases','Zinnen')} <b id="sn">0</b></span><span>${L('Bien pronunciadas','Goed uitgesproken')} <b id="sg">0</b></span></div>
+  <div class="pcard pron"><div class="prtarget" id="prt"></div><div class="prtr" id="prtr"></div>
+   <div class="prbtns"><button class="btn-ghost" type="button" id="prl">🔊 ${L('Escuchar','Luisteren')}</button><button class="btn-ghost" type="button" id="prs">🐢 ${L('Despacio','Langzaam')}</button>
+   <button class="btn-main mic" type="button" id="prm" ${canListen()?'':'disabled'}>🎙️ ${L('Pulsa y habla','Druk en spreek')}</button></div>
+   <div class="prheard" id="prh"></div><div class="prres" id="prr"></div>
+   <div class="gbtns"><button class="btn-ghost" type="button" id="prn">${L('Siguiente','Volgende')} →</button></div></div>`;
+  el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>renderPron(b.dataset.k));
+  const show=()=>{cur=pick(pool);tries=0;n++;$('sn').textContent=n;$('prt').textContent=cur.t;$('prt').lang=lang;$('prtr').textContent=cur.tr||'';$('prh').textContent='';$('prr').innerHTML='';setTimeout(()=>speak(cur.t,null,lang),200)};
+  $('prl').onclick=()=>speak(cur.t,$('prl'),lang);
+  $('prs').onclick=()=>speak(cur.t,$('prs'),lang,.6);
+  $('prn').onclick=show;
+  const mic=$('prm');
+  mic.onclick=()=>{
+    if(REC){REC.stop();return}
+    try{speechSynthesis.cancel()}catch(_){}
+    mic.classList.add('on');mic.textContent='⏹ '+L('Escuchando… pulsa para terminar','Ik luister… druk om te stoppen');$('prh').textContent='…';
+    listenOnce(lang,t=>{$('prh').textContent='«'+t+'»'},said=>{
+      mic.classList.remove('on');mic.textContent='🎙️ '+L('Otra vez','Nog een keer');
+      if(!said){$('prh').textContent=L('No te he oído. ¿Está activado el micrófono?','Ik hoorde niets. Staat de microfoon aan?');return}
+      $('prh').textContent='«'+said+'»';tries++;
+      const r=compareWords(cur.t,said,lang),msg=r.score>=90?L('¡Perfecto!','Perfect!'):r.score>=70?L('¡Muy bien! Casi perfecto.','Heel goed! Bijna perfect.'):r.score>=40?L('Vas bien. Repite las palabras en rojo.','Goed bezig. Herhaal de rode woorden.'):L('Inténtalo otra vez, escuchando primero.','Probeer het nog eens; luister eerst.');
+      $('prr').innerHTML=`<div class="prscore ${r.score>=70?'ok':'ko'}">${r.score}%</div><div class="prdiff" lang="${lang}">${diffHtml(r)}</div><p>${msg}</p>`;
+      if(r.score>=70&&tries===1){good++;$('sg').textContent=good}
+    },err=>{
+      mic.classList.remove('on');mic.textContent='🎙️ '+L('Pulsa y habla','Druk en spreek');
+      $('prh').textContent=/not.?allowed|not_granted|denied/i.test(err)?L('Sin permiso para el micrófono. Actívalo en el navegador.','Geen toestemming voor de microfoon. Zet hem aan in de browser.'):/unavailable|unsupported|language/i.test(err)?L('El reconocimiento de voz no está disponible aquí para este idioma. Prueba en Chrome o Edge.','Spraakherkenning is hier niet beschikbaar voor deze taal. Probeer Chrome of Edge.'):/no-speech/.test(err)?L('No te he oído. Prueba otra vez.','Ik hoorde niets. Probeer het opnieuw.'):L('No se pudo usar el micrófono.','De microfoon werkte niet.')+' ('+err+')';
+    });
+  };
+  show();
+}
+
+/* ---------- dictado ---------- */
+function renderDict(kind){
+  kind=kind||'s';const el=VIEWS.oir,lang=tLang(),pool=poolFor(kind,lang);
+  let cur=null,n=0,good=0,checked=false;
+  el.innerHTML=`<nav class="crumbs"><a href="#escuchar">${L('Escuchar y hablar','Luisteren en spreken')}</a><span>›</span><span>${L('Dictado','Dictee')}</span></nav>
+  <h2 class="h-sec">✍️ ${L('Dictado','Dictee')} · ${lang==='es'?L('español','Spaans'):L('neerlandés','Nederlands')}</h2>
+  <div class="lvls" role="group">${Object.entries(LEN).map(([k,v])=>`<button class="lvl" type="button" data-k="${k}" aria-pressed="${k===kind}">${v}</button>`).join('')}</div>
+  <div class="pstats"><span>${L('Frases','Zinnen')} <b id="dn">0</b></span><span>${L('Perfectas','Foutloos')} <b id="dg">0</b></span></div>
+  <div class="pcard pron"><div class="prbtns"><button class="btn-main" type="button" id="dl">🔊 ${L('Escuchar','Luisteren')}</button><button class="btn-ghost" type="button" id="ds">🐢 ${L('Despacio','Langzaam')}</button></div>
+   <textarea id="din" class="din" rows="2" lang="${lang}" spellcheck="false" autocomplete="off" placeholder="${L('Escribe lo que oyes…','Schrijf op wat je hoort…')}"></textarea>
+   <div class="prres" id="dr"></div>
+   <div class="gbtns"><button class="btn-main" type="button" id="dc">${L('Comprobar','Controleren')}</button><button class="btn-ghost" type="button" id="dnx">${L('Siguiente','Volgende')} →</button></div></div>
+  <p class="lead small">${L('Las tildes, mayúsculas y signos de puntuación no cuentan como error.','Accenten, hoofdletters en leestekens tellen niet als fout.')} Intro = ${L('comprobar','controleren')}.</p>`;
+  el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>renderDict(b.dataset.k));
+  const show=()=>{cur=pick(pool);n++;checked=false;$('dn').textContent=n;$('din').value='';$('dr').innerHTML='';$('din').focus();setTimeout(()=>speak(cur.t,null,lang,lang==='es'?.9:.8),200)};
+  $('dl').onclick=()=>speak(cur.t,$('dl'),lang);$('ds').onclick=()=>speak(cur.t,$('ds'),lang,.6);
+  const check=()=>{if(checked){show();return}const v=$('din').value.trim();if(!v){$('din').focus();return}checked=true;
+    const r=compareWords(cur.t,v,lang);if(r.score===100){good++;$('dg').textContent=good}
+    $('dr').innerHTML=`<div class="prscore ${r.score>=80?'ok':'ko'}">${r.score}%</div><div class="prdiff" lang="${lang}">${diffHtml(r)}</div><small>${esc(cur.tr||'')}</small>`};
+  $('dc').onclick=check;$('dnx').onclick=show;
+  $('din').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();check()}};
+  show();
+}
+
+/* ---------- ¿qué has oído? (test infinito) ---------- */
+function renderOido(){
+  const lang=tLang(),pool=sentencePool(lang).filter(x=>x.tr);
+  const make=()=>{const x=pick(pool),r=mc(x.tr,pool.filter(y=>y!==x).map(y=>y.tr));
+    return{q:`<span class="qsub">${L('Escucha y elige la traducción','Luister en kies de vertaling')}</span>`,pre:[x.t,lang],...r,why:`<span lang="${lang}">${esc(x.t)}</span>`,say:[x.t,lang]}};
+  runPractice(VIEWS.oir,'oido-'+lang,L('¿Qué has oído?','Wat hoorde je?'),`<a href="#escuchar">${L('Escuchar y hablar','Luisteren en spreken')}</a>`,[make]);
+}
+GENS.oido_nl={t:'¿Qué has oído? (neerlandés)',lv:'A2',lang:'nl',make(){const P=sentencePool('nl').filter(x=>x.tr),x=pick(P),r=mc(x.tr,P.filter(y=>y!==x).map(y=>y.tr));return{q:`<span class="qsub">Escucha y elige la traducción</span>`,pre:[x.t,'nl'],...r,why:esc(x.t),say:[x.t,'nl']}}};
+GENS.oido_es={t:'¿Qué has oído? (español)',lv:'A2',lang:'es',make(){const P=sentencePool('es').filter(x=>x.tr),x=pick(P),r=mc(x.tr,P.filter(y=>y!==x).map(y=>y.tr));return{q:`<span class="qsub">Luister en kies de vertaling</span>`,pre:[x.t,'es'],...r,why:esc(x.t),say:[x.t,'es']}}};
+T_NL.oido_es='Wat hoorde je?';
 
 /* ================= APP: vocabulario, juegos y frases ================= */
 const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Básicos'];
