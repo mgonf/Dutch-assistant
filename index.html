@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794355047";</script>
+<script>window.WB_V="?v=1794392717";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -384,6 +384,64 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .didyou{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--de-soft);font-size:1.02rem}
 .didyou .sug{all:unset;cursor:pointer;font-weight:700;color:var(--de);text-decoration:underline;text-underline-offset:3px}
 .didyou .sug:hover,.didyou .sug:focus-visible{color:var(--het)}
+
+.rtext{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin:12px 0;display:flex;flex-direction:column;gap:12px}
+.rtext .rpara{border-radius:12px;padding:4px 8px;margin:0 -8px;transition:background .2s}
+.rtext .rpara.cur{background:var(--de-soft)}
+.rtext p{margin:0;font-size:1.12rem;line-height:1.75}
+.rtext.poem p:first-child{font-family:var(--f-display);font-size:1.2rem;line-height:1.8}
+.rtext .rtr{font-size:.98rem;color:var(--muted);margin-top:6px;line-height:1.55;border-left:3px solid var(--line);padding-left:10px}
+.rtext.notr .rtr{display:none}
+.w{cursor:pointer;border-radius:4px;transition:background .15s}
+.w:hover{background:var(--de-soft);box-shadow:0 2px 0 var(--de)}
+.wpop{box-sizing:border-box;position:absolute;z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.wpop .wph{display:flex;align-items:center;gap:8px}
+.wpop .wph b{font-size:1.1rem;flex:1;overflow-wrap:anywhere}
+.wpop p{margin:0;line-height:1.4}
+.wpop small{color:var(--muted)}
+.wpop .muted{color:var(--muted)}
+.wpop .wpx{all:unset;cursor:pointer;font-size:1.4rem;line-height:1;padding:0 4px;color:var(--muted)}
+.btn-ghost.sm{font-size:.85rem;padding:6px 10px;align-self:flex-start}
+.rgloss{background:var(--paper);border-radius:14px;padding:12px 16px;margin:8px 0}
+.rgloss summary{cursor:pointer;font-weight:700}
+.rgloss dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px 16px;margin:10px 0 0}
+.rgloss dl div{display:flex;gap:6px;flex-wrap:wrap}
+.rgloss dt{font-weight:700}
+.rgloss dd{margin:0;color:var(--muted)}
+.rgloss dd::before{content:'= '}
+.rsrc{font-size:.85rem;color:var(--muted);margin:6px 0 14px}
+.newslist{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:8px 0 20px}
+.newsitem{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.newsitem:hover{border-color:var(--de)}
+.newsitem .lv{align-self:flex-start}
+.newsitem small{color:var(--muted)}
+.pill{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:999px;background:var(--paper);color:var(--muted);font-weight:700}
+.lv.C1{background:#fee2e2;color:#b91c1c}
+
+.sign{display:inline-block;align-self:center;margin:10px auto;padding:14px 22px;border-radius:10px;background:#1d4ed8;color:#fff;font-weight:800;letter-spacing:.04em;font-size:clamp(1.1rem,4vw,1.6rem);border:4px solid #fff;box-shadow:0 0 0 3px #1d4ed8;text-align:center}
+.obuilt{min-height:56px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;padding:10px;border:2px dashed var(--line);border-radius:14px}
+.otoks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.otok{font:inherit;font-size:1.05rem;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.otok.in{background:var(--de-soft);border-color:var(--de)}
+.otok.ghost{opacity:.25;cursor:default}
+.ohint{color:var(--muted)}
+.acc{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.pcol{display:flex;flex-direction:column;gap:10px}
+.pbtn{font:inherit;font-size:1.02rem;padding:12px 10px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:52px;overflow-wrap:anywhere}
+.pbtn.sel{border-color:var(--de);background:var(--de-soft)}
+.pbtn.done{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,var(--surface));opacity:.6;cursor:default}
+.pbtn.bad{border-color:var(--bad);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.lprog{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0}
+.lprog div{height:100%;width:0;background:var(--de);transition:width .3s}
+.qopt.idk{opacity:.75;font-style:italic}
+.lvres{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+
+.wotd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:14px 18px;margin:6px 0 16px;border-radius:16px;background:linear-gradient(135deg,var(--de-soft),var(--surface));border:1px solid var(--line)}
+.wotd-l{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--de)}
+.wotd-w{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1.2rem}
+.wotd-t{margin-left:auto;font-weight:700;font-size:.9rem}
 </style>
 
 <div class="topbar">
@@ -396,6 +454,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <button class="tab" type="button" data-go="conjugador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l3 3-3 3"/></svg><span class="tl" data-nl="Vervoegen">Conjugador</span></button>
       <button class="tab" type="button" data-go="expresiones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><span class="tl" data-nl="Uitdrukkingen">Expresiones</span></button>
       <button class="tab" type="button" data-go="escuchar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></svg><span class="tl" data-nl="Luisteren">Escuchar</span></button>
+      <button class="tab" type="button" data-go="leer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg><span class="tl" data-nl="Lezen">Leer</span></button>
     </nav>
     <select class="learn" id="learn" aria-label="Idioma que aprendes / Taal die je leert"><option value="nl">🇪🇸 Aprendo neerlandés</option><option value="es">🇳🇱 Ik leer Spaans</option></select>
   </div>
@@ -426,6 +485,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <main class="view" id="v-conj" hidden></main>
 <main class="view" id="v-idi" hidden></main>
 <main class="view" id="v-oir" hidden></main>
+<main class="view" id="v-leer" hidden></main>
 
 <footer class="view credits" id="credits" hidden>Dibujos: Fluent Emoji (Microsoft, licencia MIT), Noto Emoji (Google, Apache 2.0) y flag-icons (MIT); molino, zueco, electrodomésticos, dique y casa de canal dibujados para esta app. Temario basado en los niveles del MCER (A1–B2) y en los temas habituales de NT2 e inburgering. La pronunciación usa la voz neerlandesa de tu dispositivo.</footer>
 
@@ -1145,11 +1205,11 @@ let contentP=null;
 const getContent=()=>contentP||(contentP=fetch('content.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(c=>(APP.content=c)).catch(e=>{contentP=null;throw e}));
 const getTheme=id=>APP.themes[id]?Promise.resolve(APP.themes[id]):fetch('v/'+id+'.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(t=>(APP.themes[id]=t));
 
-const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab'),conj:$('v-conj'),idi:$('v-idi'),oir:$('v-oir')};
+const VIEWS={dict:$('v-dict'),gram:$('v-gram'),vocab:$('v-vocab'),conj:$('v-conj'),idi:$('v-idi'),oir:$('v-oir'),leer:$('v-leer')};
 function show(v){
   for(const k in VIEWS)VIEWS[k].hidden=k!==v;
   $('credits').hidden=v==='dict';
-  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab',conjugador:'conj',expresiones:'idi',escuchar:'oir'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false');if(m===v&&t.parentNode.scrollWidth>t.parentNode.clientWidth)t.parentNode.scrollLeft=t.offsetLeft-t.parentNode.offsetLeft-20});
+  document.querySelectorAll('.tab').forEach(t=>{const m={diccionario:'dict',gramatica:'gram',vocabulario:'vocab',conjugador:'conj',expresiones:'idi',escuchar:'oir',leer:'leer'}[t.dataset.go];t.setAttribute('aria-current',m===v?'page':'false');if(m===v&&t.parentNode.scrollWidth>t.parentNode.clientWidth)t.parentNode.scrollLeft=t.offsetLeft-t.parentNode.offsetLeft-20});
 }
 function go(h){if(location.hash==='#'+h)route();else location.hash=h}
 function openDict(w){go('diccionario');$q.value=w;search(w)}
@@ -1161,17 +1221,23 @@ async function route(){
   window.scrollTo(0,0);
   if(!h||h==='diccionario'){show('dict');return}
   if(h==='conjugador'){show('conj');renderConj();return}
+  if(h==='leer'||/^r-/.test(h)){show('leer');const el=VIEWS.leer;try{stopAll()}catch(_){}if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
+    await loadP.catch(()=>{});try{if(h==='leer')renderReadHome();else renderRead(h.slice(2))}catch(e){console.error(e);failed(el)}return}
   if(h==='escuchar'||/^(pod-|pronuncia|dictado|oido)/.test(h)){show('oir');const el=VIEWS.oir;stopAll();if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
     try{if(h==='escuchar')renderListenHome();else if(h.startsWith('pod-'))renderPod(h.slice(4));else if(h.startsWith('pronuncia'))renderPron();else if(h.startsWith('dictado'))renderDict();else renderOido()}catch(e){console.error(e);failed(el)}return}
   try{stopAll()}catch(_){}
   if(h==='expresiones'||/^xt?-/.test(h)){show('idi');const el=VIEWS.idi;if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
     try{if(h==='expresiones')renderIdiomHome();else if(h.startsWith('xt-'))renderIdiomTest(h.slice(3));else renderIdiomCat(h.slice(2))}catch(e){console.error(e);failed(el)}return}
-  const isP=h==='practica'||h.startsWith('p-'),isG=isP||h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-');
+  const isP=h==='practica'||h.startsWith('p-')||h==='ordena'||h==='escribe'||h==='nivel',isG=isP||h==='gramatica'||h.startsWith('g-'),isV=h==='vocabulario'||h.startsWith('v-')||h.startsWith('f-')||h==='parejas';
   if(!isG&&!isV){show('dict');return}
   const el=isG?VIEWS.gram:VIEWS.vocab;show(isG?'gram':'vocab');
   if(!APP.content){loading(el);try{await getContent()}catch(_){failed(el);return}}
   try{
   if(h==='practica')renderPracticeHub();
+  else if(h==='ordena'){await loadP.catch(()=>{});renderOrder()}
+  else if(h==='escribe'){await loadP.catch(()=>{});pools();renderTypeConj()}
+  else if(h==='nivel'){await loadP.catch(()=>{});pools();renderLevelTest()}
+  else if(h==='parejas')renderPairs();
   else if(h.startsWith('p-'))await renderPractice(h.slice(2));
   else if(h==='gramatica')renderGramList();
   else if(h.startsWith('g-'))renderLesson(h.slice(2));
@@ -1866,9 +1932,11 @@ function renderPracticeHub(){
   el.innerHTML=`<nav class="crumbs"><a href="#gramatica">${L('Gramática','Grammatica')}</a><span>›</span><span>${L('Práctica infinita','Eindeloos oefenen')}</span></nav>
   <h2 class="h-sec">${L('Práctica infinita','Eindeloos oefenen')}</h2>
   <p class="lead">${L('Cada ejercicio genera preguntas nuevas sin fin a partir de miles de palabras y verbos. Responde con el ratón o con las teclas 1–4; Intro pasa a la siguiente.','Elke oefening maakt eindeloos nieuwe vragen uit duizenden woorden en werkwoorden. Antwoord met de muis of de toetsen 1–4; Enter gaat door.')}</p>
-  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="p-mix"><div class="pic pnum">🎲</div><b>${L('Todo mezclado','Alles door elkaar')}</b><small>${L('Preguntas aleatorias de todos los ejercicios','Willekeurige vragen uit alle oefeningen')}</small><div class="meta"><span class="lv">A1–B2</span></div></button>${ks.map(genCard).join('')}</div>`;
+  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="p-mix"><div class="pic pnum">🎲</div><b>${L('Todo mezclado','Alles door elkaar')}</b><small>${L('Preguntas aleatorias de todos los ejercicios','Willekeurige vragen uit alle oefeningen')}</small><div class="meta"><span class="lv">A1–B2</span></div></button>${extraCards()}${ks.map(genCard).join('')}</div>`;
 }
 async function renderPractice(id){
+  if(id==='errores'){const E=myErr();if(!E.length){renderPracticeHub();return}await Promise.all([loadP.catch(()=>{}),getContent().catch(()=>{})]);
+    runPractice(VIEWS.gram,'errores',L('Repasar mis errores','Mijn fouten herhalen'),`<a href="#practica">${L('Práctica infinita','Eindeloos oefenen')}</a>`,[()=>{const E2=myErr();if(!E2.length)return null;const q=pick(E2);const s=shuffle(q.o.map((_,k)=>k));return{...q,o:s.map(k=>q.o[k]),a:s.indexOf(q.a),orig:q}}]);return}
   const keys=id==='mix'?myGens():(id.split('--').map(k=>k.replace(/-/g,'_')).filter(k=>GENS[k]));
   if(!keys.length){renderPracticeHub();return}
   VIEWS.gram.innerHTML=`<p class="empty">${L('Preparando preguntas…','Vragen voorbereiden…')}</p>`;await Promise.all([loadP.catch(()=>{}),getContent().catch(()=>{})]);pools();
@@ -1892,7 +1960,7 @@ function runPractice(el,id,title,crumb,makers){
     $('pcard').querySelectorAll('.qopt').forEach(b=>b.onclick=()=>answer(+b.dataset.i));
   };
   const answer=i=>{if(answered||!cur)return;answered=true;n++;const good=i===cur.a;
-    if(good){ok++;streak++;if(streak>best){best=streak;APP.prog.p[id]=best;saveProg()}}else streak=0;
+    if(good){ok++;streak++;if(streak>best){best=streak;APP.prog.p[id]=best;saveProg()}if(id==='errores')clearErr(cur.orig||cur)}else{streak=0;if(id!=='errores')recordErr(cur)}
     $('pcard').querySelectorAll('.qopt').forEach(b=>{b.disabled=true;const j=+b.dataset.i;if(j===cur.a)b.classList.add('right');else if(j===i)b.classList.add('wrong')});
     $('pfb').className='fb '+(good?'ok':'ko');$('pfb').innerHTML=(good?L('¡Bien! ','Goed! '):L('No. ','Nee. '))+cur.why;
     $('pn').textContent=n;$('pok').textContent=ok;$('pst').textContent=streak;$('pbest').textContent=best;
@@ -2189,10 +2257,383 @@ function renderOido(){
 GENS.oido_nl={t:'¿Qué has oído? (neerlandés)',lv:'A2',lang:'nl',make(){const P=sentencePool('nl').filter(x=>x.tr),x=pick(P),r=mc(x.tr,P.filter(y=>y!==x).map(y=>y.tr));return{q:`<span class="qsub">Escucha y elige la traducción</span>`,pre:[x.t,'nl'],...r,why:esc(x.t),say:[x.t,'nl']}}};
 GENS.oido_es={t:'¿Qué has oído? (español)',lv:'A2',lang:'es',make(){const P=sentencePool('es').filter(x=>x.tr),x=pick(P),r=mc(x.tr,P.filter(y=>y!==x).map(y=>y.tr));return{q:`<span class="qsub">Luister en kies de vertaling</span>`,pre:[x.t,'es'],...r,why:esc(x.t),say:[x.t,'es']}}};
 T_NL.oido_es='Wat hoorde je?';
+/* ================= Leer / Lezen: textos reales y originales ================= */
+let RDL=null,RDLV='all';const rdLang=()=>RDL||tLang();
+try{$('learn').addEventListener('change',()=>{RDL=null})}catch(_){}
+const NEWS={
+  nl:[['NOS Jeugdjournaal','https://jeugdjournaal.nl','A2–B1',L('Noticias para jóvenes, frases cortas y vídeos.','Nieuws voor jongeren, korte zinnen en video’s.')],
+      ['Wablieft','https://www.wablieft.be','A2–B1',L('Periódico belga en «lenguaje claro».','Belgische krant in duidelijke taal.')],
+      ['NOS Nieuws','https://nos.nl','B2–C1',L('La cadena pública neerlandesa.','De Nederlandse publieke omroep.')]],
+  es:[['Plena inclusión (lectura fácil)','https://www.plenainclusion.org','A2–B1',L('Textos y noticias en lectura fácil.','Teksten en nieuws in eenvoudige taal.')],
+      ['RTVE Noticias','https://www.rtve.es/noticias/','B1–B2',L('La radiotelevisión pública española.','De Spaanse publieke omroep.')],
+      ['El País','https://elpais.com','B2–C1',L('Uno de los principales diarios en español.','Een van de belangrijkste Spaanstalige kranten.')]]
+};
+function renderReadHome(){
+  const el=VIEWS.leer,lang=rdLang(),R=(APP.content.reads||[]).filter(r=>r.lang===lang&&(RDLV==='all'||r.level===RDLV)),done=APP.prog.read||{};
+  const lv=['all','A1','A2','B1','B2','C1'];
+  el.innerHTML=`<h2 class="h-sec">${L('Leer','Lezen')}</h2>
+  <p class="lead">${L('Textos de todos los niveles: notas, anuncios, correos, noticias, leyes reales y fragmentos de literatura clásica. Toca cualquier palabra para ver su traducción.','Teksten op alle niveaus: briefjes, advertenties, e-mails, nieuws, echte wetteksten en fragmenten uit klassieke literatuur. Tik op een woord om de vertaling te zien.')}</p>
+  <div class="lvls" role="group">${['nl','es'].map(l=>`<button class="lvl" type="button" data-rl="${l}" aria-pressed="${lang===l}">${l==='nl'?L('🇳🇱 En neerlandés','🇳🇱 In het Nederlands'):L('🇪🇸 En español','🇪🇸 In het Spaans')}</button>`).join('')}</div>
+  <div class="lvls" role="group">${lv.map(v=>`<button class="lvl" type="button" data-rv="${v}" aria-pressed="${RDLV===v}">${v==='all'?L('Todos','Alle'):v}</button>`).join('')}</div>
+  <div class="lgrid">
+   <button class="lcard mixcard" type="button" data-go="p-carteles-${lang}"><div class="pic pnum">🪧</div><b>${L('Carteles y avisos reales','Echte borden en mededelingen')}</b><small>${L('¿Qué significa este cartel? Test infinito.','Wat betekent dit bord? Eindeloze test.')}</small><div class="meta"><span class="lv">A1–A2</span><span class="lv">∞</span></div></button>
+   ${R.map(r=>`<button class="lcard" type="button" data-go="r-${r.id}"><div class="pic">${r.icon}</div><b>${esc(r.t)}</b><small>${esc(r.tt)}</small><div class="meta"><span class="lv ${r.level}">${r.level}</span><span>${esc(r.kind)}</span>${done[r.id]!=null?`<span class="done">✓ ${done[r.id]}/${r.quiz.length}</span>`:''}</div></button>`).join('')}
+  </div>
+  <h3 class="h-sub">📰 ${L('Prensa real para tu nivel','Echt nieuws op jouw niveau')}</h3>
+  <p class="lead small">${L('No puedo copiar artículos de prensa (tienen derechos de autor), pero estas webs publican noticias reales y fáciles de leer:','Krantenartikelen kan ik niet kopiëren (auteursrecht), maar deze sites publiceren echt nieuws dat makkelijk te lezen is:')}</p>
+  <div class="newslist">${NEWS[lang].map(([n,u,lv,d])=>`<a class="newsitem" href="${u}" target="_blank" rel="noopener"><b>${esc(n)}</b><span class="lv">${lv}</span><small>${esc(d)}</small></a>`).join('')}</div>`;
+  el.querySelectorAll('[data-rl]').forEach(b=>b.onclick=()=>{RDL=b.dataset.rl;renderReadHome()});
+  el.querySelectorAll('[data-rv]').forEach(b=>b.onclick=()=>{RDLV=b.dataset.rv;renderReadHome()});
+}
+/* --- palabras tocables --- */
+const wrapWords=(t,lang)=>esc(t).replace(/([A-Za-zÀ-ÖØ-öø-ÿĳĲ][A-Za-zÀ-ÖØ-öø-ÿĳĲ'’\-]*)/g,m=>`<span class="w" data-w="${m}">${m}</span>`).replace(/ \/ /g,'<br>');
+let ESFORMS=null;
+function esForms(){if(ESFORMS)return ESFORMS;ESFORMS=new Map();
+  try{for(const [v,nl] of ES_VERBS){const c=esConj(v);const add=f=>{if(f)for(const x of String(f).split(/\s*\/\s*/)){const k=norm(x);if(k&&!ESFORMS.has(k))ESFORMS.set(k,[v,nl])}};
+    add(v);add(c.ger);add(c.part);c.tenses.forEach(t=>t.f.forEach(add));Object.values(c.imper||{}).forEach(add)}}catch(e){}
+  return ESFORMS}
+function wordInfo(w,lang,r){
+  const n=norm(w);
+  const gk=a=>norm(a).replace(/\(.*?\)/g,'').replace(/^(el|la|los|las|un|una|de|het|een|zich|se)\s+/,'').trim();
+  const g=(r.gloss||[]).find(([a])=>{const k=gk(a);return k===n||k.split(/\s+/)[0]===n||k.split(/\s+/).includes(n)&&k.split(/\s+/).length<=2});
+  if(g)return{head:g[0],tr:g[1],src:L('glosario del texto','woordenlijst van de tekst')};
+  if(lang==='es'){const f=esForms().get(n);if(f)return{head:f[0],tr:f[1],src:norm(f[0])===n?'':L('forma de','vorm van')+' «'+f[0]+'»'}}
+  const hits=lookup(w).filter(h=>h.e.pos!=='grammar');
+  if(!hits.length)return null;
+  if(lang==='nl'){const h=hits.find(h=>h.via||norm(h.e.nl)===n||norm(stripArt(h.e.nl))===n)||hits[0];
+    const art=h.e.pos==='noun'&&h.e.noun&&h.e.noun.article?h.e.noun.article+' ':'';
+    return{head:art+h.e.nl,tr:(h.e.es||[]).slice(0,3).join('; '),src:h.via?h.via:''}}
+  const h=hits[0];return{head:w,tr:hits.slice(0,3).map(x=>(x.e.pos==='noun'&&x.e.noun&&x.e.noun.article?x.e.noun.article+' ':'')+x.e.nl).filter((v,i,a)=>a.indexOf(v)===i).join(', '),src:''};
+}
+function closePop(){const p=document.getElementById('wpop');if(p)p.remove()}
+function showPop(span,lang,r){
+  closePop();const w=span.dataset.w,info=wordInfo(w,lang,r);
+  const pop=document.createElement('div');pop.id='wpop';pop.className='wpop';pop.setAttribute('role','dialog');
+  pop.innerHTML=`<div class="wph"><b lang="${lang}">${esc(info?info.head:w)}</b>${sayBtn(info&&lang==='nl'?info.head:w,'sm',lang)}<button type="button" class="wpx" aria-label="${L('Cerrar','Sluiten')}">×</button></div>
+   ${info?`<p>${esc(info.tr||'—')}</p>${info.src?`<small>${esc(info.src)}</small>`:''}`:`<p class="muted">${L('No está en el diccionario.','Staat niet in het woordenboek.')}</p>`}
+   <button type="button" class="btn-ghost sm" data-look="${esc(w)}">🔍 ${L('Buscar en el diccionario','Zoek in het woordenboek')}</button>`;
+  document.body.appendChild(pop);
+  const b=span.getBoundingClientRect(),pw=Math.min(300,window.innerWidth-24);pop.style.width=pw+'px';
+  let x=b.left+window.scrollX+b.width/2-pw/2;x=Math.max(12+window.scrollX,Math.min(x,window.scrollX+window.innerWidth-pw-12));
+  pop.style.left=x+'px';pop.style.top=(b.bottom+window.scrollY+8)+'px';
+  pop.querySelector('.wpx').onclick=closePop;
+  pop.querySelector('[data-look]').onclick=()=>{closePop();$q.value=w;go('diccionario');setTimeout(()=>search(w),50)};
+}
+document.addEventListener('click',e=>{const p=document.getElementById('wpop');if(p&&!p.contains(e.target)&&!e.target.closest('.w'))closePop()});
+window.addEventListener('hashchange',closePop);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});
+
+function renderRead(id){
+  const el=VIEWS.leer,r=(APP.content.reads||[]).find(x=>x.id===id);if(!r){renderReadHome();return}
+  let rate=1,playing=false;
+  el.innerHTML=`<nav class="crumbs"><a href="#leer">${L('Leer','Lezen')}</a><span>›</span><span>${esc(r.t)}</span></nav>
+  <div class="lhead"><div class="pic">${r.icon}</div><div><span class="lv ${r.level}">${r.level}</span> <span class="pill">${esc(r.kind)}</span><h2>${esc(r.t)}</h2><i>${esc(r.tt)}</i></div></div>
+  ${r.note?`<p class="tip">${esc(r.note)}</p>`:''}
+  <div class="podbar"><button class="btn-main" type="button" id="rplay">🔊 ${L('Leer en voz alta','Voorlezen')}</button>
+   <label class="rate">${L('Velocidad','Snelheid')} <select id="rrate"><option value="0.75">0,75×</option><option value="0.9">0,9×</option><option value="1" selected>1×</option></select></label>
+   <label class="tg"><input type="checkbox" id="rtr"> ${L('Ver traducción','Vertaling tonen')}</label></div>
+  <p class="lead small">👆 ${L('Toca cualquier palabra para ver qué significa.','Tik op een woord om te zien wat het betekent.')}</p>
+  <article class="rtext notr ${/Poes/.test(r.kind)?'poem':''}" id="rtext" lang="${r.lang}">${r.paras.map((p,i)=>`<div class="rpara" data-i="${i}"><p>${wrapWords(p[0],r.lang)}</p>${p[1]?`<p class="rtr">${esc(p[1]).replace(/ \/ /g,'<br>')}</p>`:''}</div>`).join('')}</article>
+  ${r.gloss.length?`<details class="rgloss" open><summary>📒 ${L('Vocabulario','Woordenlijst')} (${r.gloss.length})</summary><dl>${r.gloss.map(([a,b])=>`<div><dt lang="${r.lang}">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></details>`:''}
+  <p class="rsrc">📚 ${esc(r.src)}</p>
+  <section class="quiz"><h3>${L('Preguntas','Vragen')}</h3><div id="rq">${r.quiz.map((q,qi)=>`<div class="qq" data-q="${qi}"><div class="qt"><span class="qn">${qi+1}.</span> <span lang="${r.lang}">${esc(q.q)}</span></div><div class="qo">${shuffle(q.o.map((_,k)=>k)).map(k=>`<button type="button" data-k="${k}">${esc(q.o[k])}</button>`).join('')}</div><div class="why" hidden></div></div>`).join('')}</div><p class="fb" id="rres"></p></section>`;
+  const box=$('rtext');
+  box.querySelectorAll('.w').forEach(s=>s.onclick=e=>{e.stopPropagation();showPop(s,r.lang,r)});
+  $('rtr').onchange=e=>box.classList.toggle('notr',!e.target.checked);
+  $('rrate').onchange=e=>{rate=+e.target.value};
+  const hl=i=>box.querySelectorAll('.rpara').forEach(x=>x.classList.toggle('cur',+x.dataset.i===i));
+  const btn=$('rplay'),reset=()=>{playing=false;btn.textContent='🔊 '+L('Leer en voz alta','Voorlezen');hl(-1)};
+  btn.onclick=()=>{if(playing){stopAll();reset();return}playing=true;btn.textContent='⏹ '+L('Parar','Stoppen');
+    playLines(r.paras.map(p=>['A',p[0].replace(/ \/ /g,', ')]),r.lang,rate,hl,reset)};
+  let ans=0,right=0;
+  $('rq').querySelectorAll('.qq').forEach(div=>{const q=r.quiz[+div.dataset.q];div.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.k===q.a;div.querySelectorAll('button').forEach(x=>{x.disabled=true;if(+x.dataset.k===q.a)x.classList.add('right')});if(!ok)b.classList.add('wrong');
+    const w=div.querySelector('.why');w.innerHTML=(ok?`<b style="color:var(--ok)">${L('¡Correcto!','Goed zo!')}</b> `:`<b style="color:var(--bad)">${L('No es esa.','Helaas.')}</b> `)+esc(q.why);w.hidden=false;
+    ans++;if(ok)right++;if(ans===r.quiz.length){const res=$('rres');res.textContent=`${L('Resultado','Resultaat')}: ${right} ${L('de','van')} ${r.quiz.length}`;res.className='fb '+(right/r.quiz.length>=.6?'ok':'ko');
+      APP.prog.read=APP.prog.read||{};APP.prog.read[r.id]=Math.max(right,APP.prog.read[r.id]??0);saveProg()}})});
+}
+/* ================= Más ejercicios: carteles, huecos, preposiciones, pronombres, tildes… ================= */
+const SIGNS_NL=[['NIET ROKEN','prohibido fumar'],['VERBODEN TOEGANG','prohibido el paso'],['DUWEN','empujar'],['TREKKEN','tirar (de la puerta)'],['UITGANG','salida'],['NOODUITGANG','salida de emergencia'],
+ ['INGANG','entrada'],['GESLOTEN','cerrado'],['TE KOOP','se vende'],['TE HUUR','se alquila'],['UITVERKOCHT','agotado'],['UITVERKOOP','rebajas, liquidación'],['VANDAAG GESLOTEN','hoy cerrado'],
+ ['ALLEEN PINNEN','solo pago con tarjeta'],['HONDEN AAN DE LIJN','los perros, atados'],['LET OP: ZAKKENROLLERS','cuidado con los carteristas'],['NIET STOREN','no molestar'],['BEZET','ocupado'],
+ ['HEREN','caballeros'],['DAMES','señoras'],['WACHTRUIMTE','sala de espera'],['SPOEDEISENDE HULP','urgencias'],['UITRIT VRIJLATEN','vado: no aparcar delante'],['FIETSPAD','carril bici'],
+ ['WEGWERKZAAMHEDEN','obras en la carretera'],['OMLEIDING','desvío'],['GLADHEID','peligro: calzada resbaladiza'],['VERBODEN TE ZWEMMEN','prohibido bañarse'],['VERBODEN TE PARKEREN','prohibido aparcar'],
+ ['ALLEEN BESTEMMINGSVERKEER','solo acceso a residentes y destinatarios'],['ROOKVRIJE ZONE','zona sin humo'],['NIET AANRAKEN','no tocar'],['PAS OP DE TREDE','cuidado con el escalón'],
+ ['ZELFSCANKASSA','caja de autoservicio'],['AFHALEN','para recoger / para llevar'],['BEZORGEN','entrega a domicilio'],['GRATIS PARKEREN','aparcamiento gratuito'],['GEEN RECLAME','no se admite publicidad'],
+ ['LIFT BUITEN GEBRUIK','ascensor fuera de servicio'],['RIJDT NIET','no circula (tren cancelado)'],['VOL','completo'],['AANBIEDING','oferta'],['1 + 1 GRATIS','2x1'],['OP = OP','hasta agotar existencias'],
+ ['TWEEDE HALVE PRIJS','segunda unidad a mitad de precio'],['STILTECOUPÉ','vagón de silencio'],['INSTAPPEN','suban (al vehículo)'],['PERRON','andén'],['KASSA GESLOTEN','caja cerrada'],
+ ['GEEN TOEGANG VOOR FIETSEN','prohibido el paso a bicis'],['FIETSEN WORDEN VERWIJDERD','se retirarán las bicis aparcadas aquí'],['PRIVÉ','privado'],['BINNENKORT OPEN','próxima apertura'],
+ ['NIEUWE OPENINGSTIJDEN','nuevo horario'],['WEGENS ZIEKTE GESLOTEN','cerrado por enfermedad'],['DEUR SLUITEN A.U.B.','cierre la puerta, por favor']];
+const SIGNS_ES=[['PROHIBIDO FUMAR','niet roken'],['SE ALQUILA','te huur'],['SE VENDE','te koop'],['CERRADO POR VACACIONES','gesloten wegens vakantie'],['EMPUJAR','duwen'],['TIRAR','trekken'],
+ ['SALIDA','uitgang'],['ENTRADA','ingang'],['SALIDA DE EMERGENCIA','nooduitgang'],['CEDA EL PASO','voorrang verlenen'],['PROHIBIDO EL PASO','verboden toegang'],['RECIÉN PINTADO','pas geverfd'],
+ ['NO FUNCIONA','werkt niet'],['FUERA DE SERVICIO','buiten gebruik'],['ASEOS','toiletten'],['CABALLEROS','heren'],['SEÑORAS','dames'],['REBAJAS','uitverkoop'],['LIQUIDACIÓN POR CIERRE','opheffingsuitverkoop'],
+ ['ABIERTO 24 HORAS','24 uur per dag open'],['VADO PERMANENTE','uitrit: altijd vrijlaten'],['SE BUSCA CAMARERO','ober gezocht'],['OCUPADO','bezet'],['PRECAUCIÓN: SUELO MOJADO','let op: natte vloer'],
+ ['CUIDADO CON EL PERRO','pas op voor de hond'],['NO SE ADMITEN DEVOLUCIONES','ruilen niet mogelijk'],['PAGUE AQUÍ','hier betalen'],['ENTRADA LIBRE','gratis toegang'],['TAQUILLA','kassa (voor kaartjes)'],
+ ['TOQUE EL TIMBRE','bel aan'],['PROHIBIDO APARCAR','verboden te parkeren'],['CARGA Y DESCARGA','laden en lossen'],['CALLE PEATONAL','voetgangersstraat'],['OBRAS','werkzaamheden'],['DESVÍO','omleiding'],
+ ['PELIGRO','gevaar'],['PROHIBIDO BAÑARSE','verboden te zwemmen'],['SOLO RESIDENTES','alleen bewoners'],['AGOTADO','uitverkocht'],['2x1','twee voor de prijs van één'],['HORARIO DE VERANO','zomertijden (openingstijden)'],
+ ['NO TOCAR','niet aanraken'],['SILENCIO','stilte'],['FARMACIA DE GUARDIA','dienstapotheek'],['CONSIGNA','bagagedepot'],['PROHIBIDO ARROJAR BASURA','verboden afval te storten'],['COMPLETO','vol'],
+ ['CERRADO POR DEFUNCIÓN','gesloten wegens overlijden'],['PISO PILOTO','modelwoning'],['PRÓXIMA APERTURA','binnenkort geopend'],['MANTENGA LA PUERTA CERRADA','houd de deur gesloten'],
+ ['NO PISAR EL CÉSPED','niet op het gras lopen'],['SE ACEPTAN TARJETAS','betalen met de kaart mogelijk'],['VENTA DE ENTRADAS','kaartverkoop'],['PROHIBIDO EL USO DEL MÓVIL','geen mobiele telefoons'],
+ ['PARADA DE TAXIS','taxistandplaats'],['URGENCIAS','spoedeisende hulp']];
+function signMaker(list,lang){return()=>{const [s,m]=pick(list),r=mc(m,list.filter(x=>x[1]!==m).map(x=>x[1]));
+  return{q:`<span class="qsub">${L('¿Qué significa este cartel?','Wat betekent dit bord?')}</span><span class="sign" lang="${lang}">${esc(s)}</span>`,...r,why:`<b>${esc(s)}</b> = ${esc(m)}`,say:[s.toLowerCase(),lang]}}}
+
+/* ---------- huecos en frases reales ---------- */
+const CLOZE={nl:{art:['de','het','een'],prep:['in','op','aan','met','voor','van','naar','bij','uit','over','onder','door','tegen','zonder','om','tot','na','achter','naast','tussen'],
+  pron:['ik','je','jij','hij','ze','zij','we','wij','jullie','u','me','mij','hem','haar','ons','hun','hen'],conj:['en','maar','of','want','omdat','dat','als','toen','dus','terwijl','hoewel'],
+  verb:['is','zijn','ben','bent','heeft','hebben','heb','hebt','wordt','worden','kan','kunnen','moet','moeten','wil','willen','zal','zullen','was','waren','had'],adv:['niet','geen','ook','al','nog','wel','er','hier','daar','nu','dan']},
+ es:{art:['el','la','los','las','un','una','unos','unas'],prep:['a','en','de','con','por','para','sin','desde','hasta','sobre','entre','al','del'],pron:['me','te','se','lo','le','nos','les','yo','tú','él','ella'],
+  conj:['y','o','pero','porque','que','si','cuando','aunque','como'],verb:['es','son','está','están','era','estaba','fue','ha','han','hay','tiene','tengo','soy','estoy'],adv:['no','muy','ya','también','más','aquí','allí','bien','mal']}};
+const CLOZE_N=c=>({art:L('artículo','lidwoord'),prep:L('preposición','voorzetsel'),pron:L('pronombre','voornaamwoord'),conj:L('conjunción','voegwoord'),verb:L('verbo','werkwoord'),adv:L('adverbio','bijwoord')})[c];
+const CLZ={};
+function clozeIdx(lang){if(CLZ[lang])return CLZ[lang];const out=[];
+  for(const s of sentencePool(lang)){const toks=s.t.split(/\s+/);if(toks.length<4)continue;
+    toks.forEach((t,i)=>{const w=t.toLowerCase().replace(/[.,;:!?¿¡«»"()]/g,'');const cat=Object.keys(CLOZE[lang]).find(c=>CLOZE[lang][c].includes(w));if(cat)out.push({s,i,cat,w})})}
+  return CLZ[lang]=out}
+function clozeMaker(lang,cats){return()=>{
+  const I=clozeIdx(lang).filter(x=>!cats||cats.includes(x.cat));if(!I.length)return null;
+  const {s,i,cat,w}=pick(I),tok=w;
+  if(!tok)return null;
+  const toks=s.t.split(/\s+/),orig=toks[i],m=orig.match(/^([¿¡«"(]*)(.*?)([.,;:!?»")]*)$/),pre=m[1],core=m[2],post=m[3];
+  const cap=core[0]!==core[0].toLowerCase();const fix=x=>cap?x[0].toUpperCase()+x.slice(1):x;
+  const r=mc(fix(tok),CLOZE[lang][cat].filter(x=>x!==tok).map(fix));
+  const shown=toks.map((x,j)=>j===i?pre+'___'+post:esc(x)).join(' ');
+  return{q:`<span class="qsub">${L('Falta un/a','Er ontbreekt een')} ${CLOZE_N(cat)}</span><span class="qbig" lang="${lang}">${shown}</span><span class="qsub">${esc(s.tr||'')}</span>`,...r,why:`<span lang="${lang}">${esc(s.t)}</span>`,say:[s.t,lang]}}}
+
+/* ---------- español: pretérito o imperfecto ---------- */
+const PRET_M=['Ayer','El sábado pasado','Anoche','En 2015','La semana pasada','Un día','Hace dos años','El verano pasado'];
+const IMP_M=['De pequeño','Cuando era joven','Antes','Todos los veranos','Normalmente','Siempre','Cada domingo','En aquella época'];
+const ACTS=[['ir','al cine'],['comer','paella'],['jugar','al fútbol'],['ver','la tele'],['visitar','a los abuelos'],['leer','el periódico'],['trabajar','en un bar'],['vivir','en Sevilla'],['estudiar','inglés'],
+ ['cenar','con amigos'],['escribir','cartas'],['tomar','café'],['salir','con amigos'],['hacer','deporte'],['ir','a la playa'],['nadar','en el río'],['viajar','en tren'],['bailar','salsa'],['dormir','la siesta']];
+const OBJ_TH=new Set(['eten','drinken','fruit','groente','kleding','huis','keuken','school','winkelen','supermarkt','gereedschap','techniek','computer','snacks','badkamer','slaapkamer','huishouden','boeken','hoeveelheden']);
+const SUBJ=[['yo',0],['tú',1],['mi hermano',2],['nosotros',3],['mis padres',5],['Ana',2]];
+const GEN_EXTRA_ES={
+ es_pretimp:{t:'Pretérito indefinido o imperfecto',lv:'B1',make(){const pret=Math.random()<.5,mk=pick(pret?PRET_M:IMP_M),[v,c]=pick(ACTS),[sj,k]=pick(SUBJ),cj=esConj(v);
+   const f=cj.tenses[pret?1:2].f[k],other=cj.tenses[pret?2:1].f[k],r=mc(f,[other,cj.tenses[0].f[k],cj.tenses[pret?1:2].f[(k+2)%6]]);
+   return{q:`<span class="qbig">${mk}, ${sj} ___ <i>(${v})</i> ${c}.</span>`,...r,why:pret?`«${mk}»: ${L('acción terminada en un momento concreto → indefinido','afgeronde handeling op een bepaald moment → indefinido')} (<b>${f}</b>).`:`«${mk}»: ${L('costumbre o descripción en el pasado → imperfecto','gewoonte of beschrijving in het verleden → imperfecto')} (<b>${f}</b>).`,say:[`${mk}, ${sj} ${f} ${c}.`,'es']}}},
+ es_pronobj:{t:'Pronombres: lo, la, los, las',lv:'A2',make(){const VB=[['comprar','compras','compro'],['ver','ves','veo'],['tener','tienes','tengo'],['buscar','buscas','busco'],['necesitar','necesitas','necesito'],['llevar','llevas','llevo'],['querer','quieres','quiero'],['usar','usas','uso']];
+   const OBJ=lexNouns().filter(w=>OBJ_TH.has(w[5]));const w=pick(OBJ.length?OBJ:lexNouns()),n=es1Raw(w[3]),pl=Math.random()<.35,ea=pl?(w[4]==='la'?'las':'los'):w[4],noun=pl?esPlural(n):n,[,tu,yo]=pick(VB);
+   const p={el:'lo',la:'la',los:'los',las:'las'}[ea];if(!p)return null;const r=mc(p,['lo','la','los','las','le'].filter(x=>x!==p));
+   return{q:`<span class="qbig">¿${tu[0].toUpperCase()+tu.slice(1)} ${ea} ${esc(noun)}? — Sí, ___ ${yo}.</span><span class="qsub">${esc(w[0])}</span>`,...r,why:`${ea} ${esc(noun)} → <b>${p}</b> (${L('objeto directo','lijdend voorwerp')})`,say:[`Sí, ${p} ${yo}.`,'es']}}},
+ es_tilde:{t:'¿Lleva tilde?',lv:'A2',make(){
+   if(Math.random()<.45){const [s,c,o,why]=pick(TILDE_CTX);const r=mc(c,o);return{q:`<span class="qbig">${esc(s)}</span>`,...r,why:esc(why),say:[s.replace('___',c),'es']}}
+   const w=pick(TILDE_W),plain=w.normalize('NFD').replace(/[́]/g,'').normalize('NFC'),vs=[...plain].map((ch,i)=>/[aeiou]/.test(ch)?i:-1).filter(i=>i>=0);
+   const alt=vs.map(i=>plain.slice(0,i)+({a:'á',e:'é',i:'í',o:'ó',u:'ú'})[plain[i]]+plain.slice(i+1)).filter(x=>x!==w);
+   const r=mc(w,[plain===w?null:plain,...alt].filter(Boolean));return{q:`<span class="qsub">${L('Escucha: ¿cómo se escribe?','Luister: hoe schrijf je het?')}</span>`,pre:[w,'es'],...r,why:`<b>${esc(w)}</b>`,say:[w,'es']}}},
+ es_prep:{t:'Preposiciones: a, en, de, por, para…',lv:'A2',make(){const [s,c,o,why]=pick(PREP_ES);const r=mc(c,o);return{q:`<span class="qbig">${esc(s)}</span>`,...r,why:esc(why),say:[s.replace('___',c),'es']}}},
+ es_hueco:{t:'Completa la frase (frases reales)',lv:'A2',make(){return clozeMaker('es')()}},
+ carteles_es:{t:'Carteles y avisos en español',lv:'A1',make(){return signMaker(SIGNS_ES,'es')()}},
+};
+const TILDE_W=['camión','canción','árbol','lápiz','fácil','difícil','médico','música','teléfono','rápido','página','sábado','miércoles','también','después','aquí','allí','está','café','sofá','inglés','francés','alemán',
+ 'jóvenes','exámenes','último','número','pájaro','química','matemáticas','autobús','corazón','habitación','estación','avión','jamás','además','quizás','difícilmente','cómodo','plátano','azúcar','cárcel','móvil','útil','débil'];
+const TILDE_CTX=[['___ hermano es alto.','Mi',['Mí'],'«mi» (posesivo) sin tilde; «mí» (pronombre) con tilde.'],['El regalo es para ___.','mí',['mi'],'Pronombre tras preposición: mí.'],['¿___ tienes hambre?','Tú',['Tu'],'«tú» (pronombre) con tilde.'],
+ ['___ coche es rojo.','Tu',['Tú'],'«tu» (posesivo) sin tilde.'],['___ es mi amigo.','Él',['El'],'«él» (pronombre) con tilde.'],['___ perro ladra.','El',['Él'],'«el» (artículo) sin tilde.'],['¿Vienes? — ___, claro.','Sí',['Si'],'«sí» (afirmación) con tilde.'],
+ ['___ llueve, no salgo.','Si',['Sí'],'«si» (condicional) sin tilde.'],['Quiero ___ café.','más',['mas'],'«más» (cantidad) con tilde.'],['¿___ hora es?','Qué',['Que'],'Interrogativo: qué.'],['Creo ___ viene.','que',['qué'],'Conjunción: que.'],
+ ['¿___ vives?','Dónde',['Donde'],'Interrogativo: dónde.'],['No sé ___ está.','dónde',['donde'],'Interrogativo indirecto: dónde.'],['Yo no ___ la respuesta.','sé',['se'],'«sé» (verbo saber) con tilde.'],['Ella ___ levanta pronto.','se',['sé'],'«se» (pronombre) sin tilde.'],
+ ['¿___ te llamas?','Cómo',['Como'],'Interrogativo: cómo.'],['Habla ___ un profesor.','como',['cómo'],'Comparación: como.']];
+const PREP_ES=[['Voy ___ Madrid mañana.','a',['en','de','por'],'Dirección: ir a.'],['Vivo ___ Sevilla.','en',['a','de','por'],'Lugar: vivir en.'],['Soy ___ Holanda.','de',['en','a','por'],'Origen: ser de.'],
+ ['Este regalo es ___ ti.','para',['por','a','de'],'Destinatario: para.'],['Gracias ___ todo.','por',['para','de','a'],'Gracias por.'],['Un café ___ leche, por favor.','con',['de','en','a'],'Café con leche.'],
+ ['Pienso mucho ___ ti.','en',['a','de','por'],'Pensar en.'],['Llamo ___ mi madre cada día.','a',['de','en','por'],'Persona como objeto: a.'],['Viajo ___ tren.','en',['por','de','a'],'Medio de transporte: en.'],
+ ['Paseamos ___ el parque.','por',['para','en','a'],'Movimiento a través: por.'],['Salgo ___ casa a las ocho.','de',['a','en','por'],'Salir de.'],['Estudio ___ aprobar el examen.','para',['por','a','de'],'Finalidad: para.'],
+ ['Te espero ___ la estación.','en',['a','de','por'],'Lugar: en.'],['Trabajo ___ las nueve ___ las cinco.','de… a',['desde… en','a… de','por… a'],'De… a.'],['El tren sale ___ Ámsterdam.','para',['por','en','de'],'Destino: para / hacia.'],
+ ['Lo hago ___ ti, porque te quiero.','por',['para','a','de'],'Causa / motivo: por.'],['Estoy ___ casa.','en',['a','de','por'],'Estar en casa.'],['Vamos ___ casa.','a',['en','de','por'],'Ir a casa.'],
+ ['Es la casa ___ mi abuela.','de',['a','para','en'],'Posesión: de.'],['Me interesa ___ arte.','el',['al','del','a'],'Interesar: sin preposición; «el arte» es el sujeto.'],['Sueño ___ vivir en el campo.','con',['de','en','por'],'Soñar con.'],
+ ['Depende ___ ti.','de',['a','en','por'],'Depender de.'],['Me acuerdo ___ aquel verano.','de',['en','a','por'],'Acordarse de.'],['Llegamos ___ Barcelona por la noche.','a',['en','de','por'],'Llegar a.'],
+ ['Hablamos ___ política.','de',['en','sobre de','a'],'Hablar de.'],['Te lo mando ___ correo.','por',['en','con','de'],'Medio: por correo.'],['Tengo que terminarlo ___ el lunes.','para',['por','hasta en','a'],'Plazo: para.'],
+ ['Pagué diez euros ___ el libro.','por',['para','de','a'],'Precio / intercambio: por.'],['Empiezo ___ trabajar a las ocho.','a',['de','en','por'],'Empezar a + infinitivo.'],['Acabo ___ llegar.','de',['a','en','por'],'Acabar de + infinitivo = net…'],
+ ['Me casé ___ ella en 2010.','con',['a','de','en'],'Casarse con.'],['Confío ___ ti.','en',['a','de','por'],'Confiar en.']];
+
+/* ---------- neerlandés ---------- */
+const OMTE=[['Ik ga naar de winkel om brood te kopen.',['Ik ga naar de winkel om brood kopen.','Ik ga naar de winkel brood te kopen om.'],'om … te + infinitivo = para (finalidad).'],
+ ['Het is leuk om Nederlands te leren.',['Het is leuk om Nederlands leren.','Het is leuk Nederlands om te leren.'],'Het is + adjetivo + om … te + infinitivo.'],
+ ['Ik probeer vroeg op te staan.',['Ik probeer vroeg opstaan.','Ik probeer vroeg te opstaan.'],'Con separables, «te» va entre el prefijo y el verbo: op te staan.'],
+ ['Hij vergat de deur dicht te doen.',['Hij vergat de deur dicht doen.','Hij vergat te de deur dicht doen.'],'Vergeten + te + infinitivo.'],
+ ['We hebben geen tijd om te koken.',['We hebben geen tijd om koken.','We hebben geen tijd te om koken.'],'Geen tijd om te + infinitivo.'],
+ ['Ik ga morgen werken.',['Ik ga morgen te werken.','Ik ga morgen om te werken.'],'Gaan + infinitivo SIN te.'],
+ ['Je hoeft niet te komen.',['Je hoeft niet komen.','Je hoeft niet om te komen.'],'Hoeven + te (siempre con negación).'],
+ ['Ze zit te lezen.',['Ze zit lezen.','Ze zit om te lezen.'],'Zitten/staan/liggen + te = estar haciendo algo.'],
+ ['Ik kan goed zwemmen.',['Ik kan goed te zwemmen.','Ik kan goed om te zwemmen.'],'Modales (kunnen, moeten, willen, mogen) SIN te.'],
+ ['Het begint te regenen.',['Het begint regenen.','Het begint om regenen.'],'Beginnen + te + infinitivo.'],
+ ['Hij belde om te zeggen dat hij later kwam.',['Hij belde om zeggen dat hij later kwam.','Hij belde te zeggen om dat hij later kwam.'],'Om … te = para.'],
+ ['Ik heb besloten om te verhuizen.',['Ik heb besloten verhuizen.','Ik heb besloten om verhuizen.'],'Besluiten (om) te + infinitivo.'],
+ ['Zij staat op de bus te wachten.',['Zij staat op de bus wachten.','Zij staat op de bus om te wachten.'],'Staan + te = estar (de pie) haciendo algo.'],
+ ['Laat me even nadenken.',['Laat me even na te denken.','Laat me om na te denken.'],'Laten + infinitivo SIN te.']];
+const ZICH=[['vergissen','equivocarse'],['haasten','darse prisa'],['herinneren','recordar'],['vervelen','aburrirse'],['schamen','avergonzarse'],['wassen','lavarse'],['concentreren','concentrarse'],['voelen','sentirse'],['ergeren','irritarse'],['verbazen','sorprenderse']];
+const ZPRON=[['Ik','me',0],['Jij','je',1],['Hij','zich',2],['Wij','ons',3],['Jullie','je',4],['Zij (ellos)','zich',5],['U','zich',2]];
+const ER=[['Hoeveel kinderen heb je? Ik heb ___ drie.','er',['het','daar','ze'],'Er de cantidad con número.'],['___ staat een man voor de deur.','Er',['Het','Daar','Hij'],'Er presentativo: hay.'],
+ ['Ben je in Gent geweest? Ja, ik ben ___ vorig jaar geweest.','er',['het','hem','dat'],'Er = allí (átono).'],['Wat vind je ___ van?','ervan',['het','van het','daar'],'Van + het → ervan.'],
+ ['Ik heb ___ geen zin in.','er',['het','daar van','ze'],'Zin hebben in → er… in.'],['Denk je nog aan de afspraak? Ja, ik denk ___ aan.','er',['het','hem','haar'],'Denken aan iets → eraan.'],
+ ['___ wordt hier veel gefietst.','Er',['Het','Men','Daar is'],'Pasiva impersonal: er wordt…'],['Ik heb een nieuwe fiets. Ik ben ___ heel blij mee.','er',['het','hem','ze'],'Met → mee: er… mee.'],
+ ['Hoeveel broodjes wil je? Geef me ___ maar twee.','er',['ze','het','die'],'Er con números.'],['Is ___ nog koffie?','er',['het','daar','die'],'Is er…? = ¿Hay…?']];
+const MODAL_V=['werken','koken','fietsen','zwemmen','lezen','slapen','betalen','wachten','helpen','komen','gaan','spelen','dansen','zingen','studeren','eten','drinken','bellen','reizen','rijden','schrijven','wandelen','sporten','leren','winkelen','sparen','vertrekken','blijven'];
+const MODAL=[['kunnen','poder'],['moeten','tener que'],['willen','querer'],['mogen','poder (permiso)']];
+const GEN_EXTRA_NL={
+ nl_omte:{t:'Om te, te o nada',lv:'B1',make(){const [c,w,why]=pick(OMTE);const r=mc(c,w);return{q:`<span class="qsub">${L('Elige la frase correcta','Kies de juiste zin')}</span>`,...r,why:esc(why),say:[c,'nl']}}},
+ nl_zich:{t:'Verbos reflexivos (zich)',lv:'A2',make(){const [v,es]=pick(ZICH),[p,pr,k]=pick(ZPRON),cj=conjugate(v),f=cj.present[k];
+   const r=mc(pr,['me','je','zich','ons'].filter(x=>x!==pr));return{q:`<span class="qbig">${p} ${f} ___.</span><span class="qsub">zich ${v} = ${es}</span>`,...r,why:`${p} ${f} <b>${pr}</b>`,say:[`${p} ${f} ${pr}`,'nl']}}},
+ nl_er:{t:'El uso de «er»',lv:'B1',make(){const [s,c,o,why]=pick(ER);const r=mc(c,o);return{q:`<span class="qbig">${esc(s)}</span>`,...r,why:esc(why),say:[s.replace('___',c),'nl']}}},
+ nl_modal:{t:'Verbos modales',lv:'A1',make(){const [m,es]=pick(MODAL),k=rint(0,5),P=['Ik','Jij','Hij','Wij','Jullie','Zij'],MV=pools().simple.filter(x=>MODAL_V.includes(x.e.nl)),v=pick(MV.length?MV:pools().simple),f=conjugate(m).present[k];
+   const adv=pick(['morgen','vandaag','niet','vanavond','nu']);const alt=[...new Set([0,1,2,3,4,5].map(i=>conjugate(m).present[i]))].filter(x=>x!==f);
+   const r=mc(f,alt.concat(MODAL.filter(x=>x[0]!==m).map(x=>conjugate(x[0]).present[k])));
+   return{q:`<span class="qbig">${P[k]} ___ ${adv} ${esc(v.e.nl)}.</span><span class="qsub">${m} (${es}) · ${esc(v.e.nl)} = ${esc((v.e.es||[])[0]||'')}</span>`,...r,why:`${P[k]} <b>${f}</b> ${adv} ${esc(v.e.nl)}. ${L('El infinitivo va al final.','De infinitief staat achteraan.')}`,say:[`${P[k]} ${f} ${adv} ${v.e.nl}`,'nl']}}},
+ nl_hueco:{t:'Completa la frase (frases reales)',lv:'A2',make(){return clozeMaker('nl')()}},
+ carteles_nl:{t:'Carteles y avisos en neerlandés',lv:'A1',make(){return signMaker(SIGNS_NL,'nl')()}},
+};
+for(const [k,g] of Object.entries(GEN_EXTRA_NL))GENS[k]={...g,lang:'nl'};
+for(const [k,g] of Object.entries(GEN_EXTRA_ES))GENS[k]={...g,lang:'es'};
+Object.assign(T_NL,{es_pretimp:'Indefinido of imperfecto',es_pronobj:'Voornaamwoorden: lo, la, los, las',es_tilde:'Accent of niet?',es_prep:'Voorzetsels: a, en, de, por, para…',es_hueco:'Vul de zin aan (echte zinnen)',carteles_es:'Spaanse borden en mededelingen'});
+Object.assign(LESSON_GENS,{'es-pret-imperf':['es_pretimp'],'es-pretimp':['es_pretimp'],'es-tilde':['es_tilde'],'es-pronombres-dobles':['es_pronobj'],'es-preposiciones':['es_prep'],
+ 'om-te':['nl_omte'],'te-om-te':['nl_omte'],zich:['nl_zich'],reflexivos:['nl_zich'],er:['nl_er','voorzetsel'],modales:['nl_modal'],'modale-werkwoorden':['nl_modal']});
+
+const CL_T={pron:['Huecos: pronombres','Gaten: voornaamwoorden'],prep:['Huecos: preposiciones','Gaten: voorzetsels'],art:['Huecos: artículos','Gaten: lidwoorden'],conj:['Huecos: conjunciones','Gaten: voegwoorden'],adv:['Huecos: adverbios y partículas','Gaten: bijwoorden']};
+for(const c of Object.keys(CL_T)){
+  GENS['nl_cloze_'+c]={t:CL_T[c][0],lv:'A2',lang:'nl',make(){return clozeMaker('nl',[c])()}};
+  GENS['es_cloze_'+c]={t:CL_T[c][0],lv:'A2',lang:'es',make(){return clozeMaker('es',[c])()}};
+  T_NL['es_cloze_'+c]=CL_T[c][1];
+}
+Object.assign(LESSON_GENS,{uitspraak:['oido_nl'],pronombres:['nl_cloze_pron'],fechas:['numeros','hora'],imperativo:['presente'],objeto:['nl_cloze_pron'],preposiciones:['nl_cloze_prep','voorzetsel'],
+ 'er-is':['nl_er'],futuro:['nl_modal','presente'],graag:['comparativo'],posicion:['inversion','subordinada'],progresivo:['nl_omte'],'al-nog-pas':['nl_cloze_adv'],confusas:['nl_hueco'],
+ condicional:['pasado','nl_modal'],pronominales:['nl_er','voorzetsel'],indirecto:['subordinada'],laten:['nl_omte'],indefinidos:['nl_hueco'],'iets-lekkers':['adjetivo'],particulas:['nl_cloze_adv'],
+ cortesia:['nl_modal'],'wat-voor':['nl_hueco'],impersonal:['pasiva','nl_er'],hoeven:['nl_omte','nl_modal'],samenstellingen:['dehet'],woordvorming:['dehet','diminutivo'],elkaar:['nl_cloze_pron'],
+ procenten:['numeros'],uitroepen:['nl_hueco'],tijdsuitdrukkingen:['hora','nl_cloze_prep'],idioom:['idi_nl'],
+ 'es-uitspraak':['oido_es'],'es-hay':['es_hueco','es_serestar'],'es-vragen':['es_tilde'],'es-ontkenning':['es_hueco'],'es-ir-a':['es_pres','es_fut'],'es-objecten':['es_pronobj','es_cloze_pron'],
+ 'es-vergelijken':['es_hueco'],'es-muy-mucho':['es_cloze_adv'],'es-relatief':['es_aunque','es_cloze_conj'],'es-a-persona':['es_prep'],'es-modismos':['idi_es']});
+/* ================= Pantallas interactivas: ordenar, parejas, escribir la forma, test de nivel, errores ================= */
+const crumbP=()=>`<nav class="crumbs"><a href="#practica">${L('Práctica infinita','Eindeloos oefenen')}</a><span>›</span>`;
+const strip=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[.,;:!?¿¡«»"()]/g,'').replace(/\s+/g,' ').trim();
+
+/* ---------- mis errores ---------- */
+const errKey=q=>(q.q||'')+'|'+(q.o||[])[q.a];
+function recordErr(q){try{APP.prog.err=APP.prog.err||[];const k=errKey(q);if(APP.prog.err.some(x=>errKey(x)===k))return;
+  APP.prog.err.unshift({q:q.q,o:q.o,a:q.a,why:q.why,say:q.say||null,pre:q.pre||null,l:APP.learn});APP.prog.err=APP.prog.err.slice(0,150);saveProg()}catch(e){}}
+function clearErr(q){try{const k=errKey(q);APP.prog.err=(APP.prog.err||[]).filter(x=>errKey(x)!==k);saveProg()}catch(e){}}
+const myErr=()=>(APP.prog.err||[]).filter(x=>!x.l||x.l===APP.learn);
+
+function extraCards(){
+  const ne=myErr().length;
+  return `<button class="lcard mixcard" type="button" data-go="nivel"><div class="pic pnum">🎯</div><b>${L('Test de nivel','Niveautest')}</b><small>${L('24 preguntas de A1 a B2. Descubre tu nivel.','24 vragen van A1 tot B2. Ontdek je niveau.')}</small><div class="meta"><span class="lv">A1–B2</span></div></button>
+  ${ne?`<button class="lcard mixcard" type="button" data-go="p-errores"><div class="pic pnum">🔁</div><b>${L('Repasar mis errores','Mijn fouten herhalen')}</b><small>${ne} ${L('preguntas que fallaste','vragen die je fout had')}</small><div class="meta"><span class="lv">∞</span></div></button>`:''}
+  <button class="lcard mixcard" type="button" data-go="ordena"><div class="pic pnum">🧩</div><b>${L('Ordena la frase','Zet de zin in de goede volgorde')}</b><small>${L('Toca las palabras en el orden correcto.','Tik de woorden in de goede volgorde.')}</small><div class="meta"><span class="lv">A1–B2</span><span class="lv">∞</span></div></button>
+  <button class="lcard mixcard" type="button" data-go="escribe"><div class="pic pnum">⌨️</div><b>${L('Escribe la forma del verbo','Schrijf de werkwoordsvorm')}</b><small>${L('Sin opciones: escribe tú la conjugación.','Zonder keuzes: typ zelf de vervoeging.')}</small><div class="meta"><span class="lv">A1–B1</span><span class="lv">∞</span></div></button>
+  <button class="lcard mixcard" type="button" data-go="parejas"><div class="pic pnum">🃏</div><b>${L('Parejas de palabras','Woordparen')}</b><small>${L('Une cada palabra con su traducción.','Koppel elk woord aan zijn vertaling.')}</small><div class="meta"><span class="lv">A1–B2</span><span class="lv">∞</span></div></button>`;
+}
+
+/* ---------- ordenar la frase ---------- */
+function renderOrder(kind){
+  kind=kind||'s';const el=VIEWS.gram,lang=tLang(),P=sentencePool(lang).filter(x=>{const n=x.t.split(/\s+/).length;return kind==='s'?n>=3&&n<=6:n>=7&&n<=11});
+  let cur=null,toks=[],built=[],n=0,good=0,checked=false;
+  el.innerHTML=`${crumbP()}<span>${L('Ordena la frase','Zinsvolgorde')}</span></nav>
+  <h2 class="h-sec">🧩 ${L('Ordena la frase','Zet de zin in de goede volgorde')} · ${lang==='es'?L('español','Spaans'):L('neerlandés','Nederlands')}</h2>
+  <div class="lvls" role="group">${[['s',L('Frases cortas','Korte zinnen')],['l',L('Frases largas','Lange zinnen')]].map(([k,v])=>`<button class="lvl" type="button" data-k="${k}" aria-pressed="${k===kind}">${v}</button>`).join('')}</div>
+  <div class="pstats"><span>${L('Frases','Zinnen')} <b id="on">0</b></span><span>${L('A la primera','In één keer goed')} <b id="og">0</b></span></div>
+  <div class="pcard pron"><div class="prtr" id="otr"></div><div class="obuilt" id="ob" lang="${lang}"></div><div class="otoks" id="ot" lang="${lang}"></div>
+   <div class="prres" id="or"></div>
+   <div class="gbtns"><button class="btn-ghost" type="button" id="oh">💡 ${L('Pista','Hint')}</button><button class="btn-main" type="button" id="oc">${L('Comprobar','Controleren')}</button><button class="btn-ghost" type="button" id="onx">${L('Siguiente','Volgende')} →</button></div></div>
+  <p class="lead small">${L('Las frases salen de las lecciones, situaciones, expresiones y pódcasts de la app.','De zinnen komen uit de lessen, situaties, uitdrukkingen en podcasts van de app.')}</p>`;
+  el.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>renderOrder(b.dataset.k));
+  const draw=()=>{$('ob').innerHTML=built.map((t,i)=>`<button type="button" class="otok in" data-b="${i}">${esc(toks[t])}</button>`).join('')||`<span class="ohint">${L('Toca las palabras de abajo…','Tik op de woorden hieronder…')}</span>`;
+    $('ot').innerHTML=toks.map((t,i)=>built.includes(i)?`<span class="otok ghost">${esc(t)}</span>`:`<button type="button" class="otok" data-t="${i}">${esc(t)}</button>`).join('');
+    $('ot').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{if(checked)return;built.push(+b.dataset.t);draw()});
+    $('ob').querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{if(checked)return;built.splice(+b.dataset.b,1);draw()})};
+  const show=()=>{cur=pick(P);if(!cur)return;checked=false;n++;$('on').textContent=n;
+    const words=cur.t.split(/\s+/);let sh;do{sh=shuffle(words.map((_,i)=>i))}while(words.length>2&&sh.every((v,i)=>v===i));
+    toks=sh.map(i=>words[i]);built=[];$('otr').textContent=cur.tr||'';$('or').innerHTML='';draw()};
+  const check=()=>{if(checked){show();return}if(built.length<toks.length){$('or').innerHTML=`<p>${L('Usa todas las palabras.','Gebruik alle woorden.')}</p>`;return}
+    checked=true;const ans=built.map(i=>toks[i]).join(' '),ok=strip(ans)===strip(cur.t);if(ok&&!cur.hinted)good++;$('og').textContent=good;
+    $('or').innerHTML=ok?`<div class="prscore ok">✓</div><p>${L('¡Perfecto!','Perfect!')}</p>`:`<div class="prscore ko">✗</div><p>${L('La frase correcta es:','De juiste zin is:')}</p><p class="prdiff" lang="${lang}">${esc(cur.t)}</p>`;
+    speak(cur.t,null,lang)};
+  $('oc').onclick=check;$('onx').onclick=show;
+  $('oh').onclick=()=>{if(checked)return;cur.hinted=true;const words=cur.t.split(/\s+/);const k=built.length;if(k>=words.length)return;
+    const idx=toks.findIndex((t,i)=>t===words[k]&&!built.includes(i));if(built.every((b,i)=>toks[b]===words[i])&&idx>=0){built.push(idx);draw()}else{built=[];draw()}};
+  show();
+}
+
+/* ---------- escribir la forma del verbo ---------- */
+function renderTypeConj(){
+  const el=VIEWS.gram,lang=tLang();let cur=null,n=0,good=0,checked=false;
+  el.innerHTML=`${crumbP()}<span>${L('Escribe la forma','Schrijf de vorm')}</span></nav>
+  <h2 class="h-sec">⌨️ ${L('Escribe la forma del verbo','Schrijf de werkwoordsvorm')} · ${lang==='es'?L('español','Spaans'):L('neerlandés','Nederlands')}</h2>
+  <div class="pstats"><span>${L('Preguntas','Vragen')} <b id="cn">0</b></span><span>${L('Aciertos','Goed')} <b id="cg">0</b></span></div>
+  <div class="pcard pron"><div class="pq" id="cq"></div>
+   <input id="cin" class="din" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" lang="${lang}" placeholder="${L('Escribe aquí…','Typ hier…')}">
+   ${lang==='es'?`<div class="acc">${['á','é','í','ó','ú','ñ','ü'].map(c=>`<button type="button" class="chip" data-c="${c}">${c}</button>`).join('')}</div>`:`<div class="acc">${['ë','é','ï'].map(c=>`<button type="button" class="chip" data-c="${c}">${c}</button>`).join('')}</div>`}
+   <div class="prres" id="cr"></div>
+   <div class="gbtns"><button class="btn-main" type="button" id="cc">${L('Comprobar','Controleren')}</button><button class="btn-ghost" type="button" id="cnx">${L('Siguiente','Volgende')} →</button></div></div>
+  <p class="lead small">Intro = ${L('comprobar / siguiente','controleren / volgende')}.</p>`;
+  el.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const i=$('cin');const p=i.selectionStart??i.value.length;i.value=i.value.slice(0,p)+b.dataset.c+i.value.slice(i.selectionEnd??p);i.focus();i.selectionStart=i.selectionEnd=p+1});
+  const mk=()=>{
+    if(lang==='es'){const {v,nl,c}=esV(),ti=pick([0,0,1,1,2,3,4,5,7]),k=rint(0,5),f=c.tenses[ti].f[k];
+      return{prompt:`<span class="qsub">${esc(c.tenses[ti].nm)} · ${esc(ESP[k])}</span><span class="qbig">${esc(v)}</span><span class="qsub">${esc(nl)}</span>`,ans:f.split(/\s*\/\s*/),say:f.split(' / ')[0]}}
+    const {e,v}=pick(pools().verbs.slice(0,220)),t=pick(['pres','pres','past','perf']),P=['ik','jij','hij','wij','jullie','zij'],k=rint(0,5);
+    let f,lab;if(t==='pres'){f=v.present[k];lab=L('presente','tegenwoordige tijd')}else if(t==='past'){f=v.past[k<3?0:1];lab=L('pasado','verleden tijd')}
+    else{const aux=(v.aux||'h').startsWith('z')?['ben','bent','is','zijn','zijn','zijn'][k]:['heb','hebt','heeft','hebben','hebben','hebben'][k];f=aux+' '+v.participle;lab=L('perfecto','voltooide tijd')}
+    return{prompt:`<span class="qsub">${lab} · ${P[k]}</span><span class="qbig">${esc(e.nl)}</span><span class="qsub">${esc((e.es||[]).join(', '))}</span>`,ans:String(f).split(/\s*\/\s*/),say:P[k].replace(' (ellos)','')+' '+String(f).split(' / ')[0]}};
+  const show=()=>{cur=mk();checked=false;n++;$('cn').textContent=n;$('cq').innerHTML=cur.prompt;$('cin').value='';$('cr').innerHTML='';$('cin').focus()};
+  const check=()=>{if(checked){show();return}const v=$('cin').value.trim();if(!v){$('cin').focus();return}checked=true;
+    const exact=cur.ans.some(a=>a.toLowerCase().replace(/\s+/g,' ')===v.toLowerCase().replace(/\s+/g,' ')),near=!exact&&cur.ans.some(a=>strip(a)===strip(v));
+    if(exact||near){good++;$('cg').textContent=good}
+    $('cr').innerHTML=exact?`<div class="prscore ok">✓</div>`:near?`<div class="prscore ok">≈</div><p>${L('Casi: fíjate en las tildes →','Bijna: let op de accenten →')} <b>${esc(cur.ans.join(' / '))}</b></p>`:`<div class="prscore ko">✗</div><p>${L('Respuesta correcta:','Juiste antwoord:')} <b>${esc(cur.ans.join(' / '))}</b></p>`;
+    speak(cur.say,null,lang)};
+  $('cc').onclick=check;$('cnx').onclick=show;$('cin').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();check()}};
+  show();
+}
+
+/* ---------- parejas ---------- */
+function renderPairs(lv){
+  lv=lv||'A1';const el=VIEWS.vocab,themes=new Map((APP.content.themes||[]).map(t=>[t.id,t.level]));
+  const pool=(APP.content.lex||[]).filter(w=>themes.get(w[5])===lv&&w[1]!=='x'&&w[3]&&!/[?!.]/.test(w[0]));
+  let round=0,found=0,miss=0,sel=null,t0=Date.now();
+  el.innerHTML=`<nav class="crumbs"><a href="#vocabulario">${L('Vocabulario','Woordenschat')}</a><span>›</span><span>${L('Parejas','Woordparen')}</span></nav>
+  <h2 class="h-sec">🃏 ${L('Parejas de palabras','Woordparen')}</h2>
+  <div class="lvls" role="group">${['A1','A2','B1','B2'].map(v=>`<button class="lvl" type="button" data-lv="${v}" aria-pressed="${v===lv}">${v}</button>`).join('')}</div>
+  <div class="pstats"><span>${L('Rondas','Rondes')} <b id="mr">0</b></span><span>${L('Parejas','Paren')} <b id="mf">0</b></span><span>${L('Fallos','Fouten')} <b id="mm">0</b></span></div>
+  <div class="pairs" id="pp"></div><div class="gbtns"><button class="btn-main" type="button" id="pnext" hidden>${L('Otra ronda','Nog een ronde')} →</button></div>`;
+  el.querySelectorAll('[data-lv]').forEach(b=>b.onclick=()=>renderPairs(b.dataset.lv));
+  const art=w=>w[1]==='de'||w[1]==='het'?w[1]+' ':'';
+  const deal=()=>{round++;$('mr').textContent=round;$('pnext').hidden=true;
+    const seen=new Set(),ws=[];for(const w of shuffle(pool.slice())){const es=es1Raw(w[3]);if(seen.has(es)||seen.has(w[0]))continue;seen.add(es);seen.add(w[0]);ws.push(w);if(ws.length===6)break}
+    const L1=shuffle(ws.map((w,i)=>({i,t:art(w)+w[0],l:'nl'}))),R=shuffle(ws.map((w,i)=>({i,t:(w[4]?w[4]+' ':'')+es1Raw(w[3]),l:'es'})));
+    $('pp').innerHTML=`<div class="pcol">${L1.map(x=>`<button type="button" class="pbtn" data-s="a" data-i="${x.i}" lang="nl">${esc(x.t)}</button>`).join('')}</div><div class="pcol">${R.map(x=>`<button type="button" class="pbtn" data-s="b" data-i="${x.i}" lang="es">${esc(x.t)}</button>`).join('')}</div>`;
+    let left=ws.length;
+    $('pp').querySelectorAll('.pbtn').forEach(b=>b.onclick=()=>{if(b.classList.contains('done'))return;
+      if(!sel||sel.dataset.s===b.dataset.s){if(sel)sel.classList.remove('sel');sel=b;b.classList.add('sel');if(b.dataset.s==='a')speak(b.textContent,null,'nl');return}
+      if(sel.dataset.i===b.dataset.i){[sel,b].forEach(x=>{x.classList.remove('sel');x.classList.add('done')});found++;left--;$('mf').textContent=found;sel=null;if(left===0)$('pnext').hidden=false}
+      else{miss++;$('mm').textContent=miss;const a=sel;[a,b].forEach(x=>x.classList.add('bad'));setTimeout(()=>[a,b].forEach(x=>x.classList.remove('bad','sel')),500);sel=null}})};
+  $('pnext').onclick=deal;deal();
+}
+
+/* ---------- test de nivel ---------- */
+function renderLevelTest(){
+  const el=VIEWS.gram,lang=tLang(),LV=['A1','A2','B1','B2'];
+  const lessons=(lang==='nl'?APP.content.grammar:APP.content.grammar_es)||[];
+  const qs=[];
+  const mix=q=>{const k=shuffle(q.o.map((_,i)=>i));return{...q,o:k.map(i=>q.o[i]),a:k.indexOf(q.a)}};
+  for(const lv of LV){const st=shuffle(lessons.filter(g=>g.level===lv).flatMap(g=>g.quiz.map(q=>mix({...q,lv,html:true}))));
+    const gens=Object.keys(GENS).filter(k=>GENS[k].lang===lang&&GENS[k].lv===lv);const got=[];
+    for(const q of st){if(got.length>=4)break;got.push(q)}
+    for(let t=0;t<30&&got.length<6&&gens.length;t++){try{const q=GENS[pick(gens)].make();if(q&&q.o.length>1)got.push({...q,lv})}catch(e){}}
+    qs.push(...got.slice(0,6))}
+  let i=0;const res={A1:[0,0],A2:[0,0],B1:[0,0],B2:[0,0]};
+  el.innerHTML=`${crumbP()}<span>${L('Test de nivel','Niveautest')}</span></nav><h2 class="h-sec">🎯 ${L('Test de nivel','Niveautest')} · ${lang==='es'?L('español','Spaans'):L('neerlandés','Nederlands')}</h2>
+  <p class="lead small">${L('Las preguntas van de más fácil a más difícil. Si no sabes una, elige «No lo sé».','De vragen worden steeds moeilijker. Weet je het niet, kies dan «Weet ik niet».')}</p>
+  <div class="lprog"><div id="lbar"></div></div><div class="pcard" id="lq"></div>`;
+  const show=()=>{if(i>=qs.length){finish();return}const q=qs[i];$('lbar').style.width=(i/qs.length*100)+'%';
+    $('lq').innerHTML=`<span class="lv ${q.lv}">${q.lv}</span><div class="pq">${q.q}</div>${q.pre?sayBtn(q.pre[0],'',q.pre[1]):''}<div class="qopts${q.o.some(o=>o.length>26)?' one':''}">${q.o.map((o,k)=>`<button class="qopt" type="button" data-i="${k}">${esc(o)}</button>`).join('')}<button class="qopt idk" type="button" data-i="-1">${L('No lo sé','Weet ik niet')}</button></div>`;
+    if(q.pre)speak(q.pre[0],null,q.pre[1]);
+    $('lq').querySelectorAll('.qopt').forEach(b=>b.onclick=()=>{const ok=+b.dataset.i===q.a;res[q.lv][1]++;if(ok)res[q.lv][0]++;else if(+b.dataset.i>=0)recordErr(q);i++;show()})};
+  const finish=()=>{$('lbar').style.width='100%';let lvl='A0';for(const lv of LV){const [ok,n]=res[lv];if(n&&ok/n>=.6)lvl=lv;else break}
+    const msg={A0:L('Estás empezando: ve a las lecciones A1.','Je bent net begonnen: begin met de A1-lessen.'),A1:L('Dominas lo básico. Sigue con las lecciones A2.','Je beheerst de basis. Ga verder met A2.'),A2:L('Buen nivel elemental. Ataca el B1.','Goed basisniveau. Op naar B1.'),B1:L('Nivel intermedio. Ya puedes con el B2.','Gemiddeld niveau. Je kunt B2 aan.'),B2:L('¡Nivel avanzado! Prueba los textos C1 en «Leer».','Gevorderd niveau! Probeer de C1-teksten bij «Lezen».')}[lvl];
+    APP.prog.lvl=APP.prog.lvl||{};APP.prog.lvl[lang]=lvl;saveProg();
+    $('lq').innerHTML=`<div class="prres"><p>${L('Tu nivel estimado:','Je geschatte niveau:')}</p><div class="prscore ok" style="font-size:3rem">${lvl==='A0'?'A1−':lvl}</div><p>${msg}</p>
+     <div class="lvres">${LV.map(lv=>`<span class="lv ${lv}">${lv}: ${res[lv][0]}/${res[lv][1]}</span>`).join('')}</div>
+     <div class="gbtns"><button class="btn-main" type="button" data-go="gramatica">${L('Ir a las lecciones','Naar de lessen')}</button><button class="btn-ghost" type="button" id="lagain">${L('Repetir el test','Test opnieuw doen')}</button></div></div>`;
+    $('lagain').onclick=renderLevelTest};
+  show();
+}
 
 /* ================= APP: vocabulario, juegos y frases ================= */
-const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Básicos'];
-const GROUP_NL={Naturaleza:'Natuur',Comida:'Eten en drinken',Personas:'Mensen',Casa:'In huis',Ciudad:'De stad',Trabajo:'Werk en studie','Tiempo libre':'Vrije tijd',Sociedad:'Maatschappij','Básicos':'Basis'};
+const GROUPS=['Naturaleza','Comida','Personas','Casa','Ciudad','Trabajo','Tiempo libre','Sociedad','Cultura','Básicos'];
+const GROUP_NL={Naturaleza:'Natuur',Comida:'Eten en drinken',Personas:'Mensen',Casa:'In huis',Ciudad:'De stad',Trabajo:'Werk en studie','Tiempo libre':'Vrije tijd',Sociedad:'Maatschappij',Cultura:'Cultuur','Básicos':'Basis'};
 const gName=g=>L(g,GROUP_NL[g]||g);
 const es1=w=>w.es.split(/[;,]/)[0].replace(/\(.*?\)/g,'').trim();
 const esFull=w=>(w.ea?w.ea+' ':'')+es1(w);
@@ -2211,11 +2652,18 @@ let vMode='explorar';
 
 function tcard(t,f){const best=APP.prog.v[t.id];const [a,b]=NLES()?[t.nl,t.es]:[t.es,t.nl];
   return `<button class="tcard" type="button" data-go="${f?t.id:'v-'+t.id}"><div class="pic">${t.icon}</div><b>${esc(a)}</b><span>${esc(b)}</span><div class="meta"><span class="lv ${t.level}">${t.level}</span>${f?t.items.length+L(' frases',' zinnen'):t.n+L(' palabras',' woorden')}${best!=null?` · <span class="done">✓ ${best}%</span>`:''}</div></button>`}
+function wordOfDay(){
+  try{const lex=(APP.content.lex||[]).filter(w=>w[1]!=='x'&&w[3]);if(!lex.length)return '';
+    const d=new Date(),k=d.getFullYear()*372+d.getMonth()*31+d.getDate(),w=lex[(k*2654435761>>>0)%lex.length];
+    const nl=(w[1]==='de'||w[1]==='het'?w[1]+' ':'')+w[0],es=(w[4]?w[4]+' ':'')+es1Raw(w[3]);
+    return `<div class="wotd"><span class="wotd-l">✨ ${L('Palabra del día','Woord van de dag')}</span><div class="wotd-w"><b lang="nl">${esc(nl)}</b>${sayBtn(nl,'sm','nl')}<span>=</span><b lang="es">${esc(es)}</b>${sayBtn(es,'sm','es')}</div><a href="#v-${w[5]}" class="wotd-t">${L('Ver el tema','Bekijk het thema')} →</a></div>`}catch(e){return ''}
+}
 function renderVocabHome(){
   const c=APP.content,el=VIEWS.vocab,nw=c.themes.reduce((s,t)=>s+t.n,0);
   el.innerHTML=`<h2 class="h-sec">${L('Vocabulario','Woordenschat')}</h2>
   <p class="lead">${L(c.themes.length+' temas con '+nw+' palabras dibujadas y '+c.frases.length+' situaciones con frases útiles. Cada tema tiene tarjetas, test, escucha, escritura y el juego de de/het.',c.themes.length+' thema\'s met '+nw+' geïllustreerde woorden en '+c.frases.length+' situaties met handige zinnen. Elk thema heeft kaartjes, een toets, luisteren, schrijven en het el/la-spel.')}</p>
-  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="p-voc-nl-es"><div class="pic pnum">∞</div><b>${L('Repaso infinito: neerlandés → español','Eindeloos: Nederlands → Spaans')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button><button class="lcard mixcard" type="button" data-go="p-voc-es-nl"><div class="pic pnum">∞</div><b>${L('Repaso infinito: español → neerlandés','Eindeloos: Spaans → Nederlands')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button></div>
+  ${wordOfDay()}
+  <div class="lgrid"><button class="lcard mixcard" type="button" data-go="parejas"><div class="pic pnum">🃏</div><b>${L('Parejas de palabras','Woordparen')}</b><small>${L('Une cada palabra con su traducción, por niveles','Koppel elk woord aan de vertaling, per niveau')}</small></button><button class="lcard mixcard" type="button" data-go="p-voc-nl-es"><div class="pic pnum">∞</div><b>${L('Repaso infinito: neerlandés → español','Eindeloos: Nederlands → Spaans')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button><button class="lcard mixcard" type="button" data-go="p-voc-es-nl"><div class="pic pnum">∞</div><b>${L('Repaso infinito: español → neerlandés','Eindeloos: Spaans → Nederlands')}</b><small>${L('Todas las palabras de todos los temas, al azar','Alle woorden uit alle thema\'s, willekeurig')}</small></button></div>
   ${GROUPS.map(g=>{const ts=c.themes.filter(t=>t.group===g);return ts.length?`<p class="grp">${gName(g)}</p><div class="tgrid">${ts.map(t=>tcard(t)).join('')}</div>`:''}).join('')}
   <p class="grp">${L('Frases por situación','Zinnen per situatie')}</p><div class="tgrid">${c.frases.map(f=>tcard(f,true)).join('')}</div>`;
 }
