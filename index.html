@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794392717";</script>
+<script>window.WB_V="?v=1794396153";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -442,6 +442,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .wotd-l{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--de)}
 .wotd-w{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:1.2rem}
 .wotd-t{margin-left:auto;font-weight:700;font-size:.9rem}
+
+/* palabras compuestas */
+.cmp b{font-weight:650}
+.cmp small{color:var(--muted);font-size:.84em;margin-left:.2em;white-space:normal}
+.cmp small span[lang]{font-style:italic}
+.cmprow .tr1{font-weight:700}
 </style>
 
 <div class="topbar">
@@ -476,7 +482,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="chips" id="chips"></div>
     <div id="results"></div>
 
-    <footer>Unas 44.000 palabras neerlandesas: 200 revisadas a mano, y el resto procedente de datos abiertos. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet y MCR) y FreeDict; los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
+    <footer>Unas 43.700 palabras neerlandesas. El vocabulario por temas y la base están revisados a mano; el resto procede de datos abiertos, con varios miles de correcciones manuales. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet, MCR y Wiktionary) y FreeDict; los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las palabras compuestas sin traducción propia (linkerknie, fietsbel…) se traducen de forma aproximada a partir de sus partes y se marcan con ≈. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
   </div>
 </main>
 
@@ -924,11 +930,12 @@ function card(e,via,q){
   if(e.pos==='grammar')return grammarCard();
   const A=e.pos==='noun'?e.noun.article:null;const dh=A==='de/het';
   const art=A?`<span class="art art-${dh?'dh':A}">${A}</span>`:'';
-  const srcPill=e.src==='claude'?'<span class="pill ai">Claude</span>':e.src==='open'?'<span class="pill open">datos abiertos</span>':'';
+  const srcPill=e.src==='claude'||e.byClaude?'<span class="pill ai">Claude</span>':e.src==='open'?'<span class="pill open">datos abiertos</span>':'';
   const sayTxt=A&&A!=='de/het'?A+' '+e.nl:e.nl;
   const head=`<div class="hw-row"><h2 class="hw">${art}${esc(e.nl)}</h2>${sayBtn(sayTxt,'')}<span class="pill">${esc(e.posLabel||POS[e.pos]||'')}${A?' · '+A+'-woord':''}</span>${srcPill}</div>`;
   const viaTxt=via?`<p class="via">«${esc(q)}» es ${esc(via)} de <b>${esc(e.nl)}</b>.</p>`:'';
-  const trTxt=(e.es&&e.es.length)?`<p class="tr">${esc(e.es.join(' · '))}</p>`:`<p class="tr notr">Sin traducción en la base. Usa «Consultar a Claude» abajo.</p>`;
+  const cmp=!(e.es&&e.es.length)&&typeof compoundApp==='function'?compoundApp(e.nl):null;
+  const trTxt=(e.es&&e.es.length)?`<p class="tr">${esc(e.es.join(' · '))}</p>`:cmp?`<p class="tr">${compoundHtml(cmp)}</p><p class="note">${Lx('Traducción aproximada: es una palabra compuesta y se ha traducido a partir de sus partes. Para confirmarla, usa «Consultar a Claude».','Benadering: dit is een samengesteld woord, vertaald op basis van de delen. Controleer het met «Vraag het Claude».')}</p>`:`<p class="tr notr">${Lx('Sin traducción en la base. Usa «Consultar a Claude» abajo.','Geen vertaling in de database. Gebruik «Vraag het Claude» hieronder.')}</p>`;
   if(dh&&!e.note)e.note='Este sustantivo admite de y het (según la región o el significado). La tabla muestra las formas con de.';
   if(e.pos==='verb'&&e.verb&&e.verb.auto&&!e.note)e.note='Conjugación generada por reglas a partir del infinitivo. En verbos poco comunes, compruébala con «Consultar a Claude».';
   let body='';
@@ -1408,6 +1415,147 @@ const WIDGETS={
   }
 };
 function mountWidgets(root){root.querySelectorAll('.widget[data-w]').forEach(w=>{const f=WIDGETS[w.dataset.w];if(f)f(w)})}
+/* ================= Palabras compuestas: linkerknie = linker + knie ≈ rodilla izquierda ================= */
+// Modificadores que en español funcionan como adjetivo o complemento fijo: [masc, fem] o texto fijo.
+const CMOD={linker:['izquierdo','izquierda'],rechter:['derecho','derecha'],voor:['delantero','delantera'],achter:['trasero','trasera'],
+ boven:['superior','superior'],onder:['inferior','inferior'],binnen:['interior','interior'],buiten:['exterior','exterior'],hoofd:['principal','principal'],
+ nieuw:['nuevo','nueva'],groot:['grande','grande'],klein:['pequeño','pequeña'],dubbel:['doble','doble'],wereld:['mundial','mundial'],
+ kinder:['infantil','infantil'],jeugd:['juvenil','juvenil'],nacht:['nocturno','nocturna'],school:['escolar','escolar'],zee:['marino','marina'],
+ staats:['estatal','estatal'],rijks:['estatal','estatal'],volks:['popular','popular'],privé:['privado','privada'],sport:['deportivo','deportiva'],
+ beroeps:['profesional','profesional'],eind:['final','final'],begin:['inicial','inicial'],zij:['lateral','lateral'],midden:['central','central'],
+ tussen:['intermedio','intermedia'],reserve:['de reserva','de reserva'],nood:['de emergencia','de emergencia'],brand:['de incendios','de incendios'],
+ zomer:['de verano','de verano'],winter:['de invierno','de invierno'],lente:['de primavera','de primavera'],herfst:['de otoño','de otoño'],
+ avond:['de noche','de noche'],ochtend:['de mañana','de mañana'],dag:['de día','de día'],week:['semanal','semanal'],maand:['mensual','mensual'],jaar:['anual','anual'],
+ stads:['urbano','urbana'],stad:['de la ciudad','de la ciudad'],huis:['de casa','de casa'],thuis:['en casa','en casa'],land:['del país','del país'],
+ zonne:['solar','solar'],zon:['solar','solar'],wind:['eólico','eólica'],regen:['de lluvia','de lluvia'],water:['de agua','de agua'],
+ oud:['antiguo','antigua'],half:['medio','media'],top:['de primer nivel','de primer nivel'],
+ hand:['de mano','de mano'],voet:['de pie','de pie'],oog:['ocular','ocular'],hart:['cardíaco','cardíaca'],
+ rood:['rojo','roja'],blauw:['azul','azul'],groen:['verde','verde'],geel:['amarillo','amarilla'],zwart:['negro','negra'],wit:['blanco','blanca'],
+ grijs:['gris','gris'],bruin:['marrón','marrón'],donker:['oscuro','oscura'],licht:['claro','clara'],
+ pop:['pop','pop'],homo:['gay','gay'],live:['en directo','en directo'],leer:['de aprendizaje','de aprendizaje'],drugs:['de drogas','de drogas'],
+ tv:['de televisión','de televisión'],video:['de vídeo','de vídeo'],internet:['de internet','de internet'],web:['web','web'],online:['en línea','en línea'],
+ game:['de videojuegos','de videojuegos'],games:['de videojuegos','de videojuegos'],jazz:['de jazz','de jazz'],dance:['de música dance','de música dance'],
+ rock:['de rock','de rock'],porno:['porno','porno'],horeca:['de hostelería','de hostelería'],marketing:['de marketing','de marketing'],
+ security:['de seguridad','de seguridad'],tech:['tecnológico','tecnológica'],reality:['de telerrealidad','de telerrealidad'],media:['mediático','mediática'],
+ nep:['falso','falsa'],interim:['interino','interina'],ere:['honorífico','honorífica'],solo:['en solitario','en solitario'],bio:['ecológico','ecológica'],
+ eco:['ecológico','ecológica'],start:['inicial','inicial'],test:['de prueba','de prueba'],proef:['de prueba','de prueba'],
+ collega:['colega','colega'],gast:['invitado','invitada'],kamer:['parlamentario','parlamentaria'],stem:['de voto','de voto'],chef:['jefe','jefa'],
+ kerst:['de Navidad','de Navidad'],pas:['de pase','de pase'],rij:['de conducción','de conducción'],standaard:['estándar','estándar'],pers:['de prensa','de prensa'],speel:['de juego','de juego'],woon:['residencial','residencial'],slot:['final','final'],
+ bij:['secundario','secundaria']};
+const CMOD_EXACT=new Set(['bij','leer','pop','top','start','test','gast','solo','kamer','stem','chef','pas','rij','speel','woon','slot']);           // solo como palabra entera, sin -s/-en de unión
+// Prefijos: pegados (co-, auto-), separados (ex, no, casi)…
+const CPRE={'oud-':['sp','ex'],'ex-':['sp','ex'],'zelf':['gl','auto'],'anti':['gl','anti'],'vice':['gl','vice'],'mede':['gl','co'],'co':['gl','co'],
+ 'mega':['gl','mega'],'mini':['gl','mini'],'semi':['gl','semi'],'micro':['gl','micro'],'multi':['gl','multi'],'super':['gl','super'],'neo':['gl','neo'],
+ 'post':['gl','post'],'pre':['gl','pre'],'inter':['gl','inter'],'niet':['sp','no'],'bijna':['sp','casi'],'non':['sp','no']};
+const CPRE_GLUE=new Set(['zelf','anti','vice','mede','mega','mini','semi','micro','multi','super','niet']);
+// Siglas al principio de un compuesto con guion: eu-burger = ciudadano de la UE
+const CACR={eu:'de la UE',vn:'de la ONU',navo:'de la OTAN',cda:'del CDA',vvd:'del VVD',pvda:'del PvdA',sp:'del SP',pvv:'del PVV',d66:'de D66',
+ groenlinks:'de GroenLinks',hbo:'de FP superior (HBO)',mbo:'de FP (MBO)',vmbo:'de secundaria profesional (VMBO)',havo:'del HAVO',vwo:'del VWO',wo:'universitario',
+ ict:'de TIC',dna:'de ADN',gps:'GPS',usb:'USB',pr:'de relaciones públicas',cia:'de la CIA',fbi:'del FBI',bbc:'de la BBC',wk:'del Mundial',ek:'de la Eurocopa',
+ ov:'de transporte público',ns:'de NS (trenes)',btw:'del IVA',cao:'del convenio colectivo',aow:'de la pensión (AOW)',ww:'del paro (WW)',mkb:'de pymes',
+ zzp:'de autónomos',ggz:'de salud mental',ggd:'de salud pública',hiv:'del VIH',aids:'del sida',uv:'UV',imf:'del FMI',uefa:'de la UEFA',fifa:'de la FIFA',
+ nasa:'de la NASA',km:'kilométrico',pc:'de PC',cd:'de CD',dvd:'de DVD',sms:'por SMS',vip:'VIP',ceo:'del CEO',dj:'de DJ',ok:'de quirófano',ic:'de la UCI',
+ tbs:'de internamiento psiquiátrico (TBS)',om:'de la Fiscalía',nos:'de la NOS',knvb:'de la federación de fútbol (KNVB)',ajax:'del Ajax',psv:'del PSV',
+ jsf:'JSF',isis:'del ISIS',is:'del Estado Islámico',vs:'de EE. UU.',us:'de EE. UU.',uk:'del Reino Unido',bv:'de la S.L.',nv:'de la S.A.',it:'de TI',
+ app:'de la aplicación',start:'inicial','start-up':'de start-up',league:'de la liga',play:'de reproducción'};
+// Sentidos preferidos al formar compuestos (cuando la acepción del vocabulario es demasiado concreta)
+const CSENSE={band:'banda',stof:'sustancia',kop:'cabeza',start:'salida',opname:'grabación',jacht:'caza',stroom:'corriente',beeld:'imagen',
+ zaak:'asunto',vak:'asignatura',wagen:'vehículo',bak:'recipiente',houder:'titular',loop:'carrera',rol:'papel',laag:'capa',stem:'voz',leider:'líder',
+ druk:'presión',rit:'trayecto',bod:'oferta',lijn:'línea',golf:'ola',spel:'juego',bureau:'oficina',woning:'vivienda',zaal:'sala',leven:'vida',
+ bord:'cartel',scheiding:'separación',middag:'tarde',as:'eje',melding:'aviso',goal:'gol',reactie:'reacción',dienst:'servicio',zorg:'atención',
+ hoofd:'jefe',uitspraak:'declaración',bel:'timbre',kaart:'tarjeta',knop:'botón',lucht:'aire',stalling:'aparcamiento'};
+// títulos que van delante de un nombre: regering-Obama = gobierno de Obama
+const CHEADFIRST={regering:'gobierno de',regime:'régimen de',kabinet:'gabinete',coalitie:'coalición',commissie:'comisión',familie:'familia',club:'club',team:'equipo'};
+const CPERSON=new Set(['man','vrouw','moeder','vader','zoon','dochter','kind','ouder','meisje','jongen','broer','zus','zuster','oorzaak','gevolg','vraag','antwoord','noord','zuid','oost','west','prijs','kwaliteit','leraar','leerling','arts','patiënt']);
+const CNUM={twee:2,drie:3,vier:4,vijf:5,zes:6,zeven:7,acht:8,negen:9,tien:10,twaalf:12,vijftien:15,twintig:20,vijftig:50,honderd:100};
+const CBLOCK_HEAD=new Set(['schap','aar','ling','dom','nis','lijk','baar','ier','iër','ist','sel','erij','arij','ij','heid','loos','tje']);
+const CBLOCK_MOD=new Set(['ver','be','ge','ont','her','er','mis','on','in','wan','te','al','ten','ter','uit','weg','op','af','aan','door','om','toe','mee','na']);
+const CLINK=[['s',1],['en',2],['e',1],['er',2],['n',1],['es',2]];
+
+const cEsGen=w=>{const h=w.split(/\s+/)[0].toLowerCase();
+  if(/^(día|mapa|problema|sistema|programa|tema|idioma|clima|planeta|sofá|sol|agua|aula|arma|hacha|alma|pijama|drama|poema|esquema|dilema|panorama|fantasma|cometa|tranvía)$/.test(h))return'm';
+  if(/^(mano|foto|moto|radio|flor|sal|miel|luz|voz|nariz|paz|vez|red|piel|leche|carne|noche|calle|clase|frase|gente|llave|nube|parte|suerte|torre|fuente|muerte|sangre|tarde|madre|mujer|ley|cárcel|sartén|imagen|razón|fe|sed|pared|nieve|serie|especie|superficie|catedral|señal|col|miel|tos|crisis|tesis|base|fase|frente|corriente|mente|llave|nave|clave|cumbre|costumbre|lumbre|muchedumbre|legumbre|cruz|coz|hoz|raíz|perdiz|lombriz|cicatriz|nuez|vejez|niñez|tez|sien|ración|capital|orden)$/.test(h))return'f';
+  return/(a|ción|sión|dad|tad|tud|umbre|ie|as|is)$/.test(h)?'f':'m'};
+const cEsPl=w=>/s$/.test(w.split(/\s+/)[0])&&!/(is|us|ás|és|ís|ós|ús)$/.test(w.split(/\s+/)[0]);
+const cEsPlural=w=>{const ws=w.split(' ');let h=ws[0];
+  if(/[aeiouéáó]$/.test(h))h+='s';else if(/z$/.test(h))h=h.slice(0,-1)+'ces';else if(/s$/.test(h)&&!/[áéíóú]s$/.test(h)){}else{
+    h=h.replace(/ón$/,'on').replace(/án$/,'an').replace(/én$/,'en').replace(/ín$/,'in').replace(/és$/,'es')+'es'}
+  return[h,...ws.slice(1)].join(' ')};
+function cEsAdj(a,g,pl){if(!a)return a;if(/^(de|del|en|por) /.test(a))return a;let x=a;
+  if(g==='f'){if(/o$/.test(x))x=x.slice(0,-1)+'a';else if(/(or|ón|án|ín)$/.test(x)&&!/(mayor|menor|mejor|peor|superior|inferior|interior|exterior|anterior|posterior)$/.test(x))x=x.replace(/ón$/,'ona').replace(/án$/,'ana').replace(/ín$/,'ina').replace(/or$/,'ora')}
+  if(pl&&!/^(pop|gay|web|porno|mini|súper|VIP|USB|GPS|UV)$/.test(x)&&!/ /.test(x))x=/[aeiou]$/.test(x)?x+'s':x.replace(/z$/,'c')+'es';return x}
+const cFirstEs=s=>String(s||'').replace(/\([^)]*\)/g,'').split(/[;,]/)[0].replace(/^≈\s*/,'').replace(/^(el|la|los|las) /,'').replace(/\s+/g,' ').trim();
+
+/* kn(w) → {pos:'noun'|'adj'|'verb'|'other', es:'…', cur:bool} o null */
+function compoundAnalyze(word,kn,depth){
+  depth=depth||0;const w=String(word||'').toLowerCase().trim();if(w.length<(w.includes('-')?4:5)||depth>2||/\s/.test(w))return null;
+  const kns=(x)=>{const k=kn(x);if(k&&CSENSE[x]&&k.pos==='noun')return{...k,es:CSENSE[x]};return k};
+  const head=(h)=>{if(CBLOCK_HEAD.has(h))return null;const k=kns(h);if(k&&(k.pos==='noun'||k.pos==='adj')&&k.es)return{w:h,es:k.es,pos:k.pos,cur:k.cur};
+    // plural: kinderboeken → boek + en
+    for(const [suf,n] of [['en',2],['s',1],['eren',4]]){if(h.length-n<3||!h.endsWith(suf))continue;let b=h.slice(0,-n);
+      for(const c of [b,b.replace(/(.)\1$/,'$1'),b.replace(/([^aeiou])([aeou])([^aeiou])$/,'$1$2$2$3'),b.replace(/v$/,'f').replace(/z$/,'s')]){
+        if(CBLOCK_HEAD.has(c))continue;const kb=kns(c);if(kb&&kb.pos==='noun'&&kb.es)return{w:h,base:c,es:cEsPlural(cFirstEs(kb.es)),pos:'noun',cur:kb.cur,pl:true}}}
+    const dm=h.match(/^(.{3,}?)(etje|tje|pje|je)$/);
+    if(dm){for(const b of [dm[1],dm[1].replace(/(.)\1$/,'$1')]){const kb=kns(b);if(kb&&kb.pos==='noun'&&kb.es){const hs=cFirstEs(kb.es);return{w:h,base:b,es:hs+' '+cEsAdj('pequeño',cEsGen(hs),cEsPl(hs)),pos:'noun',cur:false,dim:true}}}}
+    if(h.length>=7&&depth<2){const a=compoundAnalyze(h,kn,depth+1);if(a&&a.parts[0][0].replace(/\(.*\)/,'').length>=3)return{w:h,es:a.es,pos:'noun',cur:false,parts:a.parts}}return null};
+  const mod=(m,hy)=>{
+    if(CBLOCK_MOD.has(m))return null;
+    if(CMOD[m])return{w:m,adj:CMOD[m],es:CMOD[m][0],kind:'adj'};
+    let k=kns(m);if(k&&k.es&&k.pos==='noun')return{w:m,es:k.es,kind:'noun',cur:k.cur};
+    const k0=k;
+    for(const [l,n] of CLINK){if(m.length-n<2||!m.endsWith(l))continue;let b=m.slice(0,-n);
+      if(CMOD[b]&&!CMOD_EXACT.has(b))return{w:b,link:l,adj:CMOD[b],es:CMOD[b][0],kind:'adj'};
+      if(CBLOCK_MOD.has(b))continue;
+      k=kns(b);if(k&&k.es&&k.pos==='noun')return{w:b,link:l,es:k.es,kind:'noun',cur:k.cur};
+      if(l==='e'&&b.length>2&&b.slice(-1)===b.slice(-2,-1)){const b2=b.slice(0,-1);k=kns(b2);if(k&&k.es&&k.pos==='noun')return{w:b2,link:'ne',es:k.es,kind:'noun',cur:k.cur}}}
+    if(k0&&k0.es&&k0.pos==='adj'&&m.length>=3)return{w:m,es:k0.es,kind:'adjw',cur:k0.cur};
+    if(k0&&k0.es&&k0.pos==='verb')return{w:m,es:k0.es,kind:'verb'};
+    if(!hy)for(const inf of [...(/[^aeiou][aeiou][^aeiouwjy]$/.test(m)?[m+m.slice(-1)+'en']:[]),...(/([aeou])\1[^aeiou]$/.test(m)?[m.replace(/([aeou])\1([^aeiou])$/,'$1$2')+'en']:[]),m+'en',m+m.slice(-1)+'en',m.replace(/([aeou])\1([^aeiou])$/,'$1$2')+'en',m.replace(/f$/,'v')+'en',m.replace(/s$/,'z')+'en',m.replace(/([aeou])\1f$/,'$1v')+'en',m.replace(/([aeou])\1s$/,'$1z')+'en']){
+      const kv=kns(inf);if(kv&&kv.pos==='verb'&&kv.es)return{w:inf,stem:m,es:kv.es,kind:'verb'}}
+    if((!hy||m.includes('-'))&&m.length>=(hy?4:6)&&depth<2){const a=compoundAnalyze(m,kn,depth+1);if(a)return{w:m,es:a.es,kind:'noun',parts:a.parts}}
+    return null};
+  let best=null;
+  const put=(sc,parts,es)=>{if(!best||sc>best.sc)best={sc,parts,es}};
+  const consider=(pre,hw,sep)=>{
+    if(depth&&!sep&&(pre.length<4||hw.length<4)&&!CMOD[pre]&&!CPRE[pre])return;
+    if(sep&&CHEADFIRST[pre]&&!kn(hw)&&/^[a-zà-ÿ]{3,}$/.test(hw)){put(40,[[pre+'-',CHEADFIRST[pre]],[hw,hw[0].toUpperCase()+hw.slice(1)]],CHEADFIRST[pre]+' '+hw[0].toUpperCase()+hw.slice(1));return}
+    if(sep&&pre==='top'&&CNUM[hw]){put(40,[['top-','top'],[hw,String(CNUM[hw])]],'top '+CNUM[hw]+' (los '+CNUM[hw]+' primeros)');return}
+    const H=head(hw);if(!H)return;
+    const hs=cFirstEs(H.es),g=cEsGen(hs),pl=H.pl||cEsPl(hs),hp=[H.base?H.w:hw,hs];
+    const P=sep?(CPRE[pre+'-']||CPRE[pre]):(CPRE_GLUE.has(pre)?CPRE[pre]:null);
+    if(P){put(12+hw.length*2,[[pre+(sep||''),P[1]+(P[0]==='gl'?'-':'')],hp],P[0]==='gl'?P[1]+hs:P[1]+' '+hs);return}
+    if(sep){if(pre==='e'&&hw!=='nummer'){put(16+hw.length,[['e-','electrónico'],hp],hs+' '+cEsAdj('electrónico',g,pl));return}
+      if(pre.length===1&&/[a-z]/.test(pre)){put(15+hw.length,[[pre+'-',pre.toUpperCase()],hp],hs+' '+pre.toUpperCase());return}
+      if(CACR[pre]){put(14+hw.length,[[pre+'-',CACR[pre]],hp],hs+' '+CACR[pre]);return}}
+    const M=mod(pre,!!sep);if(!M){if(sep&&!depth&&pre.length>1&&!/-(en|de|het|in|op|van|of|te|aan|met|voor|je|hun|een)$/.test(pre))put(4+hw.length,[[pre+'-','«'+pre+'»'],hp],hs+' «'+pre+'»');return}
+    if(hw==='ster'&&M.kind==='verb')return;
+    let es;
+    const ms=M.kind==='adj'?(g==='f'?M.adj[1]:M.adj[0]):cFirstEs(M.es);
+    if(sep&&M.kind==='noun'&&CPERSON.has(pre)&&CPERSON.has(H.base||hw)){put(30,[[pre,ms],hp],ms+'-'+hs);return}
+    if(hw==='generaal'&&M.kind==='noun'){put(30,[[pre,ms],[hw,'general']],ms+' general');return}
+    if(pre==='half'){put(25+hw.length,[[pre,cEsAdj('medio',g,false)],hp],cEsAdj('medio',g,pl)+' '+hs);return}
+    if(M.kind==='adj')es=hs+' '+cEsAdj(g==='f'?M.adj[1]:M.adj[0],g,pl);
+    else if(M.kind==='adjw')es=hs+' '+cEsAdj(cFirstEs(M.es),g,pl);
+    else if(M.kind==='verb')es=hs+' para '+cFirstEs(M.es).split(' ')[0];
+    else es=hs+' de '+(M.link==='en'&&M.kind==='noun'?cEsPlural(cFirstEs(M.es)):cFirstEs(M.es));
+    const sc=hw.length*2+pre.length-(M.link?1:0)-(pre.length<3?6:0)+(H.cur?3:0)+(M.cur?2:0)+(M.kind==='adj'?2:0)-(M.parts?3:0)-(H.parts?9:0)-(M.kind==='verb'?2:0)-(depth&&pre.length<3?99:0)+(sep?6:0);
+    put(sc,[[M.w||pre,M.kind==='adj'?(g==='f'?M.adj[1]:M.adj[0]):cFirstEs(M.es)],hp],es);
+  };
+  if(w.includes('-')){for(let i=w.indexOf('-');i>0;i=w.indexOf('-',i+1))consider(w.slice(0,i),w.slice(i+1),'-')}
+  else for(let i=2;i<=w.length-3;i++)consider(w.slice(0,i),w.slice(i),'');
+  return best?{es:best.es,parts:best.parts}:null;
+}
+// en la app: busca en el diccionario (preferencia por el vocabulario revisado)
+const LEXGL=new Map(),CMPC=new Map();
+function knApp(w){
+  try{if(!LEXGL.size&&APP.content&&APP.content.lex)for(const x of APP.content.lex){const pos={de:'noun',het:'noun',v:'verb',a:'adj'}[x[1]];if(pos&&!LEXGL.has(x[0]+'|'+pos))LEXGL.set(x[0]+'|'+pos,x[3])}}catch(e){}
+  const r=(idx.get(norm(w))||[]).filter(x=>!x.via&&norm(x.e.nl)===norm(w));
+  for(const pos of ['noun','adj','other','verb']){const lg=LEXGL.get(w+'|'+pos);if(lg)return{pos,es:lg,cur:true};
+    const h=r.find(x=>x.e.pos===pos&&(x.e.es||[]).length&&!/^≈/.test(x.e.es[0]));if(h)return{pos,es:h.e.es.join('; '),cur:h.e.src==='base'}}
+  return null;
+}
+const compoundApp=w=>{const k=norm(w)+'|'+idx.size;if(CMPC.has(k))return CMPC.get(k);let r=null;try{r=compoundAnalyze(w,knApp)}catch(e){}CMPC.set(k,r);return r};
+const compoundHtml=(c,lang)=>`<span class="cmp">≈ <b>${esc(c.es)}</b> <small>(${c.parts.map(([a,b])=>`<span lang="nl">${esc(a)}</span> = ${esc(b)}`).join(' + ')})</small></span>`;
 
 /* ================= APP: modo mixto (ES/NL), widgets españoles ================= */
 function applyI18n(){
@@ -1494,11 +1642,12 @@ function trRow(e,via,q,fromNl,k,main){
   const nlSay=(A&&A!=='de/het'?A+' ':'')+e.nl;
   const nlH=(A?`<span class="art art-${A==='de/het'?'dh':A}">${A}</span>`:'')+esc(e.nl);
   const es=(e.es||[]).filter(Boolean);
-  const esH=es.length?esc(es.join(', ')):`<span class="notr">${Lx('sin traducción en la base','geen vertaling in de database')}</span>`;
+  const cmp=!es.length?compoundApp(e.nl):null;
+  const esH=es.length?esc(es.join(', ')):cmp?compoundHtml(cmp):`<span class="notr">${Lx('sin traducción en la base','geen vertaling in de database')}</span>`;
   const viaH=via?`<span class="trvia">«${esc(q)}» ${Lx('es','is')} ${esc(via)}</span>`:'';
   const left=fromNl?nlH:esH,right=fromNl?esH:nlH;
   const conjBtn=e.pos==='verb'?`<button class="btn-ghost trb" type="button" data-conj="${esc(fromNl?e.nl:norm(q))}">${Lx('Conjugar','Vervoegen')}</button>`:'';
-  const esSay=(fromNl?(es[0]||''):q).replace(/\(.*?\)/g,'').trim();
+  const esSay=(fromNl?(es[0]||(cmp?cmp.es:'')):q).replace(/\(.*?\)/g,'').trim();
   const btn=APP.learn==='es'&&esSay?sayBtn(esSay,'','es'):sayBtn(nlSay,'');
   return `<div class="trrow${main?' tr-main':''}" data-k="${k}">${btn}<div class="trtxt"><div class="tr1">${left}</div><div class="tr2"><span class="arrow">→</span> ${right}</div>${viaH}</div>
     <div class="tract">${conjBtn}<button class="btn-ghost trb" type="button" data-more="${k}" aria-expanded="false">${Lx('Ficha','Details')}</button></div><div class="trdet" hidden></div></div>`;
@@ -1508,8 +1657,10 @@ search=async function(q,remember=true){
   if(remember){store.hist=[q,...store.hist.filter(h=>norm(h)!==norm(q))].slice(0,12);save();renderChips()}
   const my=++qsId,qn=norm(q),qb=norm(stripArt(q));
   let hits=lookup(q);
-  if(!hits.length){$res.innerHTML=`<p class="res-head">${Lx('Buscando…','Zoeken…')}</p>`;await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==qsId)return;hits=lookup(q)}
+  if(!hits.length||hits.every(h=>!(h.e.es||[]).length)){if(!hits.length)$res.innerHTML=`<p class="res-head">${Lx('Buscando…','Zoeken…')}</p>`;await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==qsId)return;hits=lookup(q)}
   const cached=store.cache[qb]||store.cache[qn]||[];
+  // entradas sin traducción que ya tradujo Claude en otra consulta
+  for(const h of hits)if(!(h.e.es||[]).length){const c=(store.cache[norm(h.e.nl)]||[]).find(x=>x.pos===h.e.pos&&(x.es||[]).length);if(c){h.e.es=c.es.slice();h.e.byClaude=true}}
   const seen=new Set(hits.map(h=>h.e.nl+'|'+h.e.pos));
   cached.forEach(e=>{if(!seen.has(e.nl+'|'+e.pos))hits.push({e,via:null})});
   const gram=hits.filter(h=>h.e.pos==='grammar'),rows=hits.filter(h=>h.e.pos!=='grammar');
@@ -1528,24 +1679,31 @@ search=async function(q,remember=true){
   if(gram.length)html+=card(gram[0].e,null,q);
   const words=q.split(/\s+/).filter(Boolean);
   if(!rows.length&&words.length>1){
-    const parts=words.map(w=>{const r=lookup(w).filter(h=>h.e.pos!=='grammar');if(!r.length)return `<span class="wbw"><b>${esc(w)}</b><span>?</span></span>`;
-      const e=r[0].e,nlMatch=r[0].via||norm(e.nl)===norm(w);return `<span class="wbw"><b>${esc(w)}</b><span>${esc(nlMatch?(e.es||[])[0]||'':e.nl)}</span></span>`});
+    const parts=words.map(w=>{const r=lookup(w).filter(h=>h.e.pos!=='grammar');if(!r.length){const c=compoundApp(w);return `<span class="wbw"><b>${esc(w)}</b><span>${c?'≈ '+esc(c.es):'?'}</span></span>`}
+      const e=r[0].e,nlMatch=r[0].via||norm(e.nl)===norm(w);const c=nlMatch&&!(e.es||[]).length?compoundApp(e.nl):null;return `<span class="wbw"><b>${esc(w)}</b><span>${esc(nlMatch?(e.es||[])[0]||(c?'≈ '+c.es:''):e.nl)}</span></span>`});
     html+=`<p class="grp">${Lx('Palabra por palabra','Woord voor woord')}</p><div class="wbwrow">${parts.join('')}</div><p class="tip">${Lx('Para frases completas, usa «Consultar a Claude» (solo dentro de Claude) o busca palabra a palabra.','Voor hele zinnen: gebruik «Vraag het Claude» (alleen binnen Claude) of zoek per woord.')}</p>`;
   }
   let dym='';
-  if(!rows.length&&!gram.length){
+  // palabra desconocida que parece compuesta: linkerelleboog ≈ codo izquierdo
+  let cmpQ=!rows.length&&!gram.length&&words.length===1&&q.length>=7&&!/[ñáéíóú¿¡]/i.test(q)?compoundApp(q):null;
+  if(cmpQ&&q.length<11){const sg=suggest(q,1);if(sg.length&&editDist(norm(q),norm(sg[0]),1)<=1)cmpQ=null}   // parece más una errata que un compuesto
+  if(cmpQ)html=`<p class="grp">${Lx('Palabra compuesta','Samengesteld woord')}</p><div class="trlist"><div class="trrow tr-main cmprow">${APP.learn==='es'?sayBtn(cmpQ.es,'','es'):sayBtn(q,'')}<div class="trtxt"><div class="tr1">${esc(q)}</div><div class="tr2"><span class="arrow">→</span> ${compoundHtml(cmpQ)}</div><span class="trvia">${Lx('Traducción aproximada, formada a partir de sus partes.','Benadering op basis van de delen van het woord.')}</span></div></div></div>`+html;
+  if(!rows.length&&!gram.length&&!cmpQ){
     if(words.length===1){const sg=suggest(q,3);if(sg.length)dym=`<p class="didyou">${Lx('¿Quisiste decir','Bedoelde je')} ${sg.map((w,i)=>`${i?(i===sg.length-1?' '+Lx('o','of')+' ':', '):''}<button type="button" class="sug" data-sug="${esc(w)}">${esc(w)}</button>`).join('')}?</p>`}
     else{let ch=false;const fixed=words.map(w=>{if(lookup(w).length||w.length<3)return w;const sg=suggest(w,1);if(sg.length){ch=true;return sg[0]}return w}).join(' ');
       if(ch)dym=`<p class="didyou">${Lx('¿Quisiste decir','Bedoelde je')} <button type="button" class="sug" data-sug="${esc(fixed)}">${esc(fixed)}</button>?</p>`}
   }
-  $res.innerHTML=dym+(rows.length||gram.length?'':`<p class="res-head">«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}</p>`)+html+'<div id="ai"></div>';
+  $res.innerHTML=dym+(rows.length||gram.length?'':`<p class="res-head">«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}${cmpQ?Lx(', pero parece una palabra compuesta:',', maar het lijkt een samengesteld woord:'):''}</p>`)+html+'<div id="ai"></div>';
   $res.querySelectorAll('[data-sug]').forEach(b=>b.onclick=()=>{$q.value=b.dataset.sug;search(b.dataset.sug)});
   $res.querySelectorAll('[data-more]').forEach(b=>b.onclick=()=>{const row=b.closest('.trrow'),d=row.querySelector('.trdet'),x=all[+b.dataset.more];
     if(d.hidden&&!d.innerHTML)d.innerHTML=card(x.e,x.via,q);d.hidden=!d.hidden;b.setAttribute('aria-expanded',String(!d.hidden));b.textContent=d.hidden?Lx('Ficha','Details'):Lx('Cerrar','Sluiten')});
   $res.querySelectorAll('[data-conj]').forEach(b=>b.onclick=()=>openConj(b.dataset.conj));
   $res.querySelectorAll('[data-showmore]').forEach(b=>b.onclick=()=>{$(b.dataset.showmore).hidden=false;b.remove()});
   const slot=$('ai');
-  if(!rows.length&&!gram.length&&words.length===1&&!dym)askClaude(q,slot);
+  const bare=NL.find(h=>!h.via&&(norm(h.e.nl)===qn||norm(h.e.nl)===qb));       // la palabra existe pero sin traducción ni análisis
+  const untranslated=bare&&!(bare.e.es||[]).length&&!compoundApp(bare.e.nl);
+  if(!rows.length&&!gram.length&&words.length===1&&!dym&&!cmpQ)askClaude(q,slot);
+  else if(untranslated&&!cached.length&&await sampleP){if(my===qsId)askClaude(q,slot)}
   else if(!cached.length||dym){slot.innerHTML=`<div class="status"><p>${Lx(words.length>1?'¿Traducir la frase completa?':'¿Buscas otra acepción o más ejemplos?',words.length>1?'De hele zin vertalen?':'Meer betekenissen of voorbeelden?')}</p><button class="btn-ghost" type="button" id="more">${Lx('Consultar a Claude','Vraag het Claude')}</button></div>`;
     slot.querySelector('#more').onclick=()=>askClaude(q,slot)}
 };
@@ -2299,9 +2457,11 @@ function wordInfo(w,lang,r){
   if(g)return{head:g[0],tr:g[1],src:L('glosario del texto','woordenlijst van de tekst')};
   if(lang==='es'){const f=esForms().get(n);if(f)return{head:f[0],tr:f[1],src:norm(f[0])===n?'':L('forma de','vorm van')+' «'+f[0]+'»'}}
   const hits=lookup(w).filter(h=>h.e.pos!=='grammar');
-  if(!hits.length)return null;
+  const cmpInfo=(x,head)=>{const c=compoundApp(x);return c?{head,tr:'≈ '+c.es,src:L('compuesto: ','samenstelling: ')+c.parts.map(([a,b])=>a+' = '+b).join(' + ')}:null};
+  if(!hits.length)return lang==='nl'?cmpInfo(w,w):null;
   if(lang==='nl'){const h=hits.find(h=>h.via||norm(h.e.nl)===n||norm(stripArt(h.e.nl))===n)||hits[0];
     const art=h.e.pos==='noun'&&h.e.noun&&h.e.noun.article?h.e.noun.article+' ':'';
+    if(!(h.e.es||[]).length){const c=cmpInfo(h.e.nl,art+h.e.nl);if(c)return c}
     return{head:art+h.e.nl,tr:(h.e.es||[]).slice(0,3).join('; '),src:h.via?h.via:''}}
   const h=hits[0];return{head:w,tr:hits.slice(0,3).map(x=>(x.e.pos==='noun'&&x.e.noun&&x.e.noun.article?x.e.noun.article+' ':'')+x.e.nl).filter((v,i,a)=>a.indexOf(v)===i).join(', '),src:''};
 }
