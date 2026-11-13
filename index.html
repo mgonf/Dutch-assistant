@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794576525";</script>
+<script>window.WB_V="?v=1794576888";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -475,6 +475,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .qopt.right{animation:okpop .25s ease-out}@keyframes okpop{50%{transform:scale(1.03)}}
 .qopt.wrong{animation:shake .3s}@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @media (prefers-reduced-motion:reduce){.qopt.right,.qopt.wrong,.wpop{animation:none}}
+
+.wbw small{display:block;color:var(--muted);font-size:.72rem;line-height:1.2;max-width:14em}
+.wbw.phr{background:var(--de-soft)}
 </style>
 
 <div class="topbar">
@@ -1784,8 +1787,11 @@ search=async function(q,remember=true){
   if(gram.length)html+=card(gram[0].e,null,q);
   const words=q.split(/\s+/).filter(Boolean);
   if(!rows.length&&words.length>1){
-    const parts=words.map(w=>{const r=lookup(w).filter(h=>h.e.pos!=='grammar');if(!r.length){const c=compoundApp(w);return `<span class="wbw"><b>${esc(w)}</b><span>${c?'≈ '+esc(c.es):'?'}</span></span>`}
-      const e=r[0].e,nlMatch=r[0].via||norm(e.nl)===norm(w);const c=nlMatch&&!(e.es||[]).length?compoundApp(e.nl):null;return `<span class="wbw"><b>${esc(w)}</b><span>${esc(nlMatch?(e.es||[])[0]||(c?'≈ '+c.es:''):e.nl)}</span></span>`});
+    const gl=glGuessLang(q),A=glAnalyze(q,gl,null),done=new Set();
+    const parts=A.T.map((t,n)=>{if(done.has(n))return '';const d=glInfoAt(A,n),i=d.info;
+      if(d.phr&&d.phr.ns[0]===n&&d.phr.ns.every((k,j)=>j===0||k===d.phr.ns[j-1]+1)){d.phr.ns.forEach(k=>done.add(k));return `<span class="wbw phr"><b lang="${gl}">${esc(d.phr.ns.map(k=>A.T[k].w).join(' '))}</b><span>${esc(d.phr.v)}</span></span>`}
+      const tr=i?glFirst(String(i.tr).replace(/^≈ /,''))||i.tr:'?';
+      return `<span class="wbw"><b lang="${gl}">${esc(t.w)}</b><span>${esc((i&&/^≈/.test(i.tr)?'≈ ':'')+tr)}</span>${i&&i.note?`<small>${esc(i.note)}</small>`:''}</span>`});
     html+=`<p class="grp">${Lx('Palabra por palabra','Woord voor woord')}</p><div class="wbwrow">${parts.join('')}</div><p class="tip">${Lx('Para frases completas, usa «Consultar a Claude» (solo dentro de Claude) o busca palabra a palabra.','Voor hele zinnen: gebruik «Vraag het Claude» (alleen binnen Claude) of zoek per woord.')}</p>`;
   }
   let dym='';
@@ -2956,6 +2962,15 @@ function glInfoAt(A,n){ // información completa de la palabra n del análisis A
       else{const hy=t.lc.includes('-')?t.lc.split('-').map(p=>{const h=nlSide(norm(p)).find(x=>!x.via&&(x.e.es||[]).length);return h?p+' = '+glFirst(h.e.es[0]):null}):null;
         if(hy&&hy.every(Boolean))info={head:t.w,tr:hy.map(x=>x.split(' = ')[1]).join(' + '),note:hy.join(' + '),say:t.w,pos:'noun',lemma:t.lc};
         else{const c=compoundApp(t.lc);if(c)info={head:t.w,tr:'≈ '+c.es,note:L('compuesto: ','samenstelling: ')+c.parts.map(([a,b])=>a+' = '+b).join(' + '),say:t.w,pos:'noun',lemma:t.lc,cmp:true}}}
+      if(t.lc==='er'&&info&&!g){ // «er» según su uso
+        const PRE={in:'en ello',aan:'en ello / a ello',op:'en ello / sobre ello',over:'de ello / sobre ello',van:'de ello',mee:'con ello',voor:'para ello / por ello',naar:'hacia allí / a ello',uit:'de allí / de ello',bij:'con ello / junto a ello',tegen:'contra ello',door:'por ello',om:'por ello',achter:'detrás de ello',onder:'debajo de ello',af:'de ello'};
+        let pp=null;for(let i=n+1;i<T.length&&T[i].sent===t.sent;i++){if(PRE[T[i].lc]&&(T[i].end||i===T.length-1||(T[i+1]&&T[i+1].sent!==t.sent))){pp=T[i];break}if(T[i].end)break}
+        const nx=T[n+1]&&T[n+1].sent===t.sent?T[n+1].lc:'',pv=n>0&&T[n-1].sent===t.sent?T[n-1].lc:'';
+        const V=/^(is|zijn|was|waren|staat|staan|stond|stonden|ligt|liggen|lag|lagen|komt|komen|kwam|kwamen|gaat|gaan|ging|gingen|wordt|worden|werd|werden|zit|zitten|zat|zaten|bestaat|bestaan|blijft|blijven|hangt|hangen|loopt|lopen|moet|moeten|kan|kunnen|zal|zullen|zou|zouden|mag|mogen)$/;
+        if(pp)info={...info,tr:PRE[pp.lc],note:L('«er» + preposición: ','«er» + voorzetsel: ')+'er … '+pp.w+' = '+PRE[pp.lc]+L(' (se refiere a algo ya mencionado)',' (verwijst naar iets wat al genoemd is)')};
+        else if(V.test(nx)||V.test(pv))info={...info,tr:/^(was|waren|stond|stonden|lag|lagen|kwam|kwamen|ging|gingen|werd|werden|zat|zaten)$/.test(V.test(nx)?nx:pv)?L('había (er was / er waren = había)','había'):L('hay (er is / er zijn = hay)','hay'),note:L('«er» introduce un sujeto indefinido: er is / er zijn = hay','«er» als voorlopig onderwerp: er is / er zijn = hay')};
+        else if(/^(een|twee|drie|vier|vijf|veel|geen|weinig|genoeg|nog|al)$/.test(nx)||/^\d/.test(nx))info={...info,tr:L('de ellos, de eso (cantidad)','de ellos'),note:L('«er» con cantidades: ik heb er twee = tengo dos (de ellos)','«er» bij hoeveelheden')};
+        else info={...info,tr:L('allí, ahí','allí, ahí')}}
       if(g&&info){info.tr0=info.tr;info.tr=g[1];info.gl=true}
       else if(g){info={head:g[0],tr:g[1],note:'',say:t.w,gl:true,lemma:t.lc}}
     }else{const R=esRead(T,n);const g=G&&(G.one.get(t.k)||(R.map(x=>G.one.get(norm(x.head))).find(Boolean)));
