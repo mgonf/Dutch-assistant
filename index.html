@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794576888";</script>
+<script>window.WB_V="?v=1794754711";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -478,6 +478,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 .wbw small{display:block;color:var(--muted);font-size:.72rem;line-height:1.2;max-width:14em}
 .wbw.phr{background:var(--de-soft)}
+
+.smartnote{margin:2px 0 10px;color:var(--muted);font-size:.95rem}
 </style>
 
 <div class="topbar">
@@ -512,7 +514,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="chips" id="chips"></div>
     <div id="results"></div>
 
-    <footer>Unas 43.700 palabras neerlandesas. El vocabulario por temas y la base están revisados a mano; el resto procede de datos abiertos, con varios miles de correcciones manuales. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet, MCR y Wiktionary) y FreeDict; los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las palabras compuestas sin traducción propia (linkerknie, fietsbel…) se traducen de forma aproximada a partir de sus partes y se marcan con ≈. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
+    <footer>Unas 46.500 palabras neerlandesas y, en sentido contrario, búsqueda por unas 120.000 formas españolas (plurales, femeninos, verbos conjugados, pronombres pegados…). El vocabulario por temas y la base están revisados a mano; el resto procede de datos abiertos, con varios miles de correcciones manuales. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet, MCR y Wiktionary) y FreeDict, contrastadas con el Wiktionary inglés (entradas españolas, CC BY-SA); la preferencia de categoría según el contexto sale de los corpus Universal Dependencies (Alpino, LassySmall, AnCora, GSD); los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las palabras compuestas sin traducción propia (linkerknie, fietsbel…) se traducen de forma aproximada a partir de sus partes y se marcan con ≈. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
   </div>
 </main>
 
@@ -655,7 +657,9 @@ ZAL=['zal','zult / zal','zal','zullen','zullen','zullen'],ZOU=['zou','zou','zou'
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,"«»]/g,'').replace(/\s+/g,' ').trim();
 const stripArt=s=>{const m=s.match(/^(de|het|een|el|la|lo|los|las|un|una)\s+(.+)$/);return m?m[2]:s};
-const splitEs=s=>s.split(/[;,]/).map(x=>x.trim()).filter(Boolean);
+// divide por separadores fuera de paréntesis: «qué (hoe laat = qué hora; hoe oud = qué edad)» es un único sentido
+const splitTop=(s,seps)=>{const out=[];let d=0,cur='';for(const ch of String(s||'')){if(ch==='(')d++;else if(ch===')')d=Math.max(0,d-1);if(!d&&seps.includes(ch)){if(cur.trim())out.push(cur.trim());cur=''}else cur+=ch}if(cur.trim())out.push(cur.trim());return out};
+const splitEs=s=>splitTop(s,';,');
 
 function presentFromStem(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[stem,t,t,inf,t,inf]}
 function buildVerb(r){
@@ -669,7 +673,22 @@ function buildVerb(r){
 
 const ENTRIES=[];const idx=new Map();
 function add(key,e,via){if(!key)return;key=norm(key);if(!key)return;if(!idx.has(key))idx.set(key,[]);const l=idx.get(key);if(!l.some(x=>x.e===e))l.push({e,via})}
-function addEs(e){for(const t of e.es){add(t,e);const c=t.replace(/\(.*?\)/g,'').trim();if(c)add(c,e)}}
+// índice español: el sentido entero, sin paréntesis, y cada una de sus partes (con y sin artículo)
+function addEsGloss(e,t){add(t,e);const c=String(t).replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();if(!c)return;if(c!==t)add(c,e);
+  const sc=stripArt(c);if(sc!==c)add(sc,e);
+  for(const p of c.split(/\s*[,;/]\s*/)){const q=p.trim();if(!q||q===c)continue;add(q,e);const s2=stripArt(q);if(s2!==q)add(s2,e)}}
+function addEs(e){for(const t of e.es)addEsGloss(e,t)}
+// añade a una entrada de la base los sentidos revisados de dict.json que le falten (vriendin: amiga + novia)
+const gvKey=k=>k.replace(/(o|a|os|as)$/,'');
+function mergeEs(be,es,max){const have=new Set();max=max||3;
+  if(/!/.test(es)){for(const x of splitTop(es,';'))if(x[0]==='!'){(be.pri=be.pri||new Set()).add(norm(x.slice(1).replace(/==$/,'').replace(/\([^)]*\)/g,' ').trim()))}
+    es=splitTop(es,';').filter(x=>!/==$/.test(x)).map(x=>x.replace(/^!/,'')).join('; ')}
+  for(const g of be.es)for(const p of String(g).replace(/\([^)]*\)/g,' ').split(/\s*[,;/]\s*/)){const k=norm(stripArt(p.trim()));if(k)have.add(k)}
+  const hg=new Set([...have].map(gvKey));let n=0;
+  for(const sense of splitTop(es,';')){if(n>=max)break;
+    const keep=splitTop(sense,',').filter(p=>{const k=norm(stripArt(p.replace(/\([^)]*\)/g,' ').trim()));return k&&!have.has(k)&&!hg.has(gvKey(k))});
+    if(!keep.length)continue;const t=keep.join(', ');be.es.push(t);addEsGloss(be,t);n++;
+    for(const p of keep){const k=norm(stripArt(p.replace(/\([^)]*\)/g,' ').trim()));have.add(k);hg.add(gvKey(k))}}}
 
 for(const[nl,a,pl,dim,es]of NOUNS){const e={nl,es:splitEs(es),pos:'noun',noun:{article:a,plural:pl,diminutive:dim},note:NOUN_NOTES[nl]||null,src:'base'};ENTRIES.push(e);add(nl,e);addEs(e);
   if(pl)for(const p of pl.split('/'))add(p.trim(),e,'el plural');if(dim)add(dim,e,'el diminutivo')}
@@ -693,7 +712,7 @@ for(const r of VERBS){if(r[7])continue;CUR_VERB[r[0]]=buildVerb(r);if(Array.isAr
 const STEM_OVR={komen:'kom',bevelen:'beveel',bewegen:'beweeg',vergeten:'vergeet',genezen:'genees',bederven:'bederf',verliezen:'verlies',bedriegen:'bedrieg',genieten:'geniet',verdwijnen:'verdwijn',verschijnen:'verschijn',gelijken:'gelijk',oordelen:'oordeel',raadplegen:'raadpleeg',generen:'geneer',ervaren:'ervaar',verslinden:'verslind',bezwijken:'bezwijk',ontbijten:'ontbijt',beeldhouwen:'beeldhouw',stofzuigen:'stofzuig',glimlachen:'glimlach'};
 const NO_SPLIT=new Set(['ontmoeten','vermoeden','bedoelen','gebeuren','geloven','genieten','verdwijnen','verschijnen','vergeten','verliezen','bewegen','bevelen','naderen','benaderen','waarschuwen','vrijwaren','voetballen','beeldhouwen','stofzuigen','glimlachen','rangschikken','zegevieren','liefkozen','handhaven','dagvaarden','knipogen','waarborgen','brandmerken','dwarsbomen','blinddoeken','slaapwandelen','zonnebaden','bekvechten','logenstraffen','raaskallen','raadplegen','antwoorden','opperen','toeteren','overen','inneren','weigeren','wedijveren','rechtvaardigen','achten','afgunsten','ingenieuren','innen','ordenen','openen','oefenen','offeren','omen','aarden','aarzelen','voeten']);
 // partículas separables (de más larga a más corta) y primeros elementos de verbos compuestos (solo con un verbo conocido detrás)
-const SEP_X=['vooraf','overhoop','tussen','bezig','dwars','boven','adem','aansprakelijk','verantwoordelijk','schadeloos','tevreden','tegemoet','gevangen','achteruit','overeen','vooruit','schuldig','bekend','teleur','uiteen','bijeen','tekort','teweeg','gereed','gerust','gelijk','veilig','kennis','tentoon','omhoog','omlaag','onderuit','verder','plaats','dienst','alleen','kwalijk','voort','stand','prijs','kwijt','groot','klein','zwart','droog','recht','schuil','hoog','laag','fijn','plat','stil','stuk','goed','dood','stop','vrij','waar','weer','deel','leeg','hard','lief','gade','acht','heen','mede','omver','les','mis','vol'];
+const SEP_X=['lastig','flauw','bloot','wit','wijs','vreemd','zaken','teniet','beet','feest','toneel','vals','tanden','kort','vet','vorm','tekeer','ineen','weder','paard','auto','raak','zoek','kapot','schoon','thuis','vooraf','overhoop','tussen','bezig','dwars','boven','adem','aansprakelijk','verantwoordelijk','schadeloos','tevreden','tegemoet','gevangen','achteruit','overeen','vooruit','schuldig','bekend','teleur','uiteen','bijeen','tekort','teweeg','gereed','gerust','gelijk','veilig','kennis','tentoon','omhoog','omlaag','onderuit','verder','plaats','dienst','alleen','kwalijk','voort','stand','prijs','kwijt','groot','klein','zwart','droog','recht','schuil','hoog','laag','fijn','plat','stil','stuk','goed','dood','stop','vrij','waar','weer','deel','leeg','hard','lief','gade','acht','heen','mede','omver','les','mis','vol'];
 const SEP_CORE=['terecht','voorbij','achter','binnen','buiten','samen','tegen','terug','thuis','kapot','schoon','dicht','langs','klaar','open','door','onder','over','voor','vast','weg','mee','neer','rond','aan','bij','toe','uit','los','af','in','na','om','op'];
 const SEP=SEP_CORE.concat(SEP_X).sort((a,b)=>b.length-a.length);
 const INSEP_WORDS=new Set('mislukken omsluiten onderlijnen doorspekken onderdrukken onderwerpen ondervragen onderschatten onderkennen onderschrijven ondermijnen omgeven omsingelen omzeilen omhelzen omlijnen omspannen overdekken overtreffen overhoren overschatten overladen overbruggen overspannen overstelpen overweldigen overrompelen overmeesteren overbelasten doorzoeken doorstaan doorgronden doorkruisen doorboren voltooien voldoen volbrengen volstaan volharden volmaken voltrekken misbruiken misleiden mishandelen misdragen miskennen misverstaan mismaken misprijzen weerleggen weerspiegelen weerstaan weerhouden weerkaatsen weerklinken aanschouwen overnachten onderzoeken ondernemen onderhouden ondersteunen onderscheiden onderbreken onderwijzen onderhandelen ondertekenen onderstrepen ondervinden ondergaan overleggen overwegen overtuigen overleven overnachten overschrijden overtreden overdrijven overhandigen overheersen overwinnen overlijden overvallen overkomen overzien voorspellen voorzien voorkomen doorzien omringen omvatten omschrijven omarmen achterhalen achtervolgen aanvaarden aanbidden'.split(' '));
@@ -729,15 +748,22 @@ function splitVerb(inf){
   if(knownBase(inf))return null;
   if(NO_SPLIT.has(inf)){const m=inf.match(/^(ver|ont|her|be|ge)(.+)$/);return m&&!STRONG[inf]&&m[2].length>=4&&!isV(m[2][0])?{pre:m[1],type:'insep',base:m[2],reg:true}:null}
   const ins=INSEP_WORDS.has(inf),nat=nativeEr(inf),lat=latin(inf);
+  let best=null,bs=-1;
   for(const p of SEP){
     if(!inf.startsWith(p))continue;const rest=inf.slice(p.length);if(rest.length<3)continue;
     const core=SEP_CORE.includes(p);
     if(lat&&!(isKnownV(rest)&&LATIN_SEPBASE.has(rest)))continue;
-    if(isKnownV(rest)||NAT_ER.has(rest)||erWord(rest)||(core&&!nat&&monoEr(rest))||(core&&!lat&&!nat&&rest.length>=5&&/en$/.test(rest)&&!isV(rest[0])&&!/^(.)\1/.test(rest)))return{pre:p,type:ins?'insep':'sep',base:rest};
+    let sc=-1;
+    if(knownBase(rest))sc=3;else if(isKnownV(rest))sc=2;else if(NAT_ER.has(rest)||erWord(rest)||(core&&!nat&&monoEr(rest)))sc=1;
+    else if(core&&!lat&&!nat&&rest.length>=5&&/en$/.test(rest)&&!isV(rest[0])&&!/^(.)\1/.test(rest))sc=0;
+    if(sc>bs){bs=sc;best={pre:p,type:ins?'insep':'sep',base:rest}}
+    if(sc===3)break;
   }
+  if(best){if(FORCE_WEAK.has(inf))best.reg=true;return best}
   if(lat)return null;
   for(const p of INS_PFX){
     if(!inf.startsWith(p))continue;const rest=inf.slice(p.length);
+    if(NAT_ER.has(inf)&&monoEr(rest))continue;   // beteren = beter + en, no be + teren
     if(isKnownV(rest)&&rest.length>=3)return{pre:p,type:'insep',base:rest};
     if(p==='er'||nat)continue;
     if(rest.length>=(p==='ge'?5:4)&&/en$/.test(rest)&&!isV(rest[0])&&!/^(.)\1/.test(rest))return{pre:p,type:'insep',base:rest};
@@ -761,6 +787,17 @@ function regStem(inf){
 const geJoin=s=>/^(ui|ij)/.test(s)?'ge'+s:/^[eiu]/.test(s)?'ge'+({e:'ë',i:'ï',u:'ü'}[s[0]])+s.slice(1):'ge'+s;
 function presentOf(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[stem,t,t,inf,t,inf]}
 // verbos con be-/ver-/ont-/her- aparente que sí llevan ge- en el participio
+// ronda 6: comprobado con frecuencias de corpus (verbetert/verbeterde frente a serveert/serveerde)
+['verbeteren','koesteren','beteren','belazeren','piekeren','belemmeren','bekommeren','treiteren','hunkeren','huiveren','folteren','verpulveren','verorberen','klonteren','klauteren','mijmeren','badderen','sputteren','stotteren','slingeren','zwalken'].forEach(v=>NAT_ER.add(v));
+['traceren','serveren','citeren','drogeren','transformeren','profileren','conditioneren','rangeren','royeren','stofferen','choqueren','confisqueren','informeren','reserveren','presenteren','registreren','installeren','observeren','reageren','accepteren','controleren','analyseren','arresteren','respecteren','riskeren','annuleren','fotograferen','telefoneren','repareren','kopiëren','studeren','proberen','waarderen'].forEach(v=>LATIN_YES.add(v));
+['onderscheppen','openbaren','overreden','overdenken','omarmen','omcirkelen','onderbouwen','overlappen','overtroeven','onderrichten','omhullen','misgunnen','overstijgen','doordrenken','overwinteren','hersenspoelen','grondvesten','misleiden','mishandelen','miskennen','misdragen','misvormen','overbluffen','overspoelen','overstemmen','onderscheiden','ondertekenen','omvatten','omringen'].forEach(v=>INSEP_WORDS.add(v));
+['nagelen','volslagen','bekrompen','vervlogen','gedegen','belegen','geborgen','afgetrokken','uitgeslapen','effen','litteken','maaltijden','contacten','glazen','haven','open'].forEach(v=>NO_SPLIT.add(v));
+// verbos débiles aunque su base sea fuerte: opscheppen (presumir) ≠ scheppen (crear)
+const FORCE_WEAK=new Set(['opscheppen','onderscheppen','afschrikken','overreden','omvatten','herbergen']);
+// préstamos y casos especiales: raíz y -te/-de según la pronunciación (racete, managede)
+Object.assign(STEM_OVR,{verwelkomen:'verwelkom',interviewen:'interview',relaxen:'relax',sponsoren:'sponsor',chillen:'chill',skiën:'ski',ruziën:'ruzie',beamen:'beaam',racen:'race',updaten:'update',managen:'manage',gamen:'game',tapen:'tape',recyclen:'recycle',appen:'app',faxen:'fax',mailen:'mail',saven:'save',timen:'time',liken:'like',stressen:'stress',vereren:'vereer',onteren:'onteer',herbergen:'herberg'});
+const LOAN_TE=new Set(['racen','updaten','tapen','liken','relaxen','faxen']);
+['interviewen','verwelkomen','beamen','vereren','onteren'].forEach(v=>NO_SPLIT.add(v));['vereren','onteren','beamen','verwelkomen'].forEach(v=>INSEP_WORDS.add(v));
 const GE_YES=new Set(['beeldhouwen','beelden','beitelen','beieren','beuken','beunen','bezemen','beteren','bedelen','vergen','verven','veren','herbergen','herderen','beren','ontbijten']);
 function conjCore(inf,reg){
   if(!reg&&CUR_VERB[inf])return{...CUR_VERB[inf]};
@@ -768,10 +805,10 @@ function conjCore(inf,reg){
   if(!reg&&IRRPRES[inf])return{inf,present:IRRPRES[inf].slice(),past:[S.ps,S.pp],participle:S.part,aux:S.aux,imperative:IRRPRES[inf][0],regularStem:null};
   const{stem,orig}=regStem(inf);
   if(S)return{inf,present:presentOf(stem,inf),past:[S.ps,S.pp],participle:S.part,aux:S.aux,imperative:stem,regularStem:stem};
-  const vl=/([tkfsp]|ch|x)$/.test(orig);
+  const vl=LOAN_TE.has(inf)||/([tkfsp]|ch|sh|x)$/.test(orig);
   const ps=stem+(vl?'te':'de');
   const pm=inf.match(/^(be|ver|ont|her)(.+)en$/);
-  const noGe=!reg&&!!pm&&/[aeiouyë]/.test(pm[2])&&!GE_YES.has(inf)&&!(pm[1]==='her'&&latin(inf))&&!(latin(inf)&&isV(pm[2][0])&&pm[2][0]!=='ë');
+  const noGe=INSEP_WORDS.has(inf)||!reg&&!!pm&&/[aeiouyë]/.test(pm[2])&&!GE_YES.has(inf)&&!(pm[1]==='her'&&latin(inf))&&!(latin(inf)&&isV(pm[2][0])&&pm[2][0]!=='ë');
   return{inf,present:presentOf(stem,inf),past:[ps,ps+'n'],participle:(noGe?stem:geJoin(stem))+(/[td]$/.test(stem)?'':(vl?'t':'d')),aux:'h',imperative:stem,regularStem:stem};
 }
 const VERBSET=new Set();
@@ -856,18 +893,20 @@ function indexVerbForms(e,v){
 }
 let formsDone;const formsP=new Promise(r=>{formsDone=r});
 const loadP=fetch('dict.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(rows=>{
-  const have=new Set(ENTRIES.map(e=>e.nl+'|'+e.pos));
+  const have=new Set(ENTRIES.map(e=>e.nl+'|'+e.pos)),BASEK=new Map(ENTRIES.map(e=>[e.nl+'|'+e.pos,e]));
   let fr=0;
   for(const r of rows){fr++;
     const[nl,p,es,a,pl,dim]=r;const pos=p==='o'?'other':p==='n'?'noun':p==='v'?'verb':'adj';
-    if(have.has(nl+'|'+pos)||nl.split(' ').length>2)continue;
+    if(have.has(nl+'|'+pos)){const be=BASEK.get(nl+'|'+pos);if(be){if(r[6]&&es)mergeEs(be,es);if(r[7])mergeEs(be,r[7],8)}continue}
+    if(nl.split(' ').length>2)continue;
     if(pos==='verb'&&!nl.includes(' ')){if(!/en$/.test(nl)&&!/(gaan|staan|slaan|zien|doen|ën)$/.test(nl)||nl==='open'||nl==='crayon')continue;VERBSET.add(nl)}
-    const e={nl,es:es?es.split(/;\s*/).filter(Boolean):[],pos,src:r[6]?'base':'open',note:null,fr,big:1};
+    const xs=r[7]?splitTop(r[7],';'):[],pri=xs.filter(x=>x[0]==='!').map(x=>norm(x.slice(1).replace(/==$/,'').replace(/\([^)]*\)/g,' ').trim()));
+    const e={nl,es:(es?splitTop(es,';'):[]).concat(xs.filter(x=>!/==$/.test(x)).map(x=>x.replace(/^!/,''))),pri:pri.length?new Set(pri):null,pos,src:r[6]?'base':'open',note:null,fr,big:1};
     if(pos==='noun')e.noun={article:a||'de',plural:pl||null,diminutive:dim||null};
     if(pos==='other')e.posLabel='palabra';
     BIG_N++;
     add(nl,e);
-    for(const t of e.es){add(t,e);for(const piece of t.split(/,\s*/))add(piece,e)}
+    for(const t of e.es)addEsGloss(e,t);
     if(pos==='noun'&&pl)for(const x of pl.split('/'))add(x.trim(),e,'el plural');
     if(pos==='noun'&&dim)add(dim,e,'el diminutivo');
     if(pos==='verb'){e.lazy=true;Object.defineProperty(e,'verb',{get(){return this._v||(this._v=conjugate(this.nl))},configurable:true})}
@@ -898,27 +937,29 @@ const loadP=fetch('dict.json'+(window.WB_V||'')).then(r=>{if(!r.ok)throw new Err
 
 // preferencia de categoría por forma, sacada de corpus etiquetados (UD): «bel» suele ser verbo, «fiets» sustantivo…
 const NLPREF=new Map(),PCLS={noun:'n',verb:'v',adj:'a',other:'o'};
-function hitScore(x,k,partV){
+function hitScore(x,k,partV,qr){
   const e=x.e;if(e.pos==='grammar')return -1;
   const nlSide=!!x.via||norm(e.nl)===k;
   let s=(e.src==='base'?0:1)+(x.via?0.5:0);
   if(!nlSide){ // la consulta es española: primero donde es la primera acepción
-    let gi=(e.es||[]).findIndex(g=>{const n=norm(g);return n===k||norm(g.replace(/\(.*?\)/g,''))===k});if(gi<0)gi=4;
+    const gi=esPos(e,k);
     const lex=typeof LEXGL!=='undefined'&&LEXGL.has(e.nl+'|'+e.pos);
-    return 10+s+gi*0.5-(lex?0.7:0)}
+    // tildes: «sábana» no es «sabana», «papá» no es «papa»
+    let acc=0;if(qr){const P=[];for(const g of e.es||[])for(const p of String(g).replace(/\([^)]*\)/g,' ').split(/[,;/]/)){const t=stripArt(p.trim().toLowerCase());if(norm(t)===k)P.push(t)}if(P.length&&!P.includes(qr))acc=2.5}
+    const pri=e.pri&&e.pri.has(k)?1.8:0;
+    return 10+s+(pri?0:gi*0.5)-(lex?0.7:0)+Math.min((e.fr||0)/20000,1.5)+acc-pri}
   const pr=NLPREF.get(k);
   if(pr&&!(partV&&e.pos==='adj')){const [cls,lem]=pr.split('=');const i=cls.indexOf(PCLS[e.pos]);s+=i<0?3:i*2;if(lem&&i===0&&norm(e.nl)!==lem)s+=1.5}
   if(partV&&e.pos==='adj')s-=0.6;                                          // gesloten = cerrado, antes que «participio de sluiten»
   if((x.via==='el diminutivo'||x.via==='el plural')&&e.src==='base')s+=0.6; // broodje tiene entrada propia
   return s}
+function esPos(e,k){const es=e.es||[];for(let i=0;i<es.length;i++){const g=es[i];if(norm(g)===k)return i;const c=String(g).replace(/\([^)]*\)/g,' ');if(norm(stripArt(c.trim()))===k)return i;
+  const ps=c.split(/\s*[,;/]\s*/);for(let j=0;j<ps.length;j++)if(norm(stripArt(ps[j].trim()))===k)return i+Math.min(j,3)*0.1}return 4}
 function lookup(q){
   const tries=[norm(q),norm(stripArt(q))];
-  const s=norm(stripArt(q));
-  if(s.endsWith('es'))tries.push(s.slice(0,-2));
-  if(s.endsWith('s'))tries.push(s.slice(0,-1));
   for(const k of tries){const r=idx.get(k);if(r&&r.length){
     const partV=r.some(x=>x.e.pos==='verb'&&(x.via==='el participio'||x.via==='una forma del pasado'));
-    const sc=new Map(r.map(x=>[x,hitScore(x,k,partV)]));
+    const qr=stripArt(String(q).trim().toLowerCase()),sc=new Map(r.map(x=>[x,hitScore(x,k,partV,qr)]));
     return r.slice().sort((a,b)=>sc.get(a)-sc.get(b));
   }}
   return[];
@@ -1105,13 +1146,14 @@ async function search(q,remember=true){
   q=q.trim();if(!q)return;
   if(remember){store.hist=[q,...store.hist.filter(h=>norm(h)!==norm(q))].slice(0,12);save();renderChips()}
   const my=++searchId;
-  let base=lookup(q);
+  let base=lookup(q),smart=null;
   if(!base.length){$res.innerHTML='<p class="res-head">Buscando…</p>';await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==searchId)return;base=lookup(q)}
+  if(!base.length&&typeof smartLookup==='function'){await formsP;if(typeof eslemP!=='undefined')await eslemP;if(my!==searchId)return;smart=smartLookup(q);if(smart&&smart.hits.length)base=smart.hits}
   const MAX=6;const hidden=base.length>MAX?base.slice(MAX):[];base=base.slice(0,MAX);const cached=store.cache[norm(stripArt(q))]||store.cache[norm(q)]||null;
   const seen=new Set(base.map(b=>b.e.nl+'|'+b.e.pos));
   const extra=(cached||[]).filter(e=>!seen.has(e.nl+'|'+e.pos));
   const tot=base.length+hidden.length+extra.length;
-  let html=`<p class="res-head">${tot?`${tot} ${Lx('resultado'+(tot>1?'s':''),'resultat'+(tot>1?'en':''))} ${Lx('para','voor')} «${esc(q)}»`:`«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}`}</p>`;
+  let html=(smart&&smart.note&&base.length?`<p class="via smartnote">🔎 ${esc(smart.note)}</p>`:'')+`<p class="res-head">${tot?`${tot} ${Lx('resultado'+(tot>1?'s':''),'resultat'+(tot>1?'en':''))} ${Lx('para','voor')} «${esc(q)}»`:`«${esc(q)}» ${Lx('no está en el diccionario','staat niet in het woordenboek')}`}</p>`;
   html+=base.map(b=>card(b.e,b.via,q)).join('')+extra.map(e=>card(e,null,q)).join('');
   if(hidden.length)html+=`<div id="morebox"><button class="btn-ghost" type="button" id="showmore">Mostrar ${hidden.length} resultado${hidden.length>1?'s':''} más</button></div>`;
   html+=`<div id="ai"></div>`;
@@ -1177,7 +1219,7 @@ const ES_STRONG={estar:'estuv',tener:'tuv',poder:'pud',poner:'pus',saber:'sup',q
 const ES_FUT={tener:'tendr',poner:'pondr',venir:'vendr',salir:'saldr',valer:'valdr',poder:'podr',saber:'sabr',caber:'cabr',haber:'habr',querer:'querr',decir:'dir',hacer:'har'};
 const ES_YO={tener:'tengo',venir:'vengo',poner:'pongo',salir:'salgo',hacer:'hago',decir:'digo',traer:'traigo',caer:'caigo',oír:'oigo',valer:'valgo',caber:'quepo',saber:'sé',ver:'veo',dar:'doy',estar:'estoy',ser:'soy',ir:'voy',haber:'he'};
 const ES_IMP={ser:'sé',ir:'ve',tener:'ten',venir:'ven',poner:'pon',salir:'sal',hacer:'haz',decir:'di'};
-const ES_DER={mantener:'tener',obtener:'tener',contener:'tener',detener:'tener',sostener:'tener',entretener:'tener',retener:'tener',componer:'poner',proponer:'poner',suponer:'poner',imponer:'poner',disponer:'poner',exponer:'poner',oponer:'poner',deshacer:'hacer',rehacer:'hacer',satisfacer:'hacer',prevenir:'venir',convenir:'venir',intervenir:'venir',atraer:'traer',distraer:'traer',contraer:'traer',extraer:'traer',sobresalir:'salir',prever:'ver'};
+const ES_DER={mantener:'tener',obtener:'tener',contener:'tener',detener:'tener',sostener:'tener',entretener:'tener',retener:'tener',componer:'poner',proponer:'poner',suponer:'poner',imponer:'poner',disponer:'poner',exponer:'poner',oponer:'poner',deshacer:'hacer',rehacer:'hacer',satisfacer:'hacer',prevenir:'venir',predecir:'decir',contradecir:'decir',desdecir:'decir',convenir:'venir',intervenir:'venir',atraer:'traer',distraer:'traer',contraer:'traer',extraer:'traer',sobresalir:'salir',prever:'ver'};
 const ES_FULL={
  ser:{pres:'soy eres es somos sois son',ind:'fui fuiste fue fuimos fuisteis fueron',imp:'era eras era éramos erais eran',subj:'sea seas sea seamos seáis sean'},
  ir:{pres:'voy vas va vamos vais van',ind:'fui fuiste fue fuimos fuisteis fueron',imp:'iba ibas iba íbamos ibais iban',subj:'vaya vayas vaya vayamos vayáis vayan',ger:'yendo',vos:'id'},
@@ -1299,6 +1341,12 @@ function esConj(input){
       T('Pretérito perfecto','voltooide tijd',HE.map(h=>h+' '+part)),T('Futuro','toekomende tijd',fut),T('Condicional','voorwaardelijke wijs',cond),
       T('Pluscuamperfecto','voltooid verleden tijd',HAB.map(h=>h+' '+part)),T('Subjuntivo presente','aanvoegende wijs',subj),T('Subjuntivo imperfecto','aanvoegende wijs (verleden)',subjI)]};
 }
+/* generado por src/r6_esverbs.py: verbos españoles con cambio de raíz, -zc o tilde en la i/u (formas de Wiktionary) */
+'acertar acrecentar adherir advenir aferrar alentar apacentar arrendar ascender asentar asentir aserrar aspaventar atender atener atentar aterrar atestar avenir aventar beldar cegar cerner cernir cimentar concernir concertar condescender conferir contender contener contravenir controvertir convenir deferir denegar dentar desacertar desalentar desasosegar desatender descender desconcertar desenterrar desgobernar deshelar desmembrar desmentir despezar desplegar desterrar detener devenir diferir digerir discernir disentir distender emparentar empedrar encerrar encomendar enmendar ensangrentar enterrar entrecerrar entretener escarmentar estregar extender ferrar hacendar heder helar hender hendir herbar herrar incensar inferir ingerir intender interferir intervenir invernar malentender malherir malquerer manifestar mantener melar mentar obtener pervertir plegar precalentar presentir prevenir proferir provenir quebrar reasentar recalentar recentar recomenzar reconvertir reencender refregar regimentar reinvertir remendar renegar repensar replegar requebrar requerir resembrar restregar retener revenir reventar revertir salpimentar sarmentar segar sembrar sementar serrar sobrecalentar sobreentender sobrentender sobrevenir sosegar sostener soterrar subarrendar subvenir subvertir temblar templar tender tentar transferir trascender trasegar ventar verter'.split(' ').forEach(v=>{if(v)ES_EIE.add(v)});
+'absolver acordar adormir aforar amoblar amolar apostar asolar atronar clocar colar concordar conmover consolar demoler denostar desacordar desaforar desaprobar descolgar desconsolar descontar descordar desenvolver desolar desollar despoblar discordar disolver dolar encordar engrosar enrocar ensoñar escocer escolar esforzar forzar holgar hollar jugar mancornar moler morder poblar precocer promover recocer recolar recontar recostar reencontrar reforzar remorder remover repoblar reprobar resollar resonar retorcer retrocar revolar revolcar revolver rodar sobrepoblar sobrevolar solar soldar soltar solver superpoblar tostar trocar tronar volcar'.split(' ').forEach(v=>{if(v)ES_OUE.add(v)});
+'ceñir comedir concebir constreñir derretir desteñir desvestir embestir erguir estreñir expedir gemir henchir investir preconcebir proseguir reelegir regir rendir reteñir revestir travestir'.split(' ').forEach(v=>{if(v)ES_EI.add(v)});
+'abastecer abducir aborrecer adolecer adormecer aducir amanecer anochecer apetecer carecer compadecer comparecer complacer convalecer coproducir decrecer desabastecer desagradecer desconocer desentumecer desfallecer desfavorecer desguarnecer deslucir desmerecer desobedecer desplacer desvanecer embellecer embravecer embrutecer empalidecer empecer empequeñecer empobrecer emputecer enaltecer enardecer encallecer encanecer encarecer enceguecer endurecer enfebrecer enflaquecer enfurecer engrandecer enlentecer enloquecer enlucir enmohecer enmudecer ennegrecer ennoblecer enorgullecer enrarecer enrojecer enronquecer ensombrecer ensordecer enternecer entorpecer entristecer entumecer envanecer envejecer enverdecer envilecer escarnecer esclarecer estremecer fallecer fenecer florecer fortalecer guarecer guarnecer humedecer inducir languidecer oscurecer pacer padecer palidecer perecer placer preestablecer prevalecer reabastecer reaparecer reblandecer reconducir recrudecer reintroducir rejuvenecer relucir renacer reproducir resplandecer restablecer reverdecer robustecer seducir subyacer tacer traslucir yacer'.split(' ').forEach(v=>{if(v)ES_ZC.add(v)});
+'acensuar adecuar adiar agriar aliar amnistiar ansiar arriar ataviar atenuar autografiar avaluar averiar aviar biografiar cablegrafiar caligrafiar cariar cartografiar chirriar ciar cinematografiar comisariar conceptuar conflictuar consensuar contrariar coreografiar culiar dactilografiar desafiar descarriar desvariar desviar desvirtuar devaluar discontinuar efectuar ejecutoriar enfriar escalofriar escenografiar espiar estriar evacuar exceptuar expatriar expiar extasiar extenuar extraviar fluctuar fotografiar gloriar habituar hastiar historiar insinuar interactuar inventariar liar licuar litografiar malcriar mecanografiar menstruar mimeografiar paliar perpetuar piar porfiar promiscuar puntuar radiografiar redituar reenviar reevaluar repatriar resfriar revaluar rociar serigrafiar sobreactuar subvaluar tatuar telegrafiar valuar vidriar'.split(' ').forEach(v=>{if(v)ES_ACCI.add(v)});
 
 /* ================= APP: estado, navegación, gramática ================= */
 const APP={dir:'nl-es',learn:'nl',content:null,themes:{},prog:{g:{},v:{}}};
@@ -1743,7 +1791,7 @@ WIDGETS.esconj=function(el){
 
 /* ---------- traductor rápido (primera pestaña) ---------- */
 let qsId=0;
-const glossKeys=s=>s.split(/[,;]/).map(t=>norm(t.replace(/\(.*?\)/g,''))).filter(Boolean);
+const glossKeys=s=>String(s).replace(/\([^)]*\)/g,' ').split(/[,;/]/).map(t=>norm(stripArt(t.trim()))).filter(Boolean);
 function openConj(v){conjQ=v;go('conjugador')}
 function trRow(e,via,q,fromNl,k,main){
   const A=e.pos==='noun'&&e.noun?e.noun.article:'';
@@ -1764,8 +1812,14 @@ search=async function(q,remember=true){
   q=String(q||'').trim();if(!q)return;
   if(remember){store.hist=[q,...store.hist.filter(h=>norm(h)!==norm(q))].slice(0,12);save();renderChips()}
   const my=++qsId,qn=norm(q),qb=norm(stripArt(q));
-  let hits=lookup(q);
+  let hits=lookup(q),smart=null;
   if(!hits.length||hits.every(h=>!(h.e.es||[]).length)){if(!hits.length)$res.innerHTML=`<p class="res-head">${Lx('Buscando…','Zoeken…')}</p>`;await loadP.catch(()=>{});await new Promise(r=>setTimeout(r,60));if(my!==qsId)return;hits=lookup(q)}
+  // forma que no está tal cual: plural, femenino, verbo conjugado, diminutivo, grado… (gloss.js)
+  if(!hits.length&&!/\s/.test(q)&&typeof smartLookup==='function'){await formsP;await eslemP;if(my!==qsId)return;smart=smartLookup(q);if(smart&&smart.hits.length)hits=smart.hits.map(h=>({e:h.e,via:h.via}));else smart=null}
+  // además, si es una forma verbal española (dije, era, vino, haya), primero el verbo
+  if(!smart&&hits.length&&!/\s/.test(q)&&typeof esVerbReading==='function'&&!hits.some(h=>h.via||norm(h.e.nl)===qn)){await formsP;if(my!==qsId)return;const vr=esVerbReading(q);
+    if(vr){const seen0=new Set(vr.hits.map(h=>h.e.nl+'|'+h.e.pos)),rest=hits.filter(h=>!seen0.has(h.e.nl+'|'+h.e.pos));smart=vr;
+      if(hits.some(h=>h.e.src==='base'&&esPos(h.e,qb)<1)){vr.second=true;vr.note=vr.note.replace(' → ',' '+Lx('también es','is ook')+' ');hits=rest.concat(vr.hits)}else hits=vr.hits.concat(rest)}}
   const cached=store.cache[qb]||store.cache[qn]||[];
   // entradas sin traducción que ya tradujo Claude en otra consulta
   for(const h of hits)if(!(h.e.es||[]).length){const c=(store.cache[norm(h.e.nl)]||[]).find(x=>x.pos===h.e.pos&&(x.es||[]).length);if(c){h.e.es=c.es.slice();h.e.byClaude=true}}
@@ -1776,14 +1830,15 @@ search=async function(q,remember=true){
   for(const h of rows){const e=h.e,isNl=h.via||norm(e.nl)===qn||norm(e.nl)===qb;
     if(isNl)NL.push(h);else ES.push(h)}
   // dentro de ES, primero los que tienen la palabra como traducción exacta y los revisados
-  const rank=h=>(glossKeys((h.e.es||[]).join(';')).includes(qb)?0:1)+(h.e.src==='base'?0:.5);
+  const qr=smart&&smart.base&&!smart.second?norm(smart.base):qb;
+  const rank=h=>(glossKeys((h.e.es||[]).join(';')).includes(qr)?0:1)+(h.e.src==='base'?0:.5)+(smart&&smart.hits?((smart.hits.some(x=>x.e===h.e))===!!smart.second?2:0):0);
   ES.sort((a,b)=>rank(a)-rank(b));
   const all=[];const sec=(list,fromNl,title)=>{if(!list.length)return '';const shown=list.slice(0,8),more=list.slice(8);
     let h=`<p class="grp">${title}</p><div class="trlist">${shown.map(x=>{all.push(x);return trRow(x.e,x.via,q,fromNl,all.length-1,all.length===1)}).join('')}</div>`;
     if(more.length){const id='mb'+all.length;h+=`<button class="btn-ghost" type="button" data-showmore="${id}">${Lx('Ver','Toon')} ${more.length} ${Lx('más','meer')}</button><div class="trlist" id="${id}" hidden>${more.map(x=>{all.push(x);return trRow(x.e,x.via,q,fromNl,all.length-1,false)}).join('')}</div>`}
     return h};
   const sNL=sec(NL,true,Lx('Neerlandés → español','Nederlands → Spaans')),sES=sec(ES,false,Lx('Español → neerlandés','Spaans → Nederlands'));
-  let html=APP.learn==='es'?sES+sNL:sNL+sES;
+  let html=(smart&&smart.note?`<p class="smartnote">🔎 ${esc(smart.note)}</p>`:'')+(APP.learn==='es'?sES+sNL:sNL+sES);
   if(gram.length)html+=card(gram[0].e,null,q);
   const words=q.split(/\s+/).filter(Boolean);
   if(!rows.length&&words.length>1){
@@ -2622,6 +2677,8 @@ const ES_VX=('haber:hebben (hulpwerkwoord); er zijn deber:moeten; verschuldigd z
  'alegrarse:blij zijn sorprender:verrassen aburrir:vervelen cansar:vermoeien asustar:bang maken tranquilizar:geruststellen imaginar:zich voorstellen soñar:dromen desear:wensen '+
  'esperar:wachten; hopen fijarse:letten op darse:zich geven (darse cuenta = beseffen) ponerse:aantrekken; worden hacerse:worden volverse:worden; zich omdraaien encontrarse:zich bevinden; elkaar ontmoeten '+
  'sentirse:zich voelen llevarse:meenemen (llevarse bien = goed kunnen opschieten) parecerse:lijken op quedarse:blijven dedicarse:zich bezighouden met').split(/ (?=[a-zñáéíóúü]+:)/).map(s=>s.split(':'));
+/* generado por src/r6_apply.py: traducciones español → neerlandés que son notas o frases (se muestran como texto) */
+const ESLEX_SRC2=`través = a través de = door, via; de través = schuin | cerebral = hersen- | policial = politie- (coche policial = politieauto) | estatal = staats- | estatal = van de staat | estelar = ster- (van de sterren) | acostar = naar bed brengen | acostarse = naar bed gaan | comprometer = in gevaar brengen | calmarse = tot rust komen | quienquiera = wie dan ook | cardíaco = hart- (ataque cardíaco = hartaanval) | tribal = stam- | madrugada = het holst van de nacht (de madrugada = 's nachts, vroeg in de ochtend) | acondicionado = aire acondicionado = de airconditioning | cosquillas = hacer cosquillas = kietelen; tener cosquillas = kittelig zijn | soviético = Sovjet- | universitario = universiteits- | asegurarse = zich ervan verzekeren | basarse = basarse en = gebaseerd zijn op | natal = geboorte- (ciudad natal = geboortestad) | deshacerse = deshacerse de = zich ontdoen van | facial = gezichts- (crema facial = gezichtscrème) | penal = straf- | naval = scheeps- | naval = marine- | dondequiera = waar dan ook | presionar = onder druk zetten | acudir = zich wenden tot | laboral = arbeids- | laboral = werk- | lateral = zij- | marcial = krijgs- (artes marciales = vechtsporten) | inminente = op handen zijnd | avergonzar = in verlegenheid brengen | vegetal = plant- | dactilar = huella dactilar = de vingerafdruk | bancario = bank- (cuenta bancaria = bankrekening) | familiarizarse = familiarizarse con = zich vertrouwd maken met | fiar = op de pof verkopen | fiarse = fiarse de = vertrouwen op | sanguíneo = bloed- (grupo sanguíneo = bloedgroep) | comunitario = gemeenschaps- | tinto = vino tinto = rode wijn | arterial = slagader- (presión arterial = bloeddruk) | callejero = straat- (perro callejero = zwerfhond) | fijarse = fijarse en = letten op | estudiantil = studenten- | polar = pool- (oso polar = ijsbeer) | inmobiliario = vastgoed- (agencia inmobiliaria = makelaarskantoor) | electoral = verkiezings- (campaña electoral = verkiezingscampagne) | costera = kust- | retrasarse = te laat zijn | ocasionalmente = af en toe | muscular = spier- | colmo = el colmo = het toppunt | pulmonar = long- | racial = ras- | navideño = kerst- | ultra = ultra- | comportar = met zich meebrengen | ocular = oog- (testigo ocular = ooggetuige) | quicio = sacar de quicio = razend maken | mafioso = maffia- | cuántico = kwantum- | oponerse = oponerse a = zich verzetten tegen | presenciar = getuige zijn van | cuerdo = bij zijn verstand | ambiental = milieu- | hartarse = hartarse de = genoeg krijgen van | corporativo = bedrijfs- | conllevar = met zich meebrengen | espinal = ruggenmerg- (médula espinal = ruggenmerg) | prescindir = prescindir de = het stellen zonder | supervisar = toezicht houden op | premeditado = met voorbedachten rade | lácteo = zuivel- (productos lácteos = zuivelproducten) | gubernamental = regerings- | vertebral = columna vertebral = de wervelkolom | indefinidamente = voor onbepaalde tijd | retirarse = met pensioen gaan | fúnebre = begrafenis- | satelital = satelliet- | sonoro = geluids- | bastidores = entre bastidores = achter de schermen | cabales = no estar en sus cabales = niet goed bij zijn hoofd zijn | imparable = niet te stoppen | educativo = onderwijs- | acuático = water- (parque acuático = waterpark) | antelación = con antelación = van tevoren | renal = nier- | craneal = schedel- | regresivo = cuenta regresiva = het aftellen | empresarial = bedrijfs- | empresarial = ondernemings- | avecinarse = op komst zijn | derramamiento = derramamiento de sangre = bloedvergieten | apetecer = zin hebben in (me apetece = ik heb zin in) | ocasional = af en toe | materno = moeder- (lengua materna = moedertaal) | adoptivo = adoptie- | adoptivo = pleeg- (hijo adoptivo = adoptiefkind) | sanitario = gezondheids- | trizas = hacer trizas = aan flarden scheuren | residencial = woon- (zona residencial = woonwijk) | alimentario = voedings-`;
 /* ================= Glosa contextual =================
    Traduce una palabra teniendo en cuenta la frase en la que está: categoría probable (corpus UD + palabras vecinas),
    verbos separables repartidos por la oración, formas flexionadas, expresiones fijas y el glosario del propio texto. */
@@ -2659,12 +2716,13 @@ const SEPSET=new Set(SEP);
 const nlSide=k=>(idx.get(k)||[]).filter(x=>x.e.pos!=='grammar'&&(x.via||norm(x.e.nl)===k||norm(stripArt(x.e.nl))===k));
 // grafías antiguas y formas sueltas (textos literarios)
 const NLM_OLD={zoo:'zo',alzoo:'alzo',den:'de',eene:'een',eenen:'een',eener:'een',mijne:'mijn',zijne:'zijn',hare:'haar',dezen:'deze',dien:'die',welken:'welke',gij:'jij',mede:'mee',
-  wien:'wie',zeide:'zeggen',zeiden:'zeggen',hij:'hij',noch:'noch',thans:'thans',ende:'en',heeren:'heer',menschen:'mens',mensch:'mens',wereld:'wereld',vleesch:'vlees',visch:'vis',tusschen:'tussen',
+  wien:'wie',zeide:'zeggen',elkander:'elkaar',malkander:'elkaar',geleek:'lijken',geleken:'lijken',zeiden:'zeggen',hij:'hij',noch:'noch',thans:'thans',ende:'en',heeren:'heer',menschen:'mens',mensch:'mens',wereld:'wereld',vleesch:'vlees',visch:'vis',tusschen:'tussen',
   wenschen:'wensen',wensch:'wens',frisch:'fris',valsch:'vals',bosch:'bos',asch:'as',flesch:'fles',tasch:'tas',eenigen:'enige',eenige:'enige',geene:'geen',zeer:'zeer',kwam:'komen'};
 function nlMorph(w){ // formas que el índice no tiene: plurales, diminutivos, adjetivos flexionados, grados, grafías antiguas
   const out=[],seen=new Set();
   const tryB=(b,pos,via,opt)=>{if(!b||b.length<2)return;for(const x of nlSide(norm(b))){
     if(x.via&&!(opt&&opt.via===x.via))continue;if(pos&&!pos.includes(x.e.pos))continue;
+    if(via==='el plural'&&x.e.pos==='noun'&&x.e.noun&&x.e.noun.plural&&!String(x.e.noun.plural).split('/').some(p=>norm(p.trim())===norm(w))&&!(/e$/.test(x.e.nl)&&norm(x.e.nl+'n')===norm(w)))continue;
     const key=x.e.nl+'|'+x.e.pos+'|'+via;if(seen.has(key))continue;seen.add(key);out.push({e:x.e,via:x.via?x.via:via,morph:1,old:opt&&opt.old?1:0})}};
   const stems=b=>{const v=[b];
     if(/([bcdfgklmnprstz])\1$/.test(b))v.push(b.slice(0,-1));
@@ -2691,6 +2749,13 @@ function nlMorph(w){ // formas que el índice no tiene: plurales, diminutivos, a
   if(/dere?$/.test(w))tryB(w.replace(/dere?$/,''),A,'el comparativo');
   if(/ste?$/.test(w)){const b=w.replace(/ste?$/,'');tryB(b,A,'el superlativo');tryB(b+'s',A,'el superlativo')}
   if(/[^s]s$/.test(w))tryB(w.slice(0,-1),A,'la forma con -s (iets …s = algo …)');
+  if(/ende?$/.test(w))tryB(w.replace(/de?$/,''),['verb'],'el participio de presente');            // vliegende
+  if(/(aa|oe|ie)nde?$/.test(w))tryB(w.replace(/nde?$/,'n'),['verb'],'el participio de presente');   // gaande, doende, ziende
+  if(/[^s]s$/.test(w))tryB(w.slice(0,-1),['other','noun'],'el genitivo (-s)');                  // iemands, vaders
+  if(/(ën|en)$/.test(w)&&!out.length){const b=w.replace(/ë?n$/,'').replace(/e$/,'');for(const x of [b,b+'e',w.replace(/ën$/,'')])tryB(x,['other'],'el plural (met z’n tweeën, duizenden)')}
+  if(/e$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-1)))tryB(s,['other'],'la forma flexionada');               // eerdere
+  if(/en$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-2)))tryB(s,A,'la forma flexionada');                   // de groten, de rijken
+  if(/e$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-1)))tryB(s,N,'una forma antigua (ten koste van, in feite, ter plaatse)');
   if(!out.length){ // grafía anterior a 1947: mensch, heele, loopen, zoo
     let o=w.replace(/mede$/,'mee').replace(/sch(e|en|er)?$/,'s$1').replace(/(aa|ee|oo|uu)([^aeiou])(e|en|er)$/,(m,a,b,c)=>a[0]+b+c).replace(/^(.*[^o])oo$/,'$1o');
     if(o!==w){for(const x of nlSide(norm(o)))if(!seen.has(x.e.nl+'|'+x.e.pos)){seen.add(x.e.nl+'|'+x.e.pos);out.push({e:x.e,via:x.via||'grafía o forma antigua',morph:1,old:1})}
@@ -2745,7 +2810,7 @@ function nlRead(T,n){
   else if(R[0]&&R[0].e.pos==='verb'&&NL_VFIN.has(R[0].via)){const f=nlSepFwd(T,n,R[0].e);if(f)R.unshift({e:f.e,via:R[0].via,s:-9,sep:T[f.pi].w,stem:R[0].e.nl})}
   else if(!(R[0]&&R[0].e.pos==='noun'&&R[0].s<-1)){const v=R.find(r=>r.e.pos==='verb'&&NL_VFIN.has(r.via)&&r.s-R[0].s<3.3);if(v){const f=nlSepFwd(T,n,v.e);if(f)R.unshift({e:f.e,via:v.via,s:-9,sep:T[f.pi].w,stem:v.e.nl})}}
   return R}
-const NL_VIA={'el plural':['plural de','meervoud van'],'el diminutivo':['diminutivo de','verkleinwoord van'],'el diminutivo (en plural)':['diminutivo (plural) de','verkleinwoord (meervoud) van'],
+const NL_VIA={'el participio de presente':['participio de presente de','onvoltooid deelwoord van'],'el genitivo (-s)':['genitivo de','genitief van'],'el plural (met z’n tweeën, duizenden)':['plural de','meervoud van'],'una forma antigua (ten koste van, in feite, ter plaatse)':['forma antigua (dativo) de','oude naamval van'],'el plural':['plural de','meervoud van'],'el diminutivo':['diminutivo de','verkleinwoord van'],'el diminutivo (en plural)':['diminutivo (plural) de','verkleinwoord (meervoud) van'],
   'una forma del presente':['presente de','tegenwoordige tijd van'],'una forma del pasado':['pasado de','verleden tijd van'],'el participio':['participio de','voltooid deelwoord van'],
   'la forma flexionada':['forma con -e de','verbogen vorm van'],'el comparativo':['comparativo de','vergrotende trap van'],'el superlativo':['superlativo de','overtreffende trap van'],
   'el imperativo':['imperativo de','gebiedende wijs van'],'grafía o forma antigua':['grafía o forma antigua de','oude spelling of vorm van'],
@@ -2772,7 +2837,7 @@ const ES_PREP=GLS('a de en con por para sin sobre entre hasta desde hacia contra
 const ES_SUBJ=GLS('yo tú él ella usted nosotros nosotras vosotros ellos ellas ustedes me te se nos os le les no ya');
 let ESLEX=null;
 function esLex(){if(ESLEX)return ESLEX;ESLEX=new Map();
-  for(const item of ESLEX_SRC.split(/\s*\|\s*|\n/)){const m=item.trim().match(/^(?:([na]):)?(.+?) = (.+)$/);if(!m)continue;
+  for(const item of (ESLEX_SRC+'\n'+(typeof ESLEX_SRC2==='string'?ESLEX_SRC2:'')).split(/\s*\|\s*|\n/)){const m=item.trim().match(/^(?:([na]):)?(.+?) = (.+)$/);if(!m)continue;
     for(const f of m[2].split('/')){const k=f.trim();if(!ESLEX.has(k))ESLEX.set(k,[]);ESLEX.get(k).push({c:m[1]||'o',nl:m[3],head:m[2].split('/')[0].trim()})}}
   return ESLEX}
 let ESF=null,ESVN=null;
@@ -2784,13 +2849,14 @@ function esFormMap(){
   if(ESF)return ESF;ESF=new Map();ESVN=new Map();
   const put=(f,inf,nl,lab)=>{if(!f)return;for(let x of String(f).split(/\s*\/\s*/)){x=x.replace(/^no /,'').replace(/^(me|te|se|nos|os) /,'').toLowerCase();if(!x||x.includes(' '))continue;
     let l=ESF.get(x);if(!l)ESF.set(x,l=[]);if(!l.some(y=>y.inf===inf)&&l.length<5)l.push({inf,nl,lab})}};
-  for(const [v,nl0] of ES_VERBS.concat(ES_VX)){if(ESVN.has(v))continue;const nl=nl0.replace('/',' / ');ESVN.set(v,nl);let c;try{c=esConj(v)}catch(_){continue}
+  for(const [v,nl0] of ES_VERBS.concat(ES_VX)){if(!v||ESVN.has(v))continue;const nl=String(nl0||'').replace('/',' / ');ESVN.set(v,nl);let c;try{c=esConj(v)}catch(_){continue}
+    if(!c||!c.tenses)continue;
     put(v,v,nl,'');
     c.tenses.forEach((t,ti)=>{if(ti!==3&&ti!==6)t.f.forEach(f=>put(f,v,nl,'t'+ti))});
     put(c.ger,v,nl,'ger');put(c.part,v,nl,'part');
     if(c.imper){put(c.imper.tu,v,nl,'imp');put(c.imper.vos,v,nl,'imp')}}
   return ESF}
-function esPieces(e){if(e._gp)return e._gp;const out=[];for(const g of e.es||[])for(const p of String(g).split(/[,;]/)){const s=p.replace(/\(.*?\)/g,'').trim().toLowerCase();if(s)out.push(s)}return e._gp=out}
+function esPieces(e){if(e._gp&&e._gn===(e.es||[]).length)return e._gp;const out=[];for(const g of e.es||[])for(const p of String(g).replace(/\([^)]*\)/g,' ').split(/[,;/]/)){const s=p.trim().toLowerCase();if(s)out.push(s)}e._gn=(e.es||[]).length;return e._gp=out}
 function glLexInit(){try{if(!LEXGL.size&&APP.content&&APP.content.lex)for(const x of APP.content.lex){const pos={de:'noun',het:'noun',v:'verb',a:'adj'}[x[1]];if(pos&&!LEXGL.has(x[0]+'|'+pos))LEXGL.set(x[0]+'|'+pos,x[3])}}catch(e){}}
 function esSide(lc,loose){const k=norm(lc),out=[];glLexInit();
   for(const x of idx.get(k)||[]){const e=x.e;if(e.pos==='grammar')continue;const P=esPieces(e);
@@ -2802,40 +2868,70 @@ function esSide(lc,loose){const k=norm(lc),out=[];glLexInit();
 const esNlHead=e=>(e.pos==='noun'&&e.noun&&e.noun.article&&e.noun.article!=='de/het'?e.noun.article+' ':'')+e.nl;
 const ES_CLS={noun:'n',verb:'v',adj:'a',other:'o'};
 function esVerbNl(inf){esFormMap();if(ESVN.has(inf))return ESVN.get(inf);
-  const h=esSide(inf).filter(x=>x.e.pos==='verb'&&x.s<6);return h.length?h.slice(0,2).map(x=>x.e.nl).join(', '):''}
+  const f=v=>{const h=esSide(v).filter(x=>x.e.pos==='verb'&&x.s<6);return h.length?h.slice(0,2).map(x=>x.e.nl).join(', '):''};
+  return f(inf)||(/se$/.test(inf)?f(inf.slice(0,-2)):f(inf+'se'))}
 const ESL_C=new Map();
-const ES_END=['ábamos','íamos','áramos','iéramos','asteis','isteis','ieron','yeron','ieras','ieran','iendo','yendo','abais','aron','aban','abas','aras','aran','iera','íais','amos','emos','imos','aste','iste','ando',
-  'ada','adas','ados','ida','idas','idos','aba','ara','ían','ías','ado','ido','áis','éis','ía','ís','an','en','as','es','ió','yó','ar','er','ir','o','a','e','é','í','ó'];
+const ES_END=['ásemos','iésemos','áramos','iéramos','ábamos','íamos','asteis','isteis','ieron','yeron','ieras','ieran','ieses','iesen','iendo','yendo','abais','aseis','ieseis','aron','aban','abas','aras','aran','ases','asen','iera','iese','íais','amos','emos','imos','aste','iste','ando',
+  'ada','adas','ados','ida','idas','idos','aba','ara','ase','ían','ías','ado','ido','áis','éis','ía','ís','an','en','as','es','ió','yó','ar','er','ir','o','a','e','é','í','ó'];
 const esNoAcc=s=>s.normalize('NFD').replace(/́/g,'').normalize('NFC');
+// cambios de raíz: tuv→ten, hic→hac, quis→quer, pud→pod, pus→pon, sup→sab, vin→ven, dij→dec, traj→tra, -go→∅, e→i, o→ue…
+const ES_STEMRULES=[[/uv$/,'en'],[/uv$/,''],[/hic$/,'hac'],[/hiz$/,'hac'],[/quis$/,'quer'],[/pud$/,'pod'],[/pus$/,'pon'],[/sup$/,'sab'],[/cup$/,'cab'],[/vin$/,'ven'],[/dij$/,'dec'],[/aj$/,'a'],
+  [/ig$/,''],[/([lnr])g$/,'$1'],[/g$/,'c'],[/qu$/,'c'],[/gu$/,'g'],[/c$/,'z'],[/zc$/,'c'],[/j$/,'g'],[/j$/,'c'],[/y$/,''],[/z$/,'c'],[/ü$/,'u']];
+function esVowelVariants(st){ // cambia la última vocal de la raíz (ie→e, ue→o, i→e, u→o), sin tocar la u de gu/qu
+  const out=new Set([st]);if(/üe/.test(st))out.add(st.replace(/üe([^aeiou]*)$/,'o$1'));const m=st.match(/^(.*?)(ie|ue|i|u)([^aeiouáéíóú]*|gu[^aeiou]*|qu[^aeiou]*)$/);
+  if(m){const to={ie:'e',ue:'o',i:'e',u:'o'}[m[2]];out.add(m[1]+to+m[3]);if(m[2]==='ie')out.add(m[1]+'i'+m[3]);if(m[2]==='ue')out.add(m[1]+'u'+m[3])}
+  return out}
 function esLemma(w){ // forma de un verbo que no está en las listas → infinitivo, comprobado con el conjugador
   if(ESL_C.has(w))return ESL_C.get(w);let res=null;const tried=new Set();
-  const test=inf=>{if(tried.has(inf)||inf.length<4)return null;tried.add(inf);const nl=esVerbNl(inf);if(!nl)return null;let c;try{c=esConj(inf)}catch(_){return null}
-    const chk=f=>String(f||'').split(/\s*\/\s*/).some(x=>x.toLowerCase()===w);
-    if(w===inf)return{inf,nl,lab:''};
-    for(let ti=0;ti<c.tenses.length;ti++){if(ti===3||ti===6)continue;if(c.tenses[ti].f.some(chk))return{inf,nl,lab:'t'+ti}}
-    if(chk(c.ger))return{inf,nl,lab:'ger'};if(chk(c.part)||chk(String(c.part).replace(/o$/,'a'))||chk(String(c.part).replace(/o$/,'os'))||chk(String(c.part).replace(/o$/,'as')))return{inf,nl,lab:'part'};
-    if(c.imper&&(chk(c.imper.tu)||chk(c.imper.vos)))return{inf,nl,lab:'imp'};return null};
-  const fut=w.match(/^(.+[aeií]r)(é|ás|á|emos|éis|án|ía|ías|íamos|íais|ían)$/);
-  if(fut)res=test(fut[1])||test(esNoAcc(fut[1]));
-  if(!res)for(const en of ES_END){if(!w.endsWith(en)||w.length-en.length<2)continue;const st=w.slice(0,-en.length),stems=new Set([st]);
-    [[/ie([^aeiou]*)$/,'e$1'],[/ue([^aeiou]*)$/,'o$1'],[/i([^aeiou]*)$/,'e$1'],[/u([^aeiou]*)$/,'o$1'],[/qu$/,'c'],[/gu$/,'g'],[/c$/,'z'],[/zc$/,'c'],[/j$/,'g'],[/j$/,'c'],[/y$/,''],[/z$/,'c']]
-      .forEach(([re,to])=>{for(const s of [...stems]){const x=s.replace(re,to);if(x!==s)stems.add(x)}});
-    for(const s of stems){for(const s2 of new Set([s,esNoAcc(s)])){for(const e2 of ['ar','er','ir']){res=test(s2+e2);if(res)break}if(res)break}if(res)break}
-    if(res)break}
+  const test=(inf,w2)=>{const ww=w2||w;if(tried.has(inf+'|'+ww)||inf.length<3||(/[áéíóú]/.test(inf)&&inf!=='oír'&&!/oír$/.test(inf)))return null;tried.add(inf+'|'+ww);const nl=esVerbNl(inf);if(!nl)return null;let c;try{c=esConj(inf)}catch(_){return null}
+    if(ww===inf)return{inf,nl,lab:''};
+    for(const loose of [false,true]){
+      const chk=f=>String(f||'').split(/\s*\/\s*/).some(x=>{x=x.toLowerCase().replace(/^no /,'');return x===ww||loose&&esNoAcc(x)===esNoAcc(ww)});
+      for(let ti=0;ti<c.tenses.length;ti++){if(ti===3||ti===6)continue;if(c.tenses[ti].f.some(chk))return{inf,nl,lab:'t'+ti}}
+      if(chk(c.ger))return{inf,nl,lab:'ger'};if(chk(c.part)||chk(String(c.part).replace(/o$/,'a'))||chk(String(c.part).replace(/o$/,'os'))||chk(String(c.part).replace(/o$/,'as')))return{inf,nl,lab:'part'};
+      if(c.imper&&(chk(c.imper.tu)||chk(c.imper.vos)||chk(c.imper.ud)||chk(c.imper.uds)))return{inf,nl,lab:'imp'}}
+    return null};
+  const tryW=ww=>{let r=null;
+    const fut=ww.match(/^(.+?)(é|ás|á|emos|éis|án|ía|ías|íamos|íais|ían)$/);
+    if(fut){const b=fut[1];const C=[b,esNoAcc(b)];
+      if(/ndr$/.test(b))C.push(b.slice(0,-3)+'ner',b.slice(0,-3)+'nir');if(/ldr$/.test(b))C.push(b.slice(0,-3)+'ler',b.slice(0,-3)+'lir');
+      if(/[^nl]dr$/.test(b))C.push(b.slice(0,-2)+'er');if(/br$/.test(b))C.push(b.slice(0,-2)+'ber');if(/rr$/.test(b))C.push(b.slice(0,-1)+'er');
+      if(/har$/.test(b))C.push(b.slice(0,-3)+'hacer');if(/dir$/.test(b))C.push(b.slice(0,-3)+'decir');
+      for(const x of C){if(/(ar|er|ir|ír)$/.test(x)){r=test(x,ww);if(r)return r}}}
+    if(/z$/.test(ww)){r=test(ww.slice(0,-1)+'cer',ww);if(r)return r}                                  // haz, deshaz
+    if(/[aei]d$/.test(ww)){r=test(ww.slice(0,-1)+'r',ww)||test(ww.slice(0,-2)+'ír',ww);if(r)return Object.assign({},r,{lab:'imp'})}   // sentad, poned
+    if(/[nl]$/.test(ww)||/[nl]$/.test(esNoAcc(ww))){const b=esNoAcc(ww);for(const x of [b+'er',b+'ir']){r=test(x,ww);if(r)return r}}   // mantén, detén, sal
+    for(const en of ES_END){if(!ww.endsWith(en)||ww.length-en.length<1)continue;const st=ww.slice(0,-en.length),stems=new Set([st]);
+      for(const s0 of [...stems])for(const v of esVowelVariants(s0))stems.add(v);
+      for(const [re,to] of ES_STEMRULES)for(const s0 of [...stems]){const x=s0.replace(re,to);if(x!==s0){stems.add(x);for(const v of esVowelVariants(x))stems.add(v)}}
+      for(const s0 of stems){for(const s2 of new Set([s0,esNoAcc(s0)])){for(const e2 of ['ar','er','ir']){r=test(s2+e2,ww);if(r)return r}if(/^o$/.test(s2)||/[^aeiou]o$/.test(s2)){r=test(s2+'ír',ww);if(r)return r}}}}
+    return null};
+  res=tryW(w);
+  // pretérito imperfecto de subjuntivo en -se → -ra (hubiese → hubiera)
+  if(!res&&/[aeé]se(s|n|mos|is)?$/.test(w)&&/(a|ie|e|é|á)se/.test(w)){const w2=w.replace(/se(s|n|mos|is)?$/,(m,t)=>'ra'+(t||''));res=tryW(w2);if(res)res=Object.assign({},res,{lab:'t8'})}
+  // voseo: hablás, querés, vivís
+  if(!res){const v=w.match(/^(.+)(ás|és|ís)$/);if(v){const inf=v[1]+{'ás':'ar','és':'er','ís':'ir'}[v[2]];const nl=esVerbNl(inf);if(nl)res={inf,nl,lab:'t0'}}}
   ESL_C.set(w,res);return res}
-function esEncl(w){ // córtalas, ponlo, verme, lavándose, dámelo
-  const m=w.match(/^(.{2,}?)(me|te|se|nos|os|lo|la|le|los|las|les)(lo|la|le|los|las|les)?$/);if(!m)return null;
+const ES_ENCL_OK=new Set(['','ger','imp','t0','t7']);
+function esClitic(w){ // córtalas, ponlo, verme, lavándose, dámelo, déjeme, vámonos, moveos
+  const m=w.match(/^(.{2,}?)(me|te|se|nos|os|lo|la|le|los|las|les)(me|te|se|nos|lo|la|le|los|las|les)?$/);if(!m)return null;
   const cl=m[3]?m[2]+' + '+m[3]:m[2];
-  for(const b of new Set([m[1],esNoAcc(m[1]),m[3]?m[1]+m[2]:null].filter(Boolean))){
-    const f=(esFormMap().get(b)||[]).find(v=>v.lab===''||v.lab==='ger'||v.lab==='imp'||v.lab==='t0')||(b.length>3?(x=>x&&(x.lab===''||x.lab==='ger'||x.lab==='imp'||x.lab==='t0')?x:null)(esLemma(b)):null);
-    if(f)return{inf:f.inf,nl:f.nl,lab:f.lab,cl:b===m[1]+m[2]?m[3]:cl}}
+  const B=[m[1],esNoAcc(m[1])];if(m[3])B.push(m[1]+m[2],esNoAcc(m[1]+m[2]));
+  if(m[2]==='nos'&&!m[3])B.push(esNoAcc(m[1])+'s');if(m[2]==='os'&&!m[3])B.push(m[1]+'d');
+  for(const b of new Set(B)){
+    const f=(esFormMap().get(b)||[]).find(v=>ES_ENCL_OK.has(v.lab))||esFormNorm(b).find(v=>ES_ENCL_OK.has(v.lab))||(b.length>2?(x=>x&&ES_ENCL_OK.has(x.lab)?x:null)(esLemma(b)):null);
+    if(f){const two=m[3]&&esNoAcc(b).startsWith(esNoAcc(m[1]+m[2]));return{inf:f.inf,nl:f.nl,lab:b===f.inf?'':/(ando|iendo|yendo)$/.test(b)?'ger':'imp',cl:two?m[3]:cl}}}
   return null}
+let ESFN=null;
+function esFormNorm(w){if(!ESFN){ESFN=new Map();for(const [f,l] of esFormMap())if(!ESFN.has(esNoAcc(f)))ESFN.set(esNoAcc(f),l)}return ESFN.get(esNoAcc(w))||[]}
 function esBases(w){ // plurales, femeninos, diminutivos, superlativos y adverbios en -mente
   const B=[],add=(b,lab)=>{if(b&&b.length>1&&b!==w&&!B.some(x=>x[0]===b))B.push([b,lab])};
   const PL=['plural de','meervoud van'],FE=['femenino de','vrouwelijke vorm van'];
   if(/mente$/.test(w)){const a=w.slice(0,-5);add(a,['adverbio de','bijwoord van']);add(a.replace(/a$/,'o'),['adverbio de','bijwoord van'])}
   const sup=w.match(/^(.+?)(qu)?ísim[oa]s?$/);if(sup){const s=sup[2]?sup[1]+'c':sup[1];add(s+'o',['superlativo de','overtreffende trap van']);add(s,['superlativo de','overtreffende trap van']);add(s+'e',['superlativo de','overtreffende trap van'])}
   const dim=w.match(/^(.+?)(qu|gu)?(?:c)?(it|ill)([oa])s?$/);if(dim){const s=dim[2]==='qu'?dim[1]+'c':dim[2]==='gu'?dim[1]+'g':dim[1];add(s+dim[4],['diminutivo de','verkleinwoord van']);add(s,['diminutivo de','verkleinwoord van']);add(s+'e',['diminutivo de','verkleinwoord van'])}
+  const aug=w.match(/^(.+?)(ot|az|ón|on)([ae]?)(s?)$/);if(aug&&/(ote|ota|azo|aza|otes|otas|azos|azas)$/.test(w)){add(aug[1]+'e',['aumentativo de','vergrotingsvorm van']);add(aug[1]+'o',['aumentativo de','vergrotingsvorm van']);add(aug[1],['aumentativo de','vergrotingsvorm van'])}
+  if(/entas?$/.test(w))add(w.replace(/entas?$/,'ente'),FE);
   if(/ces$/.test(w))add(w.slice(0,-3)+'z',PL);
   if(/es$/.test(w))add(w.slice(0,-2),PL);
   if(/s$/.test(w)){add(w.slice(0,-1),PL);if(/as$/.test(w)){add(w.slice(0,-2)+'o',PL);add(w.slice(0,-2),PL)}}
@@ -2862,8 +2958,8 @@ function esRead(T,n){
       if(R.slice(n0).some(r=>r.s<5.5))break}}
   if(!vf.length&&!R.some(r=>r.lex&&r.cls==='o')){
     const lm=esLemma(w);if(lm)R.push({head:lm.inf,tr:lm.nl,cls:'v',s:1.9,note:esLab(lm),inf:lm.lab===''});
-    else if(weak||!R.length){const en=esEncl(w);if(en)R.push({head:en.inf,tr:en.nl,cls:'v',s:1.5,note:(esLab(en)||L('infinitivo','infinitief')+' «'+en.inf+'»')+' + '+L('pronombre','voornaamwoord')+' '+en.cl})}}
-  if(!t.first&&/^[A-ZÁÉÍÓÚÑ][a-záéíóúñü]/.test(t.w)&&!(esLex().get(w)||[]).length&&!vf.length&&!esEncl(w)&&!esLemma(w))return[{head:t.w,tr:L('nombre propio','eigennaam'),cls:'o',s:0,name:1}];
+    else if(weak||!R.length){const en=esClitic(w);if(en)R.push({head:en.inf,tr:en.nl,cls:'v',s:1.5,note:(esLab(en)||L('infinitivo','infinitief')+' «'+en.inf+'»')+' + '+L('pronombre','voornaamwoord')+' '+en.cl})}}
+  if(!t.first&&/^[A-ZÁÉÍÓÚÑ][a-záéíóúñü]/.test(t.w)&&!(esLex().get(w)||[]).length&&!vf.length&&!esClitic(w)&&!esLemma(w))return[{head:t.w,tr:L('nombre propio','eigennaam'),cls:'o',s:0,name:1}];
   const pr=ESPREF.get(w);
   for(const r of R){let d=0;const fin=r.cls==='v'&&!r.inf;
     if(pv){if(ES_DET.has(pv))d+=r.cls==='n'?-1.5:r.cls==='a'?-0.5:r.cls==='v'?1.5:0.5;
@@ -2990,6 +3086,47 @@ function glSentences(s){const out=[];let last=0,m;const re=/([.!?…]["»”’'
   out.push(s.slice(last).trim());return out.filter(Boolean)}
 function glSentTr(A,n,tr){if(!tr)return null;const a=glSentences(A.text),b=glSentences(tr);if(a.length!==b.length)return null;
   let pos=0;for(let i=0;i<a.length;i++){const st=A.text.indexOf(a[i],pos),en=st+a[i].length;if(st<0)return null;if(A.T[n].i>=st&&A.T[n].i<en)return{src:a[i],tr:b[i]};pos=en}return null}
+
+/* ================= búsqueda inteligente: formas que no están tal cual en el índice ================= */
+let ESLEM=null;const eslemP=fetch('esl.json'+(window.WB_V||'')).then(r=>r.ok?r.json():null).then(d=>{if(!d)return;ESLEM=new Map();
+  for(const x of d.split(' ')){const i=x.indexOf(':');if(i>0)ESLEM.set(x.slice(0,i),x.slice(i+1).split(','))}}).catch(()=>{});
+const ES_LOOK=/[ñáéíóúü]|(ción|ciones|dad|dades|mente|ísimo|ísima|ando|iendo|aron|ieron|aba|aban|ía|ían)$/;
+function esHits(b){const kb=norm(b),f=v=>lookup(v).filter(x=>!x.via&&x.e.pos!=='grammar'&&(norm(x.e.nl)!==norm(v)||esPos(x.e,norm(v))<4));
+  let h=f(b);if(!h.length&&/(ar|er|ir|ír)$/.test(b))h=f(b+'se');if(!h.length&&/(ar|er|ir|ír)se$/.test(b))h=f(b.slice(0,-2));return h}
+function smartLookup(q){
+  const w=String(q||'').trim().toLowerCase();if(!w||/\s/.test(w)||w.length<2)return null;
+  try{
+    const tryEs=()=>{const C=[],seen=new Set(),push=(b,lab)=>{if(b&&b!==w&&!seen.has(b)){seen.add(b);C.push([b,lab])}};
+      for(const v of esFormMap().get(w)||[])push(v.inf,esLab(v));
+      if(!(esFormMap().get(w)||[]).length)for(const v of esFormNorm(w))push(v.inf,esLab(v));
+      if(/(a|ie|e|é|á)se(s|n|mos|is)?$/.test(w)){const w2=w.replace(/se(s|n|mos|is)?$/,(m,t)=>'ra'+(t||''));for(const v of esFormMap().get(w2)||esFormNorm(w2))push(v.inf,L('subjuntivo imperfecto','aanvoegende wijs (verleden)')+' '+L('de','van')+' «'+v.inf+'»')}
+      for(const l of (ESLEM&&ESLEM.get(w))||[])push(l,L('forma de','vorm van')+' «'+l+'»');
+      for(const [b,lab] of esBases(w))push(b,L(lab[0],lab[1])+' «'+b+'»');
+      if(!C.some(c=>esHits(c[0]).length)){const lm=esLemma(w);if(lm)push(lm.inf,esLab(lm)||L('forma de','vorm van')+' «'+lm.inf+'»');
+        const en=esClitic(w);if(en)push(en.inf,(esLab(en)||L('infinitivo','infinitief')+' «'+en.inf+'»')+' + '+L('pronombre','voornaamwoord')+' '+en.cl)}
+      for(const [b,lab] of C){const h=esHits(b);if(h.length){const sl=typeof sugLabel==='function'?sugLabel(norm(b)):b,lb=sl!==b&&norm(sl)===norm(b)?lab.split('«'+b+'»').join('«'+sl+'»'):lab;return{hits:h.map(x=>({e:x.e,via:null})),note:'«'+q.trim()+'» → '+lb,lang:'es',base:b}}}
+      return null};
+    const tryNl=()=>{const m=nlMorph(w);if(!m.length)return null;const seen=new Set(),hits=[];
+      for(const x of m){const k=x.e.nl+'|'+x.e.pos;if(seen.has(k))continue;seen.add(k);hits.push({e:x.e,via:x.via})}
+      return{hits,note:null,lang:'nl'}};
+    const es=tryEs(),nl=tryNl();if(!es&&!nl)return null;if(!es)return nl;if(!nl)return es;
+    // las dos lecturas: primero la que parece más probable
+    const esFirst=ES_LOOK.test(w)||!nl.hits.some(h=>h.e.src==='base')||nl.hits.every(h=>/plural|flexionada|antigua|-s/.test(h.via||''))&&es.hits.some(h=>h.e.src==='base');
+    return{hits:esFirst?es.hits.concat(nl.hits):nl.hits.concat(es.hits),note:es.note,lang:esFirst?'es':'nl',base:es.base,both:true};
+  }catch(e){console.error(e);return null}}
+
+function esVerbReading(q){const w=String(q||'').trim().toLowerCase();if(!w||/\s/.test(w))return null;
+  try{const v=(esFormMap().get(w)||[]).find(v=>v.lab!==''&&v.inf!==w);if(!v)return null;const h=esHits(v.inf);if(!h.length)return null;
+    return{hits:h.map(x=>({e:x.e,via:null})),note:'«'+q.trim()+'» → '+esLab(v),base:v.inf}}catch(e){return null}}
+
+/* palabras gramaticales y verbos del léxico revisado (eslex.js) también en el buscador: conmigo, contigo, siquiera, hervir… */
+function glIndexLex(){try{
+  const hasEs=k=>(idx.get(norm(k))||[]).some(x=>x.e.pos==='grammar'||(!x.via&&norm(x.e.nl)!==norm(k)));
+  const made=new Map(),mk=(nl,c,label)=>{const key=nl+'|'+c;let e=made.get(key);if(!e){e={nl,es:[],pos:c==='n'?'other':c==='a'?'other':'other',posLabel:label||(c==='n'?'sustantivo':c==='a'?'adjetivo':'palabra'),src:'base',lexe:1,note:null};made.set(key,e)}return e};
+  for(const [f,arr] of esLex()){if(hasEs(f))continue;for(const x of arr){const e=mk(x.nl,x.c);if(!e.es.includes(f))e.es.push(f);add(f,e)}}
+  for(const [v,nl] of ES_VX){if(hasEs(v))continue;const e=mk(nl,'v','verbo');if(!e.es.includes(v))e.es.push(v);add(v,e)}
+}catch(e){console.error(e)}}
+loadP.then(glIndexLex).catch(()=>{});
 /* ================= Ventanita de traducción (lecturas, transcripciones, ejemplos) ================= */
 const glSaved=()=>(APP.prog.saved=APP.prog.saved||{});
 const GLPOP={pin:false,timer:0,hide:0};
