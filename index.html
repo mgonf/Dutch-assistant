@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794754711";</script>
+<script>window.WB_V="?v=1794950272";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -2303,7 +2303,7 @@ function lessonPracticeHtml(id){const ks=(LESSON_GENS[id]||[]).filter(k=>GENS[k]
   return `<section class="quiz"><h3>${L('Práctica sin fin','Eindeloos oefenen')}</h3><p class="lead" style="margin:0">${L('Preguntas nuevas cada vez, generadas a partir de miles de palabras.','Steeds nieuwe vragen, gemaakt uit duizenden woorden.')}</p>
   <div class="gbtns" style="justify-content:flex-start">${ks.map(k=>`<button class="btn-main" type="button" data-go="p-${k.replace(/_/g,'-')}" style="padding:10px 16px">∞ ${esc(gTitle(k))}</button>`).join('')}${ks.length>1?`<button class="btn-ghost" type="button" data-go="p-${ks.map(k=>k.replace(/_/g,'-')).join('--')}">${L('Todo junto','Alles samen')}</button>`:''}</div></section>`}
 Object.assign(LESSON_GENS,{spelling:['plural'],'de-het-regels':['dehet'],'toen-als-wanneer':['subordinada'],graad:['comparativo'],'zonder-lidwoord':['dehet'],
- pasiva:['pasiva','participio'],participios:['participio','adjetivo'],'preposiciones-fijas':['voorzetsel'],er:['voorzetsel'],
+ pasiva:['pasiva','participio'],participios:['participio','adjetivo'],'preposiciones-fijas':['voorzetsel','nl_waar'],er:['voorzetsel','nl_waar'],
  'es-tener':['es_pres'],'es-saber-conocer':['es_pres','es_ind'],'es-hace-desde':['es_pres','es_ind'],'es-verbos-cambio':['es_ind'],'es-pronombres-dobles':['es_imper'],'es-diminutivos':['es_genero']});
 /* ================= Expresiones / Uitdrukkingen ================= */
 let IDL=null; // idioma de las expresiones mostradas: 'nl' | 'es' (por defecto, el que se aprende)
@@ -3375,7 +3375,49 @@ const ER=[['Hoeveel kinderen heb je? Ik heb ___ drie.','er',['het','daar','ze'],
  ['Hoeveel broodjes wil je? Geef me ___ maar twee.','er',['ze','het','die'],'Er con números.'],['Is ___ nog koffie?','er',['het','daar','die'],'Is er…? = ¿Hay…?']];
 const MODAL_V=['werken','koken','fietsen','zwemmen','lezen','slapen','betalen','wachten','helpen','komen','gaan','spelen','dansen','zingen','studeren','eten','drinken','bellen','reizen','rijden','schrijven','wandelen','sporten','leren','winkelen','sparen','vertrekken','blijven'];
 const MODAL=[['kunnen','poder'],['moeten','tener que'],['willen','querer'],['mogen','poder (permiso)']];
+// «Waar wacht je op?»: preguntar y responder con waar/er/daar + preposición (lección «pronominales»)
+const WAARQ=[
+ ['¿A qué esperas?','Waar wacht je op?',['Op wat wacht je?','Wat wacht je op?','Waar wacht je aan?'],'wachten op + cosa → waar … op'],
+ ['¿En qué piensas?','Waar denk je aan?',['Wat denk je aan?','Aan wat denk je?','Waar denk je op?'],'denken aan → waar … aan'],
+ ['¿De qué habláis?','Waar praten jullie over?',['Over wat praten jullie?','Wat praten jullie over?','Waar praten jullie van?'],'praten over → waar … over'],
+ ['¿Qué estás mirando?','Waar kijk je naar?',['Naar wat kijk je?','Wat kijk je naar?','Waar kijk je op?'],'kijken naar → waar … naar'],
+ ['¿Qué te apetece?','Waar heb je zin in?',['Wat heb je zin in?','In wat heb je zin?','Waar heb je zin aan?'],'zin hebben in → waar … in'],
+ ['¿De qué tienes miedo?','Waar ben je bang voor?',['Wat ben je bang voor?','Voor wat ben je bang?','Waar ben je bang op?'],'bang zijn voor → waar … voor'],
+ ['¿De qué te ríes?','Waar lach je om?',['Wat lach je om?','Om wat lach je?','Waar lach je aan?'],'lachen om → waar … om'],
+ ['¿Qué te gusta?','Waar houd je van?',['Wat houd je van?','Van wat houd je?','Waar houd je aan?'],'houden van → waar … van'],
+ ['¿Con qué empiezas?','Waar begin je mee?',['Waar begin je met?','Met wat begin je?','Wat begin je mee?'],'beginnen met → waar … mee (met → mee)'],
+ ['¿Qué estás haciendo? (¿en qué andas?)','Waar ben je mee bezig?',['Waar ben je met bezig?','Met wat ben je bezig?','Wat ben je mee bezig?'],'bezig zijn met → waar … mee'],
+ ['¿Con qué tiene que ver eso?','Waar heeft dat mee te maken?',['Waar heeft dat met te maken?','Met wat heeft dat te maken?','Wat heeft dat mee te maken?'],'te maken hebben met → waar … mee'],
+ ['¿A qué lleva esto?','Waar leidt dit toe?',['Waar leidt dit tot?','Tot wat leidt dit?','Wat leidt dit toe?'],'leiden tot → waar … toe (tot → toe)'],
+ ['¿Qué buscas?','Waar zoek je naar?',['Naar wat zoek je?','Wat zoek je naar?','Waar zoek je op?'],'zoeken naar → waar … naar'],
+ ['¿Qué te molesta?','Waar heb je last van?',['Wat heb je last van?','Van wat heb je last?','Waar heb je last aan?'],'last hebben van → waar … van'],
+ ['¿En qué crees?','Waar geloof je in?',['Wat geloof je in?','In wat geloof je?','Waar geloof je aan?'],'geloven in → waar … in'],
+ ['¿De qué estás orgulloso?','Waar ben je trots op?',['Wat ben je trots op?','Op wat ben je trots?','Waar ben je trots van?'],'trots zijn op → waar … op'],
+ ['¿Con qué sueñas?','Waar droom je van?',['Wat droom je van?','Van wat droom je?','Waar droom je met?'],'dromen van → waar … van'],
+ ['¿De qué depende?','Waar hangt het van af?',['Waar hangt het af van?','Van wat hangt het af?','Wat hangt het van af?'],'afhangen van → waar … van af'],
+ ['¿De qué te quejas?','Waar klaag je over?',['Wat klaag je over?','Over wat klaag je?','Waar klaag je van?'],'klagen over → waar … over'],
+ ['¿En qué eres bueno?','Waar ben je goed in?',['Wat ben je goed in?','In wat ben je goed?','Waar ben je goed aan?'],'goed zijn in → waar … in'],
+ ['¿Qué escuchas?','Waar luister je naar?',['Wat luister je naar?','Naar wat luister je?','Waar luister je op?'],'luisteren naar → waar … naar'],
+ ['¿A qué tienes que acostumbrarte?','Waar moet je aan wennen?',['Wat moet je aan wennen?','Aan wat moet je wennen?','Waar moet je op wennen?'],'wennen aan → waar … aan'],
+ ['¿En qué tengo que fijarme?','Waar moet ik op letten?',['Wat moet ik op letten?','Op wat moet ik letten?','Waar moet ik aan letten?'],'letten op → waar … op'],
+ ['¿Qué pides?','Waar vraag je om?',['Wat vraag je om?','Om wat vraag je?','Waar vraag je op?'],'vragen om → waar … om'],
+ ['¿A quién esperas?','Op wie wacht je?',['Waar wacht je op?','Wie wacht je op?','Op wat wacht je?'],'Con personas no cambia: op wie'],
+ ['¿En quién piensas?','Aan wie denk je?',['Waar denk je aan?','Wie denk je aan?','Aan wat denk je?'],'Con personas: aan wie'],
+ ['¿Con quién hablas?','Met wie praat je?',['Waarmee praat je?','Wie praat je mee?','Met wat praat je?'],'Con personas: met wie'],
+ ['¿De quién estás enamorado?','Op wie ben je verliefd?',['Waar ben je verliefd op?','Wie ben je verliefd op?','Op wat ben je verliefd?'],'Con personas: op wie'],
+ ['«¿Piensas en el examen?» — «Sí, pienso en ello.»','Ja, ik denk eraan.',['Ja, ik denk aan het.','Ja, ik denk aan dat.','Ja, ik denk het aan.'],'aan + het → eraan'],
+ ['«¿Estás contento con tu bici nueva?» — «Sí, mucho.»','Ja, ik ben er heel blij mee.',['Ja, ik ben er heel blij met.','Ja, ik ben heel blij met het.','Ja, ik ben heel blij met er.'],'met + het → er … mee'],
+ ['«Eso no me apetece.»','Daar heb ik geen zin in.',['Ik heb geen zin in dat.','Daar heb ik geen zin aan.','Dat heb ik geen zin in.'],'in + dat → daar … in'],
+ ['«No tengo nada que ver con eso.»','Daar heb ik niets mee te maken.',['Ik heb niets met dat te maken.','Daar heb ik niets met te maken.','Dat heb ik niets mee te maken.'],'met + dat → daar … mee'],
+ ['«Llevo una hora esperándolo.» (el autobús)','Ik wacht er al een uur op.',['Ik wacht al een uur op het.','Ik wacht al een uur er op.','Ik wacht het al een uur op.'],'er en medio, la preposición al final'],
+ ['«No sé a qué esperan.»','Ik weet niet waarop ze wachten.',['Ik weet niet op wat ze wachten.','Ik weet niet waar wachten ze op.','Ik weet niet wat ze op wachten.'],'Subordinada: waarop (o waar … op) y el verbo al final'],
+ ['«La casa en la que vivo»','het huis waarin ik woon',['het huis in wat ik woon','het huis in dat ik woon','het huis dat ik in woon'],'Relativo con cosa: waarin (o waar … in)'],
+ ['«El hombre al que espero»','de man op wie ik wacht',['de man op wat ik wacht','de man die ik op wacht','de man wie ik op wacht'],'Relativo con persona: op wie'],
+ ['«¿Con qué pagaste?»','Waarmee heb je betaald?',['Met wat heb je betaald?','Waarmet heb je betaald?','Wat heb je mee betaald?'],'met → mee: waarmee'],
+ ['«¿A qué has estado esperando tanto tiempo?»','Waar heb je zo lang op gewacht?',['Waar heb je zo lang gewacht op?','Op wat heb je zo lang gewacht?','Wat heb je zo lang op gewacht?'],'La preposición va antes del participio final']];
 const GEN_EXTRA_NL={
+ nl_waar:{t:'Waar wacht je op? (waar/er/daar + preposición)',lv:'B1',make(){const [es,c,w,why]=pick(WAARQ);const r=mc(c,w);
+   return{q:`<span class="qsub">${L('¿Cómo se dice en neerlandés?','Hoe zeg je dit in het Nederlands?')}</span><span class="qbig">${esc(es)}</span>`,...r,why:`<b>${esc(c)}</b> · ${esc(why)}`,say:[c,'nl']}}},
  nl_omte:{t:'Om te, te o nada',lv:'B1',make(){const [c,w,why]=pick(OMTE);const r=mc(c,w);return{q:`<span class="qsub">${L('Elige la frase correcta','Kies de juiste zin')}</span>`,...r,why:esc(why),say:[c,'nl']}}},
  nl_zich:{t:'Verbos reflexivos (zich)',lv:'A2',make(){const [v,es]=pick(ZICH),[p,pr,k]=pick(ZPRON),cj=conjugate(v),f=cj.present[k];
    const r=mc(pr,['me','je','zich','ons'].filter(x=>x!==pr));return{q:`<span class="qbig">${p} ${f} ___.</span><span class="qsub">zich ${v} = ${es}</span>`,...r,why:`${p} ${f} <b>${pr}</b>`,say:[`${p} ${f} ${pr}`,'nl']}}},
@@ -3391,7 +3433,7 @@ for(const [k,g] of Object.entries(GEN_EXTRA_NL))GENS[k]={...g,lang:'nl'};
 for(const [k,g] of Object.entries(GEN_EXTRA_ES))GENS[k]={...g,lang:'es'};
 Object.assign(T_NL,{es_pretimp:'Indefinido of imperfecto',es_pronobj:'Voornaamwoorden: lo, la, los, las',es_tilde:'Accent of niet?',es_prep:'Voorzetsels: a, en, de, por, para…',es_hueco:'Vul de zin aan (echte zinnen)',carteles_es:'Spaanse borden en mededelingen'});
 Object.assign(LESSON_GENS,{'es-pret-imperf':['es_pretimp'],'es-pretimp':['es_pretimp'],'es-tilde':['es_tilde'],'es-pronombres-dobles':['es_pronobj'],'es-preposiciones':['es_prep'],
- 'om-te':['nl_omte'],'te-om-te':['nl_omte'],zich:['nl_zich'],reflexivos:['nl_zich'],er:['nl_er','voorzetsel'],modales:['nl_modal'],'modale-werkwoorden':['nl_modal']});
+ 'om-te':['nl_omte'],'te-om-te':['nl_omte'],zich:['nl_zich'],reflexivos:['nl_zich'],er:['nl_er','voorzetsel','nl_waar'],modales:['nl_modal'],'modale-werkwoorden':['nl_modal']});
 
 const CL_T={pron:['Huecos: pronombres','Gaten: voornaamwoorden'],prep:['Huecos: preposiciones','Gaten: voorzetsels'],art:['Huecos: artículos','Gaten: lidwoorden'],conj:['Huecos: conjunciones','Gaten: voegwoorden'],adv:['Huecos: adverbios y partículas','Gaten: bijwoorden']};
 for(const c of Object.keys(CL_T)){
@@ -3401,7 +3443,7 @@ for(const c of Object.keys(CL_T)){
 }
 Object.assign(LESSON_GENS,{uitspraak:['oido_nl'],pronombres:['nl_cloze_pron'],fechas:['numeros','hora'],imperativo:['presente'],objeto:['nl_cloze_pron'],preposiciones:['nl_cloze_prep','voorzetsel'],
  'er-is':['nl_er'],futuro:['nl_modal','presente'],graag:['comparativo'],posicion:['inversion','subordinada'],progresivo:['nl_omte'],'al-nog-pas':['nl_cloze_adv'],confusas:['nl_hueco'],
- condicional:['pasado','nl_modal'],pronominales:['nl_er','voorzetsel'],indirecto:['subordinada'],laten:['nl_omte'],indefinidos:['nl_hueco'],'iets-lekkers':['adjetivo'],particulas:['nl_cloze_adv'],
+ condicional:['pasado','nl_modal'],pronominales:['nl_waar','nl_er','voorzetsel'],indirecto:['subordinada'],laten:['nl_omte'],indefinidos:['nl_hueco'],'iets-lekkers':['adjetivo'],particulas:['nl_cloze_adv'],
  cortesia:['nl_modal'],'wat-voor':['nl_hueco'],impersonal:['pasiva','nl_er'],hoeven:['nl_omte','nl_modal'],samenstellingen:['dehet'],woordvorming:['dehet','diminutivo'],elkaar:['nl_cloze_pron'],
  procenten:['numeros'],uitroepen:['nl_hueco'],tijdsuitdrukkingen:['hora','nl_cloze_prep'],idioom:['idi_nl'],
  'es-uitspraak':['oido_es'],'es-hay':['es_hueco','es_serestar'],'es-vragen':['es_tilde'],'es-ontkenning':['es_hueco'],'es-ir-a':['es_pres','es_fut'],'es-objecten':['es_pronobj','es_cloze_pron'],
