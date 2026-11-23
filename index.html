@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1794953140";</script>
+<script>window.WB_V="?v=1795466366";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -47,7 +47,7 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 .legend .art{font-size:.75rem;vertical-align:0;margin:0}
 
 form.search{display:flex;gap:8px}
-#q{flex:1;min-width:0;font:500 1.2rem var(--f-ui);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+#q,#cjq{flex:1;min-width:0;font:500 1.2rem var(--f-ui);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
 #q:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px var(--de-soft)}
 button{font:600 .95rem var(--f-ui);cursor:pointer;border-radius:10px;border:1.5px solid transparent}
 .btn-main{background:var(--de);color:var(--surface);padding:0 20px}
@@ -384,6 +384,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .didyou{margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--de-soft);font-size:1.02rem}
 .didyou .sug{all:unset;cursor:pointer;font-weight:700;color:var(--de);text-decoration:underline;text-underline-offset:3px}
 .didyou .sug:hover,.didyou .sug:focus-visible{color:var(--het)}
+.via .sug{all:unset;cursor:pointer;font-weight:600;color:var(--de);text-decoration:underline;text-underline-offset:3px}
+.via .sug:hover,.via .sug:focus-visible{color:var(--het)}
 
 .rtext{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin:12px 0;display:flex;flex-direction:column;gap:12px}
 .rtext .rpara{border-radius:12px;padding:4px 8px;margin:0 -8px;transition:background .2s}
@@ -832,6 +834,10 @@ function conjugate(inf){
   if(CUR_VERB[inf])return CUR_VERB[inf];
   if(inf.includes(' ')){
     const w=inf.split(' ');const isVb=x=>knownBase(x)||VERBSET.has(x);
+    // reflexivo: ik vergis me, jij vergist je, hij vergist zich, wij vergissen ons, jullie vergissen je, zij vergissen zich
+    if(w[0]==='zich'&&w.length>=2){const v={...conjugate(w.slice(1).join(' '))};
+      v.present=v.present.map((f,i)=>reflIns(f,REFL[i]));v.imperative=v.imperative?reflIns(v.imperative,'je'):null;
+      v.refl=true;v.inf=inf;v.regularStem=null;v.auto=true;return v}
     const last=w[w.length-1],AUXV=new Set(['laten','gaan','komen','blijven','doen','leren','helpen','horen','zien']);
     const k=isVb(last)&&!(AUXV.has(w[0])&&w.length===2)?w.length-1:(isVb(w[0])?0:w.length-1);
     const rest=w.filter((_,i)=>i!==k).join(' ');
@@ -1017,6 +1023,9 @@ const sayBtnSlow=(t,lang)=>`<button type="button" class="say slow" data-say="${e
 const sayPair=(t,lang)=>`<span class="saypair">${sayBtn(t,'',lang)}${sayBtnSlow(t,lang)}</span>`;
 const sayBtn=(t,cls,lang)=>`<button type="button" class="say ${cls||''}" data-say="${esc(t)}" data-lang="${lang||'nl'}" aria-label="${lang==='es'?'Escuchar en español':'Escuchar'} «${esc(t)}»" title="${lang==='es'?'Escuchar (español)':'Escuchar'}">${SPK}</button>`;
 const PRON_SAY=['ik','jij','hij','wij','jullie','zij'];
+// etiquetas de forma («liep» es una forma del pasado) en la interfaz neerlandesa de quien aprende español
+const VIA_NL={'una forma del presente':'een vorm van de tegenwoordige tijd','una forma del pasado':'een vorm van de verleden tijd','el plural':'het meervoud','el superlativo':'de overtreffende trap','el participio':'het voltooid deelwoord','el comparativo':'de vergrotende trap','la forma flexionada':'de verbogen vorm','el imperativo':'de gebiedende wijs','el diminutivo':'het verkleinwoord','el participio de presente':'het onvoltooid deelwoord','una forma antigua del presente':'een oude vorm van de tegenwoordige tijd','el diminutivo (en plural)':'het verkleinwoord (meervoud)','una forma del subjuntivo':'een vorm van de aanvoegende wijs'};
+const viaTxt=v=>APP.learn==='es'&&VIA_NL[v]||v;
 function detRows(n,A,P){
   const de=A==='de';n=esc(n);const p=P?esc(P.split('/')[0].trim()):null;const no='—';
   return[
@@ -1045,21 +1054,25 @@ function nounBlock(e){
     <div class="fact"><span>${Lx('Se sustituye por','Vervangen door')}</span><b>${A==='de'?'hij / die':'het / dat'}</b></div></div></section>
   <section><h3>${Lx('Determinantes y concordancia','Lidwoorden en aanwijzende vnw.')}</h3><div class="tbl"><table><thead><tr><th>Función</th><th>Singular</th><th>Plural</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
+// pronombres reflexivos por persona (ik, jij/u, hij/zij/het, wij, jullie, zij)
+const REFL=['me','je','zich','ons','je','zich'];
+const reflIns=(f,p)=>String(f).split(' / ').map(x=>{const t=x.split(' ');return[t[0],p,...t.slice(1)].join(' ')}).join(' / ');
 function tenses(v){
-  const hz=v.aux==='hz',z=v.aux==='z';
-  const perf=i=>hz?`${HEB[i]} / ${BEN[i]} ${v.participle}`:`${(z?BEN:HEB)[i]} ${v.participle}`;
-  const plus=i=>hz?`${HAD[i]} / ${WAS[i]} ${v.participle}`:`${(z?WAS:HAD)[i]} ${v.participle}`;
-  return[['Presente','o.t.t.',v.present],['Pasado','o.v.t.',PRON.map((_,i)=>v.past[i<3?0:1])],
+  const R=v.refl,hz=v.aux==='hz'&&!R,z=v.aux==='z'&&!R,rf=i=>R?' '+REFL[i]:'',inf=R?v.inf.replace(/^zich /,''):v.inf;
+  const perf=i=>hz?`${HEB[i]} / ${BEN[i]} ${v.participle}`:`${(z?BEN:HEB)[i]}${rf(i)} ${v.participle}`;
+  const plus=i=>hz?`${HAD[i]} / ${WAS[i]} ${v.participle}`:`${(z?WAS:HAD)[i]}${rf(i)} ${v.participle}`;
+  return[['Presente','o.t.t.',v.present],['Pasado','o.v.t.',PRON.map((_,i)=>R?reflIns(v.past[i<3?0:1],REFL[i]):v.past[i<3?0:1])],
     ['Perfecto','v.t.t.',PRON.map((_,i)=>perf(i))],['Pluscuamperfecto','v.v.t.',PRON.map((_,i)=>plus(i))],
-    ['Futuro','o.t.t.t.',ZAL.map(a=>a+' '+v.inf)],['Condicional','o.v.t.t.',ZOU.map(a=>a+' '+v.inf)]];
+    ['Futuro','o.t.t.t.',ZAL.map((a,i)=>a+rf(i)+' '+inf)],['Condicional','o.v.t.t.',ZOU.map((a,i)=>a+rf(i)+' '+inf)]];
 }
 function verbBlock(e){
   const v=e.verb;
   const grid=tenses(v).map(([t,abbr,f])=>`<div class="tense"><h4>${t}<small>${abbr}${sayBtn(f.map((x,i)=>PRON_SAY[i]+' '+x.split(' / ')[0]).join(', '),'sm')}</small></h4><dl>${f.map((x,i)=>`<dt>${PRON[i]}</dt><dd>${esc(x)}</dd>`).join('')}</dl></div>`).join('');
-  const auxTxt=v.aux==='z'?'zijn':v.aux==='hz'?'hebben o zijn':'hebben';
+  const auxTxt=v.refl?'hebben':v.aux==='z'?'zijn':v.aux==='hz'?'hebben o zijn':'hebben';
   let notes=[];
-  if(v.aux==='hz')notes.push('Con verbos de movimiento: hebben si hablas de la actividad (ik heb gelopen); zijn si hay destino (ik ben naar huis gelopen).');
+  if(v.aux==='hz'&&!v.refl)notes.push('Con verbos de movimiento: hebben si hablas de la actividad (ik heb gelopen); zijn si hay destino (ik ben naar huis gelopen).');
   const j=v.present[1],ik=v.present[0];
+  if(v.refl)notes.push(Lx('Verbo reflexivo: el pronombre cambia con la persona (','Wederkerend werkwoord: het voornaamwoord verandert per persoon (')+PRON_SAY.map((p,i)=>p+' '+v.present[i].split(' / ')[0]).join(', ')+Lx('). En los tiempos compuestos va con hebben: ik heb me vergist.','). In de voltooide tijden met hebben: ik heb me vergist.'));
   if(v.regularStem&&j!==ik){const base=ik.split(' ')[0];notes.push(`Con inversión, jij pierde la -t: ${base.charAt(0).toUpperCase()+base.slice(1)} jij${v.prefix?' '+v.prefix:''}?`)}
   if(v.prefix)notes.push(`Verbo separable: la partícula "${v.prefix}" va al final de la frase en presente y pasado, y se une en el infinitivo y el participio.`);
   return`<section><div class="facts">
@@ -1820,9 +1833,11 @@ function trRow(e,via,q,fromNl,k,main){
   const es=(e.es||[]).filter(Boolean);
   const cmp=!es.length?compoundApp(e.nl):null;
   const esH=es.length?esc(es.join(', ')):cmp?compoundHtml(cmp):`<span class="notr">${Lx('sin traducción en la base','geen vertaling in de database')}</span>`;
-  const viaH=via?`<span class="trvia">«${esc(q)}» ${Lx('es','is')} ${esc(via)}</span>`:'';
+  const viaH=via?`<span class="trvia">«${esc(q)}» ${Lx('es','is')} ${esc(viaTxt(via))}</span>`:'';
   const left=fromNl?nlH:esH,right=fromNl?esH:nlH;
-  const conjBtn=e.pos==='verb'?`<button class="btn-ghost trb" type="button" data-conj="${esc(fromNl?e.nl:norm(q))}">${Lx('Conjugar','Vervoegen')}</button>`:'';
+  // el conjugador muestra el verbo del idioma que se aprende: el neerlandés de la ficha o, para quien aprende español, el verbo español buscado
+  let cjv=e.nl;if(e.pos==='verb'&&APP.learn==='es'&&!fromNl){const d=conjDetect(q);if(d&&d.lang==='es')cjv=d.inf}
+  const conjBtn=e.pos==='verb'?`<button class="btn-ghost trb" type="button" data-conj="${esc(cjv)}">${Lx('Conjugar','Vervoegen')}</button>`:'';
   const esSay=(fromNl?(es[0]||(cmp?cmp.es:'')):q).replace(/\(.*?\)/g,'').trim();
   const btn=APP.learn==='es'&&esSay?sayBtn(esSay,'','es'):sayBtn(nlSay,'');
   return `<div class="trrow${main?' tr-main':''}" data-k="${k}">${btn}<div class="trtxt"><div class="tr1">${left}</div><div class="tr2"><span class="arrow">→</span> ${right}</div>${viaH}</div>
@@ -1899,38 +1914,67 @@ search($q.value||'huis',false);
 /* ---------- pestaña Conjugador ---------- */
 let conjQ='';
 function conjDetect(raw){
-  const q=raw.trim().toLowerCase();if(!q)return null;
-  if(/(ar|er|ir|ír)(se)?$/.test(q)&&esConj(q))return{lang:'es',inf:q};
-  if(/n$/.test(q))return{lang:'nl',inf:q};
-  const hit=lookup(q).find(x=>x.e&&x.e.pos==='verb');           // forma conjugada: liep → lopen
+  const q=String(raw||'').trim().toLowerCase().replace(/\s+/g,' ');if(!q)return null;
+  if(!q.includes(' ')&&/(ar|er|ir|ír)(se)?$/.test(q)){let ok=false;try{ok=!!esConj(q)}catch(_){}if(ok)return{lang:'es',inf:q}}
+  if(/^zich [a-zëï]+n$/.test(q)||(idx.get(norm(q))||[]).some(h=>h.e.pos==='verb'&&!h.via&&norm(h.e.nl)===norm(q)))return{lang:'nl',inf:q};
+  const esForm=()=>{if(q.includes(' '))return null;let L1=[];try{L1=(esFormMap().get(q)||[]).filter(v=>v.inf!==q)}catch(_){}
+    if(L1.length)return{lang:'es',inf:L1[0].inf,via:esLab(L1[0]),alt:[...new Set(L1.slice(1).map(v=>v.inf))].filter(x=>x!==L1[0].inf).slice(0,2)};return null};
+  const f1=esForm();if(f1)return f1;                                  // forma española: comí, fui, tienen, dije
+  const hit=lookup(q).find(x=>x.e&&x.e.pos==='verb'&&x.via);           // forma neerlandesa: liep → lopen
   if(hit)return{lang:'nl',inf:hit.e.nl,via:hit.via};
+  if(!q.includes(' ')){let l=null;try{l=esLemma(q)}catch(_){}if(l&&l.inf&&l.inf!==q)return{lang:'es',inf:l.inf,via:esLab(l)}}
+  if(/n$/.test(q))return{lang:'nl',inf:q};
+  const h2=lookup(q).find(x=>x.e&&x.e.pos==='verb'&&norm(x.e.nl)===norm(q));
+  if(h2)return{lang:'nl',inf:h2.e.nl};
   return null;
 }
+// ¿se puede conjugar esta traducción neerlandesa? (eten, opstaan, zich vergissen, wakker worden, houden van; no «naar buiten»)
+const NL_PREPS=new Set(['naar','in','op','uit','aan','bij','met','van','voor','om','over','door','af','tot','te','met']);
+function nlConjOK(t){if(!t||/[()=…]/.test(t))return false;const w=t.split(' ');
+  if(w.length===1)return/n$/.test(t);
+  if(w[0]==='zich')return w.length===2&&/n$/.test(w[1]);
+  if(w.length===2)return(/n$/.test(w[1])&&isVerbKey(norm(w[1]))&&!NL_PREPS.has(w[0]))||(isVerbKey(norm(w[0]))&&NL_PREPS.has(w[1]));
+  return false}
 function conjTrans(d){ // traducciones del verbo al otro idioma
-  if(d.lang==='nl'){const e=lookup(d.inf).find(x=>x.e&&x.e.pos==='verb'&&!x.via);
-    return e?[...new Set(e.e.es.map(s=>s.replace(/\(.*?\)/g,'').trim()).filter(s=>/^[a-záéíóúñü]+(ar|er|ir|ír)(se)?$/.test(s)))].slice(0,4):[]}
-  const base=d.inf.replace(/se$/,'');
-  const hs=lookup(base).filter(x=>x.e&&x.e.pos==='verb'&&!x.via&&x.e.es.some(s=>norm(s).split(/[,;]/).map(t=>t.trim()).includes(norm(base))));
-  const base1=hs.filter(x=>x.e.src==='base');return [...new Set((base1.length?base1:hs).map(x=>x.e.nl))].slice(0,3);
+  const clean=s=>String(s).replace(/\(.*?\)/g,'').replace(/\s+/g,' ').trim(),ESINF=/^[a-záéíóúñü]+(ar|er|ir|ír)(se)?$/;
+  if(d.lang==='nl'){const e=lookup(d.inf).find(x=>x.e&&x.e.pos==='verb'&&!x.via);if(!e)return[];
+    const out=[];for(const s0 of e.e.es||[]){const s=clean(s0),w=s.split(' ');if(ESINF.test(s))out.push(s);else if(ESINF.test(w[0])&&w.length<=3&&/^(por|a|al|de|del|en|con|para|sobre)$/.test(w[1]||''))out.push(w[0])}   // «llamar por teléfono» → llamar; «estar sentado» no
+    return[...new Set(out)].filter(x=>{try{return!!esConj(x)}catch(_){return false}}).slice(0,4)}
+  const cur=[];try{const n=esVerbNl(d.inf);if(n)for(const t of String(n).split(/[,;/]/))cur.push(clean(t))}catch(_){}
+  const match=(x,k)=>x.e&&x.e.pos==='verb'&&!x.via&&(x.e.es||[]).some(s=>norm(clean(s))===norm(k)||norm(s).split(/[,;]/).map(t=>t.trim()).includes(norm(k)));
+  const exact=lookup(d.inf).filter(x=>match(x,d.inf)),base=d.inf.replace(/se$/,'');
+  const bh=cur.length||exact.length||base===d.inf?[]:lookup(base).filter(x=>match(x,base));
+  const hits=exact.concat(bh),b1=hits.filter(x=>x.e.src==='base');
+  return[...new Set(cur.concat((b1.length?b1:hits).map(x=>x.e.nl)))].filter(nlConjOK).slice(0,4);
 }
 function renderConj(){
-  const el=VIEWS.conj;
-  const ex=APP.learn==='es'?['tener','ir','levantarse','pedir','hacer','lopen','zijn']:['lopen','hebben','opbellen','zijn','tener','ir','levantarse'];
+  const el=VIEWS.conj,LN=APP.learn;
+  const ex=LN==='es'?['tener','ir','levantarse','pedir','hacer','lopen','zijn']:['lopen','hebben','opbellen','zijn','zich vergissen','comer','levantarse'];
   el.innerHTML=`<h2 class="h-sec">${L('Conjugador','Werkwoorden vervoegen')}</h2>
-  <p class="lead">${L('Escribe un verbo en neerlandés o en español: la app detecta el idioma y muestra todos los tiempos. También entiende formas conjugadas neerlandesas como «liep».','Typ een Nederlands of Spaans werkwoord: de app herkent de taal en toont alle tijden. Spaanse infinitieven eindigen op -ar, -er of -ir.')}</p>
-  <form class="search" id="cjf" autocomplete="off"><input id="cjq" type="search" placeholder="${L('lopen, tener, levantarse, liep…','tener, hablar, ir, lopen…')}" aria-label="${L('Verbo','Werkwoord')}"><button class="btn-main" type="submit">${L('Conjugar','Vervoegen')}</button></form>
+  <p class="lead">${L('Escribe un verbo en neerlandés o en español y verás su conjugación <b>en neerlandés</b> con todos los tiempos; si lo escribes en español, se traduce primero. También entiende formas conjugadas como «liep» o «comí».','Typ een Spaans of Nederlands werkwoord en je ziet de <b>Spaanse</b> vervoeging in alle tijden; een Nederlands werkwoord wordt eerst vertaald. Vervoegde vormen zoals «comí» of «liep» worden ook herkend.')}</p>
+  <form class="search" id="cjf" autocomplete="off"><input id="cjq" type="search" placeholder="${L('lopen, opbellen, comer, liep…','tener, hablar, comí, lopen…')}" aria-label="${L('Verbo','Werkwoord')}"><button class="btn-main" type="submit">${L('Conjugar','Vervoegen')}</button></form>
   <div class="chips"><span class="lbl">${L('Prueba','Probeer')}</span>${ex.map(w=>`<button type="button" class="chip" data-cj="${w}">${w}</button>`).join('')}</div>
   <div id="cjo" style="display:flex;flex-direction:column;gap:16px"></div>`;
-  const run=async v=>{conjQ=v;const out=$('cjo');await loadP.catch(()=>{});const d=conjDetect(v);
+  // force: mostrar el verbo en su propio idioma aunque no sea el que se aprende
+  const run=async(v,force)=>{conjQ=v;const out=$('cjo');await loadP.catch(()=>{});let d=conjDetect(v);
     const cjSug=()=>{const sg=suggest(v,3,isVerbKey);return sg.length?`<p class="didyou">${L('¿Quisiste decir','Bedoelde je')} ${sg.map((w,i)=>`${i?(i===sg.length-1?' '+L('o','of')+' ':', '):''}<button type="button" class="sug" data-cj="${esc(w)}">${esc(w)}</button>`).join('')}?</p>`:''};
     if(!d){out.innerHTML=cjSug()+`<p class="tip">${L('No reconozco ese verbo. Escribe el infinitivo: en neerlandés acaba en -en o -n (werken, gaan); en español, en -ar, -er o -ir (hablar, comer, vivir).','Dat werkwoord herken ik niet. Typ de infinitief: Nederlands eindigt op -en of -n (werken, gaan), Spaans op -ar, -er of -ir (hablar, comer, vivir).')}</p>`;out.querySelectorAll('[data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});return}
-    const tr=conjTrans(d),pre=(!tr.length&&!isVerbKey(norm(d.inf)))?cjSug():'',other=d.lang==='nl'?L('En español','In het Spaans'):L('En neerlandés','In het Nederlands');
-    const trHtml=tr.length?`<p class="via">${other}: ${tr.map(t=>`<button type="button" class="chip" data-cj="${esc(t)}">${esc(t)} →</button>`).join(' ')}</p>`:'';
+    const said=esc(String(v).trim()),formNote=x=>x.via?`<p class="via">«${said}» → ${esc(viaTxt(x.via))}${x.alt&&x.alt.length?` · ${L('o también','of ook')} ${x.alt.map(a=>`<button type="button" class="chip" data-cj="${esc(a)}">${esc(a)}</button>`).join(' ')}`:''}</p>`:'';
+    let sw='';
+    if(!force&&d.lang!==LN){const tl=conjTrans(d);const d2=tl.length?(conjDetect(tl[0])||{lang:LN,inf:tl[0]}):null;
+      if(d2&&d2.lang===LN){
+        sw=formNote(d)+`<p class="via">${d.via?esc(d.inf):'«'+said+'»'} ${LN==='nl'?'en neerlandés':'in het Spaans'}: ${tl.map((t,i)=>i?`<button type="button" class="chip" data-cj="${esc(t)}">${esc(t)}</button>`:`<b>${esc(t)}</b>`).join(' ')} · <button type="button" class="sug" data-cjf="${esc(d.inf)}">${LN==='nl'?`ver «${esc(d.inf)}» conjugado en español`:`Nederlandse vervoeging van «${esc(d.inf)}» tonen`}</button></p>`;
+        d={lang:LN,inf:d2.inf}}}
+    const tr=sw?[]:conjTrans(d),pre=(!sw&&!tr.length&&d.lang==='nl'&&!isVerbKey(norm(d.inf)))?cjSug():'',other=d.lang==='nl'?L('En español','In het Spaans'):L('En neerlandés','In het Nederlands');
+    // desde el idioma que se aprende, las traducciones abren su conjugación en el otro idioma (si no, el conjugador volvería aquí)
+    const cja=d.lang===LN?'data-cjf':'data-cj',trHtml=tr.length?`<p class="via">${other}: ${tr.map(t=>`<button type="button" class="chip" ${cja}="${esc(t)}">${esc(t)} →</button>`).join(' ')}</p>`:'';
+    const note=sw||formNote(d)+trHtml;
     if(d.lang==='es'){const c=esConj(d.inf);
-      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${trHtml}${esConjHtml(c)}</article>`}
+      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(c.inf)}</h2>${sayBtn(c.inf,'','es')}<span class="pill">${L('verbo español','Spaans werkwoord')}</span></div>${note}${esConjHtml(c)}</article>`}
     else{const v2=conjugate(d.inf);const e={nl:d.inf,verb:v2};
-      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(d.inf)}</h2>${sayBtn(d.inf,'')}<span class="pill">${L('verbo neerlandés','Nederlands werkwoord')}</span></div>${d.via?`<p class="via">«${esc(v)}» ${L('es','is')} ${esc(d.via)} ${L('de','van')} <b>${esc(d.inf)}</b>.</p>`:''}${trHtml}${verbBlock(e)}</article>`}
+      out.innerHTML=pre+`<article class="entry"><div class="hw-row"><h2 class="hw">${esc(d.inf)}</h2>${sayBtn(d.inf,'')}<span class="pill">${L('verbo neerlandés','Nederlands werkwoord')}</span></div>${note}${verbBlock(e)}</article>`}
     out.querySelectorAll('[data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
+    out.querySelectorAll('[data-cjf]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cjf;run(b.dataset.cjf,true)});
   };
   $('cjf').onsubmit=e=>{e.preventDefault();run($('cjq').value)};
   el.querySelectorAll('.chips [data-cj]').forEach(b=>b.onclick=()=>{$('cjq').value=b.dataset.cj;run(b.dataset.cj)});
@@ -2759,7 +2803,8 @@ const ES_VX=('haber:hebben (hulpwerkwoord); er zijn deber:moeten; verschuldigd z
  'enfermar:ziek worden toser:hoesten vacunar:vaccineren operar:opereren recetar:voorschrijven sufrir:lijden temer:vrezen atreverse:durven quejarse:klagen reírse:lachen enfadarse:boos worden '+
  'alegrarse:blij zijn sorprender:verrassen aburrir:vervelen cansar:vermoeien asustar:bang maken tranquilizar:geruststellen imaginar:zich voorstellen soñar:dromen desear:wensen '+
  'esperar:wachten; hopen fijarse:letten op darse:zich geven (darse cuenta = beseffen) ponerse:aantrekken; worden hacerse:worden volverse:worden; zich omdraaien encontrarse:zich bevinden; elkaar ontmoeten '+
- 'sentirse:zich voelen llevarse:meenemen (llevarse bien = goed kunnen opschieten) parecerse:lijken op quedarse:blijven dedicarse:zich bezighouden met').split(/ (?=[a-zñáéíóúü]+:)/).map(s=>s.split(':'));
+ 'sentirse:zich voelen llevarse:meenemen (llevarse bien = goed kunnen opschieten) parecerse:lijken op quedarse:blijven dedicarse:zich bezighouden met '+
+ 'despertarse:wakker worden, ontwaken bañarse:in bad gaan; zwemmen lavarse:zich wassen peinarse:zich kammen equivocarse:zich vergissen olvidarse:vergeten aburrirse:zich vervelen cansarse:moe worden dormirse:in slaap vallen perderse:verdwalen maquillarse:zich opmaken relajarse:ontspannen').split(/ (?=[a-zñáéíóúü]+:)/).map(s=>s.split(':'));
 /* generado por src/r6_apply.py: traducciones español → neerlandés que son notas o frases (se muestran como texto) */
 const ESLEX_SRC2=`través = a través de = door, via; de través = schuin | cerebral = hersen- | policial = politie- (coche policial = politieauto) | estatal = staats- | estatal = van de staat | estelar = ster- (van de sterren) | acostar = naar bed brengen | acostarse = naar bed gaan | comprometer = in gevaar brengen | calmarse = tot rust komen | quienquiera = wie dan ook | cardíaco = hart- (ataque cardíaco = hartaanval) | tribal = stam- | madrugada = het holst van de nacht (de madrugada = 's nachts, vroeg in de ochtend) | acondicionado = aire acondicionado = de airconditioning | cosquillas = hacer cosquillas = kietelen; tener cosquillas = kittelig zijn | soviético = Sovjet- | universitario = universiteits- | asegurarse = zich ervan verzekeren | basarse = basarse en = gebaseerd zijn op | natal = geboorte- (ciudad natal = geboortestad) | deshacerse = deshacerse de = zich ontdoen van | facial = gezichts- (crema facial = gezichtscrème) | penal = straf- | naval = scheeps- | naval = marine- | dondequiera = waar dan ook | presionar = onder druk zetten | acudir = zich wenden tot | laboral = arbeids- | laboral = werk- | lateral = zij- | marcial = krijgs- (artes marciales = vechtsporten) | inminente = op handen zijnd | avergonzar = in verlegenheid brengen | vegetal = plant- | dactilar = huella dactilar = de vingerafdruk | bancario = bank- (cuenta bancaria = bankrekening) | familiarizarse = familiarizarse con = zich vertrouwd maken met | fiar = op de pof verkopen | fiarse = fiarse de = vertrouwen op | sanguíneo = bloed- (grupo sanguíneo = bloedgroep) | comunitario = gemeenschaps- | tinto = vino tinto = rode wijn | arterial = slagader- (presión arterial = bloeddruk) | callejero = straat- (perro callejero = zwerfhond) | fijarse = fijarse en = letten op | estudiantil = studenten- | polar = pool- (oso polar = ijsbeer) | inmobiliario = vastgoed- (agencia inmobiliaria = makelaarskantoor) | electoral = verkiezings- (campaña electoral = verkiezingscampagne) | costera = kust- | retrasarse = te laat zijn | ocasionalmente = af en toe | muscular = spier- | colmo = el colmo = het toppunt | pulmonar = long- | racial = ras- | navideño = kerst- | ultra = ultra- | comportar = met zich meebrengen | ocular = oog- (testigo ocular = ooggetuige) | quicio = sacar de quicio = razend maken | mafioso = maffia- | cuántico = kwantum- | oponerse = oponerse a = zich verzetten tegen | presenciar = getuige zijn van | cuerdo = bij zijn verstand | ambiental = milieu- | hartarse = hartarse de = genoeg krijgen van | corporativo = bedrijfs- | conllevar = met zich meebrengen | espinal = ruggenmerg- (médula espinal = ruggenmerg) | prescindir = prescindir de = het stellen zonder | supervisar = toezicht houden op | premeditado = met voorbedachten rade | lácteo = zuivel- (productos lácteos = zuivelproducten) | gubernamental = regerings- | vertebral = columna vertebral = de wervelkolom | indefinidamente = voor onbepaalde tijd | retirarse = met pensioen gaan | fúnebre = begrafenis- | satelital = satelliet- | sonoro = geluids- | bastidores = entre bastidores = achter de schermen | cabales = no estar en sus cabales = niet goed bij zijn hoofd zijn | imparable = niet te stoppen | educativo = onderwijs- | acuático = water- (parque acuático = waterpark) | antelación = con antelación = van tevoren | renal = nier- | craneal = schedel- | regresivo = cuenta regresiva = het aftellen | empresarial = bedrijfs- | empresarial = ondernemings- | avecinarse = op komst zijn | derramamiento = derramamiento de sangre = bloedvergieten | apetecer = zin hebben in (me apetece = ik heb zin in) | ocasional = af en toe | materno = moeder- (lengua materna = moedertaal) | adoptivo = adoptie- | adoptivo = pleeg- (hijo adoptivo = adoptiefkind) | sanitario = gezondheids- | trizas = hacer trizas = aan flarden scheuren | residencial = woon- (zona residencial = woonwijk) | alimentario = voedings-`;
 /* ================= Glosa contextual =================
