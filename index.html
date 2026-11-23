@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.WB_V="?v=1795466366";</script>
+<script>window.WB_V="?v=1795471743";</script>
 </head>
 <body>
 <title>Woordenboek ES–NL</title>
@@ -527,7 +527,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="chips" id="chips"></div>
     <div id="results"></div>
 
-    <footer>Unas 46.500 palabras neerlandesas y, en sentido contrario, búsqueda por unas 120.000 formas españolas (plurales, femeninos, verbos conjugados, pronombres pegados…). El vocabulario por temas y la base están revisados a mano; el resto procede de datos abiertos, con varios miles de correcciones manuales. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet, MCR y Wiktionary) y FreeDict, contrastadas con el Wiktionary inglés (entradas españolas, CC BY-SA); la preferencia de categoría según el contexto sale de los corpus Universal Dependencies (Alpino, LassySmall, AnCora, GSD); los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); las conjugaciones se generan por reglas. Las palabras compuestas sin traducción propia (linkerknie, fietsbel…) se traducen de forma aproximada a partir de sus partes y se marcan con ≈. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
+    <footer>Unas 48.000 palabras neerlandesas y, en sentido contrario, búsqueda por unas 120.000 formas españolas (plurales, femeninos, verbos conjugados, pronombres pegados…). El vocabulario por temas y la base están revisados a mano; el resto procede de datos abiertos, con varios miles de correcciones manuales. Las traducciones vienen de Open Multilingual Wordnet (Open Dutch WordNet, MCR y Wiktionary) y FreeDict, contrastadas con el Wiktionary inglés (entradas españolas, CC BY-SA); la preferencia de categoría según el contexto sale de los corpus Universal Dependencies (Alpino, LassySmall, AnCora, GSD); los artículos y plurales, de Dutch Plurals and Articles (Centre for Digital Humanities, Universiteit Utrecht); plurales y diminutivos comprobados con la lista de palabras de OpenTaal; las conjugaciones se generan por reglas. Las palabras compuestas sin traducción propia (linkerknie, fietsbel…) se traducen de forma aproximada a partir de sus partes y se marcan con ≈. Las fichas marcadas como «datos abiertos» pueden traer traducciones imprecisas. Lo que no está en la base se consulta a Claude con tu cuenta, y la respuesta se guarda en este navegador.</footer>
   </div>
 </main>
 
@@ -717,23 +717,25 @@ const GRAMMAR={pos:'grammar',nl:'de / het',src:'base'};
 /* ---------- morfología para la base grande ---------- */
 const STRONG_SRC='bakken:bakte:bakten:gebakken:h|barsten:barstte:barstten:gebarsten:z|bederven:bedierf:bedierven:bedorven:hz|bedriegen:bedroog:bedrogen:bedrogen:h|bergen:borg:borgen:geborgen:h|bevelen:beval:bevalen:bevolen:h|bewegen:bewoog:bewogen:bewogen:h|bidden:bad:baden:gebeden:h|bieden:bood:boden:geboden:h|bijten:beet:beten:gebeten:h|binden:bond:bonden:gebonden:h|blazen:blies:bliezen:geblazen:h|blijken:bleek:bleken:gebleken:z|blinken:blonk:blonken:geblonken:h|braden:braadde:braadden:gebraden:h|breken:brak:braken:gebroken:hz|brouwen:brouwde:brouwden:gebrouwen:h|buigen:boog:bogen:gebogen:h|dragen:droeg:droegen:gedragen:h|drijven:dreef:dreven:gedreven:hz|dringen:drong:drongen:gedrongen:hz|druipen:droop:dropen:gedropen:hz|duiken:dook:doken:gedoken:hz|dwingen:dwong:dwongen:gedwongen:h|fluiten:floot:floten:gefloten:h|gelden:gold:golden:gegolden:h|gelijken:geleek:geleken:geleken:h|genezen:genas:genazen:genezen:hz|genieten:genoot:genoten:genoten:h|gieten:goot:goten:gegoten:h|glijden:gleed:gleden:gegleden:hz|graven:groef:groeven:gegraven:h|grijpen:greep:grepen:gegrepen:h|hangen:hing:hingen:gehangen:h|heffen:hief:hieven:geheven:h|heten:heette:heetten:geheten:h|houwen:hieuw:hieuwen:gehouwen:h|jagen:joeg / jaagde:joegen / jaagden:gejaagd:h|kiezen:koos:kozen:gekozen:h|klimmen:klom:klommen:geklommen:hz|klinken:klonk:klonken:geklonken:h|knijpen:kneep:knepen:geknepen:h|krimpen:kromp:krompen:gekrompen:z|kruipen:kroop:kropen:gekropen:hz|lachen:lachte:lachten:gelachen:h|laden:laadde:laadden:geladen:h|laten:liet:lieten:gelaten:h|liegen:loog:logen:gelogen:h|lijden:leed:leden:geleden:h|lijken:leek:leken:geleken:h|malen:maalde:maalden:gemalen:h|meten:mat:maten:gemeten:h|mijden:meed:meden:gemeden:h|prijzen:prees:prezen:geprezen:h|raden:raadde / ried:raadden / rieden:geraden:h|rijden:reed:reden:gereden:hz|rijzen:rees:rezen:gerezen:z|roepen:riep:riepen:geroepen:h|ruiken:rook:roken:geroken:h|scheiden:scheidde:scheidden:gescheiden:hz|schelden:schold:scholden:gescholden:h|schenken:schonk:schonken:geschonken:h|scheppen:schiep:schiepen:geschapen:h|scheren:schoor:schoren:geschoren:h|schieten:schoot:schoten:geschoten:h|schijnen:scheen:schenen:geschenen:h|schrikken:schrok:schrokken:geschrokken:z|schuiven:schoof:schoven:geschoven:h|slaan:sloeg:sloegen:geslagen:h|slijpen:sleep:slepen:geslepen:h|sluipen:sloop:slopen:geslopen:hz|sluiten:sloot:sloten:gesloten:h|smelten:smolt:smolten:gesmolten:hz|snijden:sneed:sneden:gesneden:h|spijten:speet:speten:gespeten:h|spinnen:spon:sponnen:gesponnen:h|springen:sprong:sprongen:gesprongen:hz|steken:stak:staken:gestoken:h|stelen:stal:stalen:gestolen:h|sterven:stierf:stierven:gestorven:z|stijgen:steeg:stegen:gestegen:z|stinken:stonk:stonken:gestonken:h|stoten:stootte:stootten:gestoten:h|strijden:streed:streden:gestreden:h|strijken:streek:streken:gestreken:h|trekken:trok:trokken:getrokken:hz|treden:trad:traden:getreden:hz|vallen:viel:vielen:gevallen:z|vangen:ving:vingen:gevangen:h|varen:voer:voeren:gevaren:hz|vechten:vocht:vochten:gevochten:h|verdwijnen:verdween:verdwenen:verdwenen:z|vergeten:vergat:vergaten:vergeten:hz|verliezen:verloor:verloren:verloren:h|vliegen:vloog:vlogen:gevlogen:hz|vouwen:vouwde:vouwden:gevouwen:h|vreten:vrat:vraten:gevreten:h|vriezen:vroor:vroren:gevroren:h|wassen:waste:wasten:gewassen:h|wegen:woog:wogen:gewogen:h|werpen:wierp:wierpen:geworpen:h|werven:wierf:wierven:geworven:h|wijken:week:weken:geweken:z|wijzen:wees:wezen:gewezen:h|winden:wond:wonden:gewonden:h|winnen:won:wonnen:gewonnen:h|zenden:zond:zonden:gezonden:h|zingen:zong:zongen:gezongen:h|zinken:zonk:zonken:gezonken:z|zuigen:zoog:zogen:gezogen:h|zwemmen:zwom:zwommen:gezwommen:hz|zweren:zwoer:zwoeren:gezworen:h|zwijgen:zweeg:zwegen:gezwegen:h|verschijnen:verscheen:verschenen:verschenen:z|treffen:trof:troffen:getroffen:h|zinnen:zon:zonnen:gezonnen:h|smijten:smeet:smeten:gesmeten:h|slijten:sleet:sleten:gesleten:hz|splijten:spleet:spleten:gespleten:hz|wijten:weet:weten:geweten:h|kwijten:kweet:kweten:gekweten:h|hijsen:hees:hesen:gehesen:h|schrijden:schreed:schreden:geschreden:hz|schijten:scheet:scheten:gescheten:h|rijgen:reeg:regen:geregen:h|wrijven:wreef:wreven:gewreven:h|bezwijken:bezweek:bezweken:bezweken:z|snuiven:snoof:snoven:gesnoven:h|spuiten:spoot:spoten:gespoten:hz|stuiven:stoof:stoven:gestoven:hz|zuipen:zoop:zopen:gezopen:h|schuilen:school / schuilde:scholen / schuilden:gescholen / geschuild:h|snuiten:snoot:snoten:gesnoten:h|kluiven:kloof:kloven:gekloven:h|pluizen:ploos:plozen:geplozen:h|slinken:slonk:slonken:geslonken:z|verslinden:verslond:verslonden:verslonden:h|dingen:dong:dongen:gedongen:h|wringen:wrong:wrongen:gewrongen:h|glimmen:glom:glommen:geglommen:h|zwerven:zwierf:zwierven:gezworven:h|zwellen:zwol:zwollen:gezwollen:z|vlechten:vlocht:vlochten:gevlochten:h|melken:molk / melkte:molken / melkten:gemolken:h|schenden:schond:schonden:geschonden:h|wreken:wreekte:wreekten:gewroken:h|spannen:spande:spanden:gespannen:h|zouten:zoutte:zoutten:gezouten:h|weven:weefde:weefden:geweven:h|ervaren:ervoer:ervoeren:ervaren:h|waaien:waaide / woei:waaiden / woeien:gewaaid:h|bannen:bande:banden:gebannen:h|ginnen:gon:gonnen:gegonnen:h|delven:delfde / dolf:delfden / dolven:gedolven:h|generen:geneerde:geneerden:gegeneerd:h|ontbijten:ontbeet:ontbeten:ontbeten:h|uitscheiden:scheidde uit:scheidden uit:uitgescheiden:h';
 const STRONG={};
-STRONG_SRC.split('|').forEach(s=>{const[a,b,c,d,e]=s.split(':');STRONG[a]={ps:b,pp:c,part:d,aux:e}});
+// fuertes que faltaban: rijten (reet, gereten)
+const STRONG_SRC2='rijten:reet:reten:gereten:h|tijgen:toog:togen:getogen:z';
+(STRONG_SRC+'|'+STRONG_SRC2).split('|').forEach(s=>{const[a,b,c,d,e]=s.split(':');STRONG[a]={ps:b,pp:c,part:d,aux:e}});
 const IRRPRES={slaan:['sla','slaat','slaat','slaan','slaan','slaan'],zullen:['zal','zult / zal','zal','zullen','zullen','zullen']};
 STRONG.zullen={ps:'zou',pp:'zouden',part:'—',aux:'h'};
 const CUR_VERB={};
 for(const r of VERBS){if(r[7])continue;CUR_VERB[r[0]]=buildVerb(r);if(Array.isArray(r[2]))IRRPRES[r[0]]=r[2];STRONG[r[0]]=STRONG[r[0]]||{ps:r[3],pp:r[4],part:r[5],aux:r[6]}}
-const STEM_OVR={komen:'kom',bevelen:'beveel',bewegen:'beweeg',vergeten:'vergeet',genezen:'genees',bederven:'bederf',verliezen:'verlies',bedriegen:'bedrieg',genieten:'geniet',verdwijnen:'verdwijn',verschijnen:'verschijn',gelijken:'gelijk',oordelen:'oordeel',raadplegen:'raadpleeg',generen:'geneer',ervaren:'ervaar',verslinden:'verslind',bezwijken:'bezwijk',ontbijten:'ontbijt',beeldhouwen:'beeldhouw',stofzuigen:'stofzuig',glimlachen:'glimlach'};
+const STEM_OVR={waterskiën:'waterskie',daten:'date',faken:'fake',piercen:'pierce',skypen:'skype',upgraden:'upgrade',joyriden:'joyride',skydiven:'skydive',timen:'time',barbecueën:'barbecue',neuriën:'neurie',komen:'kom',bevelen:'beveel',bewegen:'beweeg',vergeten:'vergeet',genezen:'genees',bederven:'bederf',verliezen:'verlies',bedriegen:'bedrieg',genieten:'geniet',verdwijnen:'verdwijn',verschijnen:'verschijn',gelijken:'gelijk',oordelen:'oordeel',raadplegen:'raadpleeg',generen:'geneer',ervaren:'ervaar',verslinden:'verslind',bezwijken:'bezwijk',ontbijten:'ontbijt',beeldhouwen:'beeldhouw',stofzuigen:'stofzuig',glimlachen:'glimlach'};
 const NO_SPLIT=new Set(['ontmoeten','vermoeden','bedoelen','gebeuren','geloven','genieten','verdwijnen','verschijnen','vergeten','verliezen','bewegen','bevelen','naderen','benaderen','waarschuwen','vrijwaren','voetballen','beeldhouwen','stofzuigen','glimlachen','rangschikken','zegevieren','liefkozen','handhaven','dagvaarden','knipogen','waarborgen','brandmerken','dwarsbomen','blinddoeken','slaapwandelen','zonnebaden','bekvechten','logenstraffen','raaskallen','raadplegen','antwoorden','opperen','toeteren','overen','inneren','weigeren','wedijveren','rechtvaardigen','achten','afgunsten','ingenieuren','innen','ordenen','openen','oefenen','offeren','omen','aarden','aarzelen','voeten']);
 // partículas separables (de más larga a más corta) y primeros elementos de verbos compuestos (solo con un verbo conocido detrás)
 const SEP_X=['lastig','flauw','bloot','wit','wijs','vreemd','zaken','teniet','beet','feest','toneel','vals','tanden','kort','vet','vorm','tekeer','ineen','weder','paard','auto','raak','zoek','kapot','schoon','thuis','vooraf','overhoop','tussen','bezig','dwars','boven','adem','aansprakelijk','verantwoordelijk','schadeloos','tevreden','tegemoet','gevangen','achteruit','overeen','vooruit','schuldig','bekend','teleur','uiteen','bijeen','tekort','teweeg','gereed','gerust','gelijk','veilig','kennis','tentoon','omhoog','omlaag','onderuit','verder','plaats','dienst','alleen','kwalijk','voort','stand','prijs','kwijt','groot','klein','zwart','droog','recht','schuil','hoog','laag','fijn','plat','stil','stuk','goed','dood','stop','vrij','waar','weer','deel','leeg','hard','lief','gade','acht','heen','mede','omver','les','mis','vol'];
 const SEP_CORE=['terecht','voorbij','achter','binnen','buiten','samen','tegen','terug','thuis','kapot','schoon','dicht','langs','klaar','open','door','onder','over','voor','vast','weg','mee','neer','rond','aan','bij','toe','uit','los','af','in','na','om','op'];
-SEP_X.push('nat','opzij','lam','krom','warm','buit','wacht','kwaad','leiding','tewerk','aaneen');
+SEP_X.push('geheim','ruzie','koffie','thee','boek','glad','bot','achterna','kaal','nat','opzij','lam','krom','warm','buit','wacht','kwaad','leiding','tewerk','aaneen');
 const SEP=SEP_CORE.concat(SEP_X).sort((a,b)=>b.length-a.length);
 const INSEP_WORDS=new Set('mislukken omsluiten onderlijnen doorspekken onderdrukken onderwerpen ondervragen onderschatten onderkennen onderschrijven ondermijnen omgeven omsingelen omzeilen omhelzen omlijnen omspannen overdekken overtreffen overhoren overschatten overladen overbruggen overspannen overstelpen overweldigen overrompelen overmeesteren overbelasten doorzoeken doorstaan doorgronden doorkruisen doorboren voltooien voldoen volbrengen volstaan volharden volmaken voltrekken misbruiken misleiden mishandelen misdragen miskennen misverstaan mismaken misprijzen weerleggen weerspiegelen weerstaan weerhouden weerkaatsen weerklinken aanschouwen overnachten onderzoeken ondernemen onderhouden ondersteunen onderscheiden onderbreken onderwijzen onderhandelen ondertekenen onderstrepen ondervinden ondergaan overleggen overwegen overtuigen overleven overnachten overschrijden overtreden overdrijven overhandigen overheersen overwinnen overlijden overvallen overkomen overzien voorspellen voorzien voorkomen doorzien omringen omvatten omschrijven omarmen achterhalen achtervolgen aanvaarden aanbidden'.split(' '));
 const AUX_OVR={vertrekken:'z',opstaan:'z',ontstaan:'z',gebeuren:'z',overlijden:'z',verhuizen:'hz',ontsnappen:'z',slagen:'z',lukken:'z',mislukken:'z',groeien:'z',dalen:'z',veranderen:'hz',toenemen:'z',afnemen:'hz',inslapen:'z',terugkeren:'z',verdwijnen:'z',landen:'hz',vertrekken_:'z'};
 const isV=c=>!!c&&'aeiouyëïéèöüáó'.includes(c);
 // verbos nativos en -eren (raíz átona en -er: luister, lever) frente a los de acento en «eer» (probeer, studeer)
-const NAT_ER=new Set(('luisteren fluisteren kluisteren duisteren verduisteren teisteren lasteren belasteren pleisteren roosteren meesteren overmeesteren bemeesteren verbasteren verbijsteren '+
+const NAT_ER=new Set(('leuteren sudderen glunderen twitteren luisteren fluisteren kluisteren duisteren verduisteren teisteren lasteren belasteren pleisteren roosteren meesteren overmeesteren bemeesteren verbasteren verbijsteren '+
  'veranderen hinderen verhinderen minderen verminderen vermeerderen donderen plunderen blunderen wonderen bewonderen verwonderen afzonderen uitzonderen zonderen vorderen bevorderen invorderen schilderen '+
  'bulderen verwijderen verouderen kaderen omkaderen inkaderen bladeren voederen moederen bemoederen verbroederen vernederen vergaderen sidderen fladderen modderen verbeteren beteren kletteren schitteren '+
  'schetteren stotteren snotteren sputteren knetteren kwetteren ploeteren peuteren foeteren wateren verwateren schateren klateren snateren slenteren filteren computeren overwinteren zomeren herinneren '+
@@ -753,13 +755,13 @@ const nativeEr=inf=>{let r=NAT_C.get(inf);if(r!==undefined)return r;r=false;
   else if(!LATIN_YES.has(inf)){for(const p of INS_PFX.concat(SEP)){if(!inf.startsWith(p))continue;const rest=inf.slice(p.length);if(NAT_ER.has(rest)||erWord(rest,true)){r=true;break}}}
   if(idx.size>5000)NAT_C.set(inf,r);return r};
 // verbos «latinos» que sí admiten partícula separable: afstuderen, uitproberen, opwaarderen
-const LATIN_SEPBASE=new Set('studeren proberen waarderen reageren regeren redeneren serveren produceren presteren functioneren financieren marcheren faseren doseren sorteren masseren programmeren balanceren parkeren monteren noteren transporteren kopiëren organiseren discussiëren profiteren investeren kristalliseren trainen'.split(' '));
+const LATIN_SEPBASE=new Set('rangeren studeren proberen waarderen reageren regeren redeneren serveren produceren presteren functioneren financieren marcheren faseren doseren sorteren masseren programmeren balanceren parkeren monteren noteren transporteren kopiëren organiseren discussiëren profiteren investeren kristalliseren trainen'.split(' '));
 const stripInsPfx=x=>{const m=x.match(/^(be|ver|ont|her|ge|er)([^aeiouy]+)$/);return m?m[2]:x};
-const latin=inf=>LATIN_YES.has(inf)||!nativeEr(inf)&&(/ëren$/.test(inf)||(/([^aeiouyë]|[^q]u)eren$/.test(inf)&&/[aeiouy]/.test(stripInsPfx(inf.slice(0,-4)))&&!SEP_CORE.some(p=>inf.startsWith(p)&&monoEr(inf.slice(p.length)))));
+const latin=inf=>LATIN_YES.has(inf)||!nativeEr(inf)&&(/ëren$/.test(inf)||(/([^aeiouyë]|[^q]u)eren$/.test(inf)&&/[aeiouy]/.test(stripInsPfx(inf.slice(0,-4)))&&!SEP.some(p=>inf.startsWith(p)&&monoEr(inf.slice(p.length)))));
 const knownBase=b=>!!(STRONG[b]||IRRPRES[b]||CUR_VERB[b]||STEM_OVR[b]);
 const isKnownV=r=>knownBase(r)||VERBSET.has(r);
 // verbos que empiezan como un prefijo pero no lo tienen (hersenspoelen, beeldhouwen, beulen): no se dividen y llevan ge-
-const GE_NOSPLIT=new Set(['bedelen','grondvesten','hersenspoelen','beeldhouwen','beitelen','bezemen','beuken','beulen','beuren','beunen','beieren']);
+const GE_NOSPLIT=new Set(['geselen','bedelen','grondvesten','hersenspoelen','beeldhouwen','beitelen','bezemen','beuken','beulen','beuren','beunen','beieren']);
 function splitVerb(inf){
   if(knownBase(inf)||GE_NOSPLIT.has(inf))return null;
   if(NO_SPLIT.has(inf)){const m=inf.match(/^(ver|ont|her|be|ge)(.+)$/);return m&&!STRONG[inf]&&m[2].length>=4&&!isV(m[2][0])?{pre:m[1],type:'insep',base:m[2],reg:true}:null}
@@ -800,7 +802,7 @@ function regStem(inf){
   r=r.replace(/z$/,'s').replace(/v$/,'f');
   return{stem:r,orig};
 }
-const geJoin=s=>/^(ui|ij)/.test(s)?'ge'+s:/^[eiu]/.test(s)?'ge'+({e:'ë',i:'ï',u:'ü'}[s[0]])+s.slice(1):'ge'+s;
+const geJoin=s=>/^[a-z]-/.test(s)?'ge-'+s:/^(ui|ij)/.test(s)?'ge'+s:/^[eiu]/.test(s)?'ge'+({e:'ë',i:'ï',u:'ü'}[s[0]])+s.slice(1):'ge'+s;
 // jullie va con la forma del plural (jullie werken, jullie zitten), como en el neerlandés estándar
 function presentOf(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[stem,t,t,inf,inf,inf]}
 // verbos con be-/ver-/ont-/her- aparente que sí llevan ge- en el participio
@@ -813,9 +815,10 @@ function presentOf(stem,inf){const t=stem.endsWith('t')?stem:stem+'t';return[ste
 const FORCE_WEAK=new Set(['opscheppen','onderscheppen','afschrikken','overreden','omvatten','herbergen']);
 // préstamos y casos especiales: raíz y -te/-de según la pronunciación (racete, managede)
 Object.assign(STEM_OVR,{verwelkomen:'verwelkom',interviewen:'interview',relaxen:'relax',sponsoren:'sponsor',chillen:'chill',skiën:'ski',ruziën:'ruzie',beamen:'beaam',racen:'race',updaten:'update',managen:'manage',gamen:'game',tapen:'tape',recyclen:'recycle',appen:'app',faxen:'fax',mailen:'mail',saven:'save',timen:'time',liken:'like',stressen:'stress',vereren:'vereer',onteren:'onteer',herbergen:'herberg'});
-const LOAN_TE=new Set(['racen','updaten','tapen','liken','relaxen','faxen']);
+const LOAN_TE=new Set(['racen','updaten','tapen','liken','relaxen','faxen','daten','faken','piercen','skypen']);
 ['interviewen','verwelkomen','beamen','vereren','onteren'].forEach(v=>NO_SPLIT.add(v));
-['omheinen','overpeinzen','onderstellen','ondervangen','weergalmen','overvleugelen','misdoen','wedervaren'].forEach(v=>INSEP_WORDS.add(v));['vereren','onteren','beamen','verwelkomen'].forEach(v=>INSEP_WORDS.add(v));
+['omheinen','overpeinzen','onderstellen','ondervangen','weergalmen','overvleugelen','misdoen','wedervaren','overdonderen','overstromen','overschaduwen','doorbreken','doorgronden','overspoelen'].forEach(v=>INSEP_WORDS.add(v));
+['graveren','decoderen','inhaleren','tutoyeren'].forEach(v=>{LATIN_YES.add(v);NO_SPLIT.add(v)});FORCE_WEAK.add('afprijzen');['vereren','onteren','beamen','verwelkomen'].forEach(v=>INSEP_WORDS.add(v));
 const GE_YES=new Set(['beulen','beuren','hersenspoelen','beeldhouwen','beelden','beitelen','beieren','beuken','beunen','bezemen','beteren','bedelen','vergen','verven','veren','herbergen','herderen','beren','ontbijten']);
 function conjCore(inf,reg){
   if(!reg&&CUR_VERB[inf])return{...CUR_VERB[inf]};
@@ -830,8 +833,15 @@ function conjCore(inf,reg){
   return{inf,present:presentOf(stem,inf),past:[ps,ps+'n'],participle:(noGe?stem:geJoin(stem))+(/[td]$/.test(stem)?'':(vl?'t':'d')),aux:'h',imperative:stem,regularStem:stem};
 }
 const VERBSET=new Set();
+const PART_FIX={toebedelen:'toebedeeld'};
 function conjugate(inf){
   if(CUR_VERB[inf])return CUR_VERB[inf];
+  if(PART_FIX[inf]){const v={...conjugate0(inf)};v.participle=PART_FIX[inf];return v}
+  return conjugate0(inf)}
+function conjugate0(inf){
+  // toe-eigenen (guion por el choque de vocales) = toe + eigenen
+  const hy=inf.match(/^(toe|na|mee|bij|op|af|in|uit|voor|door)-([a-zëï]+n)$/);if(hy){const c=conjugate0(hy[2]),pre=hy[1],add=f=>String(f).split(' / ').map(x=>x+' '+pre).join(' / ');
+    const v={...c,inf,prefix:pre,auto:true,regularStem:null};v.present=c.present.map(add);v.past=c.past.map(add);v.imperative=c.imperative?add(c.imperative):null;v.participle=String(c.participle).split(' / ').map(x=>pre+x).join(' / ');return v}
   if(inf.includes(' ')){
     const w=inf.split(' ');const isVb=x=>knownBase(x)||VERBSET.has(x);
     // reflexivo: ik vergis me, jij vergist je, hij vergist zich, wij vergissen ons, jullie vergissen je, zij vergissen zich
@@ -904,11 +914,12 @@ function adjForms(a){
 let BIG_N=0;
 const FORM_ALIAS={kun:['kunnen','una forma del presente'],zul:['zullen','una forma del presente'],wees:['zijn','el imperativo'],weest:['zijn','el imperativo'],ware:['zijn','una forma del subjuntivo'],
   zijt:['zijn','una forma antigua del presente'],moogt:['mogen','una forma antigua del presente'],rij:['rijden','una forma del presente'],snij:['snijden','una forma del presente'],glij:['glijden','una forma del presente'],
-  wou:['willen','una forma del pasado'],wouden:['willen','una forma del pasado'],hebt:['hebben','una forma del presente'],bent:['zijn','una forma del presente']};
+  wou:['willen','una forma del pasado'],wouden:['willen','una forma del pasado'],zegde:['zeggen','una forma del pasado'],zegden:['zeggen','una forma del pasado'],zweerde:['zweren','una forma del pasado'],zweerden:['zweren','una forma del pasado'],schepte:['scheppen','una forma del pasado'],schepten:['scheppen','una forma del pasado'],geschept:['scheppen','el participio'],gehoeven:['hoeven','el participio'],gevreeën:['vrijen','el participio'],vree:['vrijen','una forma del pasado'],vreeën:['vrijen','una forma del pasado'],zijnde:['zijn','el participio de presente'],overgekomen:['overkomen','el participio'],hebt:['hebben','una forma del presente'],bent:['zijn','una forma del presente']};
 // formas del verbo en el índice; en los separables también la forma unida de las subordinadas: (dat hij) doorgaat, opbelt
 function indexVerbForms(e,v){
-  const pre=v.prefix,addF=(f,via)=>String(f||'').split(' / ').forEach(x=>{x=x.trim();if(!x||x===e.nl)return;const w=x.split(' ');
-    if(w.length===1)add(x,e,via);else if(pre&&w.length===2&&w[1]===pre)add(pre+w[0],e,via)});
+  // en los separables cuya base no es un verbo propio (aankondigen → «kondigen» no existe) también la forma suelta: hij kondigt … aan
+  const pre=v.prefix,bare=pre&&!isKnownV(e.nl.slice(pre.length)),addF=(f,via)=>String(f||'').split(' / ').forEach(x=>{x=x.trim();if(!x||x===e.nl)return;const w=x.split(' ');
+    if(w.length===1)add(x,e,via);else if(pre&&w.length===2&&w[1]===pre){add(pre+w[0],e,via);if(bare&&w[0].length>2)add(w[0],e,via)}});
   v.present.forEach(f=>addF(f,'una forma del presente'));v.past.forEach(f=>addF(f,'una forma del pasado'));
   String(v.participle||'').split(' / ').forEach(x=>{x=x.trim();if(x&&x!=='—')add(x,e,'el participio')});
   if(v.imperative&&!pre)addF(v.imperative,'el imperativo');
@@ -2843,14 +2854,14 @@ const NL_VFIN=new Set(['una forma del presente','una forma del pasado','el imper
 const SEPSET=new Set(SEP);
 const nlSide=k=>(idx.get(k)||[]).filter(x=>x.e.pos!=='grammar'&&(x.via||norm(x.e.nl)===k||norm(stripArt(x.e.nl))===k));
 // grafías antiguas y formas sueltas (textos literarios)
-const NLM_OLD={zoo:'zo',alzoo:'alzo',den:'de',eene:'een',eenen:'een',eener:'een',mijne:'mijn',zijne:'zijn',hare:'haar',dezen:'deze',dien:'die',welken:'welke',gij:'jij',mede:'mee',
+const NLM_OLD={blijde:'blij',nakie:'naakt',kleertjes:'kleren',zoo:'zo',alzoo:'alzo',den:'de',eene:'een',eenen:'een',eener:'een',mijne:'mijn',zijne:'zijn',hare:'haar',dezen:'deze',dien:'die',welken:'welke',gij:'jij',mede:'mee',
   wien:'wie',zeide:'zeggen',elkander:'elkaar',malkander:'elkaar',geleek:'lijken',geleken:'lijken',zeiden:'zeggen',hij:'hij',noch:'noch',thans:'thans',ende:'en',heeren:'heer',menschen:'mens',mensch:'mens',wereld:'wereld',vleesch:'vlees',visch:'vis',tusschen:'tussen',
   wenschen:'wensen',wensch:'wens',frisch:'fris',valsch:'vals',bosch:'bos',asch:'as',flesch:'fles',tasch:'tas',eenigen:'enige',eenige:'enige',geene:'geen',zeer:'zeer',kwam:'komen'};
 function nlMorph(w){ // formas que el índice no tiene: plurales, diminutivos, adjetivos flexionados, grados, grafías antiguas
   const out=[],seen=new Set();
   const tryB=(b,pos,via,opt)=>{if(!b||b.length<2)return;for(const x of nlSide(norm(b))){
     if(x.via&&!(opt&&opt.via===x.via))continue;if(pos&&!pos.includes(x.e.pos))continue;
-    if(via==='el plural'&&x.e.pos==='noun'&&x.e.noun&&x.e.noun.plural&&!String(x.e.noun.plural).split('/').some(p=>norm(p.trim())===norm(w))&&!(/e$/.test(x.e.nl)&&norm(x.e.nl+'n')===norm(w)))continue;
+    if(via==='el plural'&&x.e.pos==='noun'&&x.e.noun&&x.e.noun.plural&&!String(x.e.noun.plural).split('/').some(p=>norm(p.trim())===norm(w))&&!(/e$/.test(x.e.nl)&&norm(x.e.nl+'n')===norm(w))&&!(/(el|er|em|aar|ier|eur|or|us|is|sel|gevoel)$/.test(x.e.nl)&&/(en|ens)$/.test(w)))continue;
     const key=x.e.nl+'|'+x.e.pos+'|'+via;if(seen.has(key))continue;seen.add(key);out.push({e:x.e,via:x.via?x.via:via,morph:1,old:opt&&opt.old?1:0})}};
   const stems=b=>{const v=[b];
     if(/([bcdfgklmnprstz])\1$/.test(b))v.push(b.slice(0,-1));
@@ -2866,21 +2877,29 @@ function nlMorph(w){ // formas que el índice no tiene: plurales, diminutivos, a
   if(/eren$/.test(w))for(const s of stems(w.slice(0,-4)))tryB(s,N,'el plural');
   if(/en$/.test(w)){for(const s of stems(w.slice(0,-2)))tryB(s,N,'el plural');tryB(w.slice(0,-1),N,'el plural')}
   if(/[^s]s$/.test(w))tryB(w.slice(0,-1),N,'el plural');
+  if(/elens$/.test(w))tryB(w.slice(0,-3),N,'el plural');                                      // gevoelens, wraakgevoelens
   for(const [d,lab] of [[w,'el diminutivo'],[/jes$/.test(w)?w.slice(0,-1):'','el diminutivo (en plural)']]){if(!d||!/je$/.test(d))continue;
     if(/etje$/.test(d))for(const s of stems(d.slice(0,-4)))tryB(s,N,lab);
     if(/tje$/.test(d)){const b=d.slice(0,-3);tryB(b,N,lab);if(/(aa|ee|oo|uu)$/.test(b))tryB(b.slice(0,-1),N,lab)}
     if(/pje$/.test(d))tryB(d.slice(0,-3),N,lab);
     if(/kje$/.test(d))tryB(d.slice(0,-3)+'g',N,lab);
-    tryB(d.slice(0,-2),N,lab)}
-  if(/e$/.test(w)){for(const s of stems(w.slice(0,-1))){tryB(s,A,'la forma flexionada');tryB(s,['verb'],'el participio',{via:'el participio'})}}
+    tryB(d.slice(0,-2),N,lab);if(d!==w)tryB(d,N,lab,{via:'el diminutivo'})}   // glaasjes → glaasje (diminutivo guardado) → glas
+  if(/e$/.test(w)){for(const s of stems(w.slice(0,-1))){tryB(s,A,'la forma flexionada');tryB(s,['verb'],'el participio',{via:'el participio'});
+    // participio que coincide con otra forma ya indexada (vermoord = ik vermoord): de vermoorde man
+    for(const x of nlSide(norm(s)))if(x.e.pos==='verb'&&x.via&&x.via!=='el participio'){let p='';try{p=String(x.e.verb.participle||'')}catch(_){}
+      if(p.split(' / ').some(q=>norm(q.trim())===norm(s))){const key=x.e.nl+'|verb|el participio';if(!seen.has(key)){seen.add(key);out.push({e:x.e,via:'el participio',morph:1})}}}}}
   if(/ere?$/.test(w))for(const s of stems(w.replace(/ere?$/,'')))tryB(s,A,'el comparativo');
   if(/dere?$/.test(w))tryB(w.replace(/dere?$/,''),A,'el comparativo');
   if(/ste?$/.test(w)){const b=w.replace(/ste?$/,'');tryB(b,A,'el superlativo');tryB(b+'s',A,'el superlativo')}
-  if(/[^s]s$/.test(w))tryB(w.slice(0,-1),A,'la forma con -s (iets …s = algo …)');
+  if(/[^s]s$/.test(w)){tryB(w.slice(0,-1),A,'la forma con -s (iets …s = algo …)');tryB(w.slice(0,-1),A,'el comparativo',{via:'el comparativo'})}   // iets mooiers
+  if(/(ouw|aai|ooi|oei)en?$/.test(w)){const b=w.replace(/en?$/,'').replace(/ouw$/,'oud').replace(/aai$/,'aad').replace(/ooi$/,'ood').replace(/oei$/,'oed');tryB(b,A,'la forma coloquial (kouwe = koude, goeie = goede)')}   // kouwe, ouwe, goeie, rooie
+  if(/jes$/.test(w))for(const b of [w.slice(0,-3),w.slice(0,-4)])tryB(b,A,'la forma adverbial en -jes (kalmpjes = con calma)');   // bleekjes, kalmpjes, stijfjes, magertjes
+  if(/[^aeiou]ie$/.test(w))for(const s of stems(w.slice(0,-2)))tryB(s,N,'el diminutivo coloquial (-ie)');                        // moppie, juffie, ukkie
+  if(/(de|ste)$/.test(w)){const b=w.replace(/(de|ste)$/,'');tryB(b,['other'],'el ordinal (dertiende = decimotercero)');tryB(b,N,'el ordinal (dertiende = decimotercero)')}   // dertiende, honderdste, zoveelste
   if(/ende?$/.test(w))tryB(w.replace(/de?$/,''),['verb'],'el participio de presente');            // vliegende
   if(/(aa|oe|ie)nde?$/.test(w))tryB(w.replace(/nde?$/,'n'),['verb'],'el participio de presente');   // gaande, doende, ziende
   if(/[^s]s$/.test(w))tryB(w.slice(0,-1),['other','noun'],'el genitivo (-s)');                  // iemands, vaders
-  if(/(ën|en)$/.test(w)&&!out.length){const b=w.replace(/ë?n$/,'').replace(/e$/,'');for(const x of [b,b+'e',w.replace(/ën$/,'')])tryB(x,['other'],'el plural (met z’n tweeën, duizenden)')}
+  if(/(ën|en)$/.test(w)&&!out.length){const b=w.replace(/ë?n$/,'').replace(/e$/,'');for(const x of [...stems(b),b+'e',w.replace(/ën$/,'')])tryB(x,['other'],'el plural (met z’n tweeën, duizenden)')}   // zessen, vijven
   if(/e$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-1)))tryB(s,['other'],'la forma flexionada');               // eerdere
   if(/en$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-2)))tryB(s,A,'la forma flexionada');                   // de groten, de rijken
   if(/e$/.test(w)&&!out.length)for(const s of stems(w.slice(0,-1)))tryB(s,N,'una forma antigua (ten koste van, in feite, ter plaatse)');
